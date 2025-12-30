@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { TbBrandDiscord } from 'react-icons/tb';
+import { discordContent } from './content';
 
-// GameCP SDK types (these are available globally)
+// Translation helper
+const useTranslation = () => {
+    const locale = window.GameCP_SDK?.locale || 'en';
+    const t = (translations: Record<string, string>) => translations[locale] || translations.en;
+    return { t, locale };
+};
+
+// Game CP SDK types (these are available globally)
 declare global {
     interface Window {
         GameCP_SDK: {
@@ -10,6 +18,7 @@ declare global {
             Card: React.ComponentType<{ title?: string; description?: string; icon?: React.ComponentType<any>; iconColor?: string; padding?: string; variant?: string; headerClassName?: string; children: React.ReactNode }>;
             Badge: React.ComponentType<{ variant?: string; size?: string; className?: string; children: React.ReactNode }>;
             confirm: (options: { title: string; message: string; confirmText: string; confirmButtonColor?: string }) => Promise<boolean>;
+            locale: string; // Current user locale (e.g., 'en', 'es', 'fr')
         };
         GameCP_API: {
             fetch: (url: string, options?: RequestInit) => Promise<Response>;
@@ -33,20 +42,22 @@ interface SettingsPageProps {
 
 // Client-side UI components
 export function DiscordIcon({ serverId }: DiscordIconProps) {
+    const { t } = useTranslation();
     const { Link } = window.GameCP_SDK;
     return (
         <Link
             href={`/game-servers/${serverId}/extensions/discord`}
             className="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-foreground hover:bg-muted hover:text-foreground transition-all duration-150 ease-in-out"
-            title="Discord Notifications"
+            title={t(discordContent.page.title)}
         >
             <TbBrandDiscord className="mr-3 h-5 w-5 transition-all duration-150 ease-in-out" />
-            <span>Discord</span>
+            <span>{t(discordContent.nav.title)}</span>
         </Link>
     );
 }
 
 export function SettingsPage({ serverId }: SettingsPageProps) {
+    const { t } = useTranslation();
     const [webhookUrl, setWebhookUrl] = useState<string>('');
     const [webhooks, setWebhooks] = useState<Webhook[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -59,7 +70,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
 
     const loadWebhooks = async () => {
         try {
-            const response = await window.GameCP_API.fetch(`/api/x/discord-notifications/webhooks?serverId=${serverId}`);
+            const response = await window.GameCP_API.fetch(`/ api / x / discord - notifications / webhooks ? serverId = ${serverId} `);
             const data = await response.json();
             setWebhooks(data.webhooks || []);
         } catch (err) {
@@ -81,7 +92,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
             });
 
             if (response.ok) {
-                setMessage('Webhook saved successfully!');
+                setMessage(t(discordContent.messages.success));
                 setWebhookUrl('');
                 loadWebhooks();
             } else {
@@ -97,9 +108,9 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
 
     const handleDelete = async (url: string) => {
         const confirmed = await window.GameCP_SDK.confirm({
-            title: 'Remove Webhook',
-            message: 'Are you sure you want to remove this Discord webhook? You will stop receiving notifications in this channel.',
-            confirmText: 'Remove',
+            title: t(discordContent.confirm.removeTitle),
+            message: t(discordContent.confirm.removeMessage),
+            confirmText: t(discordContent.buttons.remove),
             confirmButtonColor: 'red'
         });
 
@@ -115,7 +126,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
             });
 
             if (response.ok) {
-                setMessage('Webhook removed successfully');
+                setMessage(t(discordContent.messages.removed));
                 loadWebhooks();
             } else {
                 const data = await response.json();
@@ -141,7 +152,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
             });
 
             if (response.ok) {
-                setMessage('Test message sent to Discord!');
+                setMessage(t(discordContent.messages.testSent));
             } else {
                 const data = await response.json();
                 setError(data.error || 'Failed to send test message');
@@ -162,10 +173,10 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex-1 min-w-0">
                         <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-                            Discord Notifications
+                            {t(discordContent.page.title)}
                         </h1>
                         <p className="text-sm sm:text-base text-muted-foreground mt-1">
-                            Configure Discord webhooks to receive notifications about your game server
+                            {t(discordContent.page.description)}
                         </p>
                     </div>
                 </div>
@@ -190,8 +201,8 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
             <div className="space-y-4 sm:space-y-6">
                 {/* Configuration Card */}
                 <Card
-                    title="Webhook Configuration"
-                    description="Configure Discord webhooks to receive notifications about your game server events."
+                    title={t(discordContent.config.title)}
+                    description={t(discordContent.config.description)}
                     icon={TbBrandDiscord}
                     iconColor="blue"
                     padding="lg"
@@ -199,16 +210,16 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                     <form onSubmit={handleSave} className="space-y-6 mt-4">
                         <div>
                             <label className="block text-sm font-semibold text-foreground mb-1">
-                                Discord Webhook URL <span className="text-red-500">*</span>
+                                {t(discordContent.form.webhookUrl)} <span className="text-red-500">*</span>
                             </label>
                             <p className="text-xs text-muted-foreground mb-2">
-                                Enter the full webhook URL from your Discord server integration settings.
+                                {t(discordContent.form.webhookHint)}
                             </p>
                             <input
                                 type="url"
                                 value={webhookUrl}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWebhookUrl(e.target.value)}
-                                placeholder="https://discord.com/api/webhooks/..."
+                                placeholder={t(discordContent.form.webhookPlaceholder)}
                                 className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm transition-all"
                                 required
                             />
@@ -220,7 +231,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                                 isLoading={loading}
                                 variant="primary"
                             >
-                                Save Webhook
+                                {t(discordContent.buttons.save)}
                             </Button>
                             <Button
                                 type="button"
@@ -229,7 +240,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                                 disabled={webhooks.length === 0}
                                 variant="secondary"
                             >
-                                Send Test Message
+                                {t(discordContent.buttons.test)}
                             </Button>
                         </div>
                     </form>
@@ -238,7 +249,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                 {/* Webhooks List Card */}
                 {webhooks.length > 0 && (
                     <Card
-                        title="Active Integrations"
+                        title={t(discordContent.integrations.title)}
                         padding="none"
                         headerClassName="p-4 sm:px-6 border-b border-border"
                     >
@@ -247,7 +258,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                                 <div key={index} className="px-4 py-4 sm:px-6 flex items-center justify-between hover:bg-muted/50 transition-colors">
                                     <div className="flex items-center min-w-0 mr-4">
                                         <Badge variant="success" size="sm" className="mr-3">
-                                            Active
+                                            {t(discordContent.integrations.active)}
                                         </Badge>
                                         <span className="font-mono text-xs sm:text-sm text-muted-foreground truncate">
                                             {webhook.url}
@@ -259,7 +270,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                                         size="sm"
                                         isLoading={loading}
                                     >
-                                        Remove
+                                        {t(discordContent.buttons.remove)}
                                     </Button>
                                 </div>
                             ))}
@@ -273,7 +284,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                 <Card
                     variant="filled"
                     padding="md"
-                    title="About Discord Webhooks"
+                    title={t(discordContent.info.title)}
                 >
                     <div className="flex items-start">
                         <svg className="w-5 h-5 text-muted-foreground mr-3 mt-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -283,9 +294,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                         </svg>
                         <div className="text-xs sm:text-sm text-muted-foreground">
                             <p>
-                                Webhook URLs are unique to each Discord channel. You can create them in your
-                                Discord server settings under Integrations &gt; Webhooks. Once configured,
-                                events like server start, stop, and crashes will be sent directly to your channel.
+                                {t(discordContent.info.description)}
                             </p>
                         </div>
                     </div>
