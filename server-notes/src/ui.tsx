@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import type { GameCPWindow } from '@gamecp/types';
 
-// GameCP SDK types
+// Extend global window with GameCP SDK
 declare global {
-    interface Window {
-        GameCP_SDK: {
-            Card: React.ComponentType<{ children: React.ReactNode }>;
-            Button: React.ComponentType<{ onClick?: () => void; disabled?: boolean; className?: string; children: React.ReactNode }>;
-        };
-        GameCP_API: {
-            fetch: (url: string, options?: RequestInit) => Promise<Response>;
-        };
-    }
+    interface Window extends GameCPWindow { }
 }
 
 interface NotesAreaProps {
@@ -124,8 +117,8 @@ export function NotesArea({ serverId }: NotesAreaProps) {
                 {message && (
                     <div
                         className={`p-3 rounded-lg text-sm ${message.includes('success')
-                                ? 'bg-green-50 text-green-800 border border-green-200'
-                                : 'bg-red-50 text-red-800 border border-red-200'
+                            ? 'bg-green-50 text-green-800 border border-green-200'
+                            : 'bg-red-50 text-red-800 border border-red-200'
                             }`}
                     >
                         {message}

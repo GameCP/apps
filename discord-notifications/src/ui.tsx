@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TbBrandDiscord } from 'react-icons/tb';
 import { discordContent } from './content';
+import type { GameCPWindow } from '@gamecp/types';
 
 // Translation helper
 const useTranslation = () => {
@@ -9,21 +10,9 @@ const useTranslation = () => {
     return { t, locale };
 };
 
-// Game CP SDK types (these are available globally)
+// Extend global window with GameCP SDK
 declare global {
-    interface Window {
-        GameCP_SDK: {
-            Link: React.ComponentType<{ href: string; className?: string; title?: string; children: React.ReactNode }>;
-            Button: React.ComponentType<{ type?: 'button' | 'submit'; onClick?: () => void; isLoading?: boolean; disabled?: boolean; variant?: string; size?: string; children: React.ReactNode }>;
-            Card: React.ComponentType<{ title?: string; description?: string; icon?: React.ComponentType<any>; iconColor?: string; padding?: string; variant?: string; headerClassName?: string; children: React.ReactNode }>;
-            Badge: React.ComponentType<{ variant?: string; size?: string; className?: string; children: React.ReactNode }>;
-            confirm: (options: { title: string; message: string; confirmText: string; confirmButtonColor?: string }) => Promise<boolean>;
-            locale: string; // Current user locale (e.g., 'en', 'es', 'fr')
-        };
-        GameCP_API: {
-            fetch: (url: string, options?: RequestInit) => Promise<Response>;
-        };
-    }
+    interface Window extends GameCPWindow { }
 }
 
 interface Webhook {
@@ -70,7 +59,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
 
     const loadWebhooks = async () => {
         try {
-            const response = await window.GameCP_API.fetch(`/ api / x / discord - notifications / webhooks ? serverId = ${serverId} `);
+            const response = await window.GameCP_API.fetch(`/api/x/discord-notifications/webhooks?serverId=${serverId}`);
             const data = await response.json();
             setWebhooks(data.webhooks || []);
         } catch (err) {
