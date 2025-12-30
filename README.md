@@ -2,21 +2,6 @@
 
 Official and community extensions for GameCP.
 
-## Extensions
-
-### [Discord Notifications](./discord-notifications)
-Send game server alerts and status updates to Discord channels via webhooks.
-
-**Features:**
-- 🔴 Crash alerts
-- 🟢 Server start/stop notifications
-- 🧪 Test webhook functionality
-- 📊 Event logging
-
-**Status:** ✅ Ready for submission
-
----
-
 ## Creating a New Extension
 
 ### 1. Create Extension Directory
