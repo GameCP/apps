@@ -12,7 +12,17 @@ A GameCP extension that sends Discord notifications for game server events.
 
 ## Installation
 
-### 1. Build the Extension
+### For Users
+
+Install directly from the [GameCP App Store](https://appstore.gamecp.com):
+
+1. Browse to the Discord Notifications extension
+2. Click "Install"
+3. The extension will be automatically added to your GameCP instance
+
+### For Developers
+
+#### 1. Build the Extension
 
 ```bash
 npm install
@@ -21,10 +31,10 @@ npm run build
 
 This creates `dist/index.js` - your bundled extension.
 
-### 2. Generate SRI Hash
+#### 2. Generate SRI Hash
 
 ```bash
-npm run generate-hash
+openssl dgst -sha384 -binary dist/index.js | openssl base64 -A
 ```
 
 Copy the output hash and update `gamecp.json`:
@@ -33,29 +43,26 @@ Copy the output hash and update `gamecp.json`:
 "integrity": "sha384-YOUR_HASH_HERE"
 ```
 
-### 3. Upload to CDN
+#### 3. Create Icon
 
-Upload `dist/index.js` to your CDN at:
-```
-https://cdn.gamecp.com/extensions/discord-notifications/v1.0.0/index.js
-```
+Create a 256x256 PNG icon for your extension.
 
-### 4. Create Icon
+#### 4. Submit to App Store
 
-Create a 256x256 PNG icon and upload to:
-```
-https://cdn.gamecp.com/extensions/discord-notifications/icon.png
-```
-
-### 5. Submit to App Store
-
-1. Visit your GameCP App Store developer portal
+1. Visit the [GameCP App Store Developer Portal](https://appstore.gamecp.com/developer)
 2. Click "Submit New Extension"
-3. Upload:
-   - `gamecp.json` (manifest)
-   - `dist/index.js` (bundle)
-   - `icon.png` (256x256)
-   - Screenshots (optional)
+3. Fill in the submission form with:
+   - Extension manifest (`gamecp.json`)
+   - Extension bundle (`dist/index.js`)
+   - Icon (256x256 PNG)
+   - Screenshots (optional but recommended)
+   - Description and documentation
+
+The App Store will:
+- ✅ Validate your manifest and bundle
+- ✅ Host your extension files on the CDN
+- ✅ Make it available for users to install
+- ✅ Handle version updates automatically
 
 ## Usage
 
