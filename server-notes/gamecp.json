@@ -6,7 +6,7 @@
   "description": "Add private admin notes to game servers for internal documentation and team communication",
   "author": "GameCP Team",
   "entry_point": "index.js",
-  "integrity": "sha384-PLACEHOLDER",
+  "integrity": "sha384-RTQtne7CKkevCPtKNQJXhNazvElnR7w2JQrJX4z8THz/z64fRW/V0mr7ZzDyQyaR",
   
   "ui_injection": [
     {

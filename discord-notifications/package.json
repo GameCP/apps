@@ -1,0 +1,21 @@
+{
+  "name": "discord-notifications-extension",
+  "version": "1.0.4",
+  "description": "GameCP extension for Discord notifications",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "node build.js",
+    "generate-hash": "openssl dgst -sha384 -binary dist/index.js | openssl base64 -A"
+  },
+  "keywords": [
+    "gamecp",
+    "discord",
+    "notifications"
+  ],
+  "author": "GameCP Team",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "react-icons": "^5.5.0"
+  }
+}

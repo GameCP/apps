@@ -1,0 +1,107 @@
+{
+  "$schema": "./schema.json",
+  "extension_id": "discord-notifications",
+  "version": "1.0.4",
+  "name": "Discord Notifications",
+  "description": "Send game server alerts, crash notifications, and status updates to Discord channels via webhooks",
+  "author": "GameCP Team",
+  "entry_point": "index.js",
+  "integrity": "sha384-TqSJ4RHluj6Z9szRmVsH5+FfHKNtgG8Cx/lDhQv7+DIvyCZy/FFNkR/xFc/ft2hk",
+  
+  "ui_injection": [
+    {
+      "method": "MOUNT",
+      "target": "server.sidebar.nav",
+      "component": "DiscordIcon",
+      "order": 50
+    },
+    {
+      "method": "HANDLER",
+      "target": "server.page.extensions",
+      "component": "SettingsPage",
+      "route_path": "/game-servers/:id/extensions/discord"
+    }
+  ],
+  
+  "config": {
+    "webhookUrl": {
+      "type": "text",
+      "label": "Discord Webhook URL",
+      "description": "Enter your Discord webhook URL to receive notifications",
+      "placeholder": "https://discord.com/api/webhooks/...",
+      "required": true
+    }
+  },
+  
+  "internal_logic": {
+    "api_routes": [
+      {
+        "method": "POST",
+        "path": "/webhooks",
+        "handler_export": "saveWebhook",
+        "timeout_ms": 3000,
+        "description": "Save Discord webhook URL"
+      },
+      {
+        "method": "GET",
+        "path": "/webhooks",
+        "handler_export": "getWebhooks",
+        "description": "Get configured webhooks"
+      },
+      {
+        "method": "POST",
+        "path": "/test",
+        "handler_export": "testWebhook",
+        "timeout_ms": 10000,
+        "description": "Send test message to Discord"
+      },
+      {
+        "method": "DELETE",
+        "path": "/webhooks",
+        "handler_export": "deleteWebhook",
+        "description": "Remove a Discord webhook"
+      }
+    ],
+    "event_listeners": [
+      {
+        "event": "server.status.crash",
+        "handler_export": "handleCrash",
+        "async": true,
+        "description": "Send alert when server crashes"
+      },
+      {
+        "event": "server.status.started",
+        "handler_export": "handleStart",
+        "async": true,
+        "description": "Notify when server starts"
+      },
+      {
+        "event": "server.status.stopped",
+        "handler_export": "handleStop",
+        "async": true,
+        "description": "Notify when server stops"
+      }
+    ]
+  },
+  
+  "sandbox_config": {
+    "db_collections": ["webhooks", "logs"],
+    "permissions": [
+      "network.outbound"
+    ],
+    "resource_limits": {
+      "memory_mb": 128,
+      "timeout_ms": 10000,
+      "max_db_queries_per_request": 10
+    }
+  },
+  
+  "metadata": {
+    "icon": "https://cdn.gamecp.com/extensions/discord-notifications/icon.png",
+    "category": "notifications",
+    "homepage": "https://github.com/GameCP/discord-notifications-extension",
+    "repository": "https://github.com/GameCP/discord-notifications-extension",
+    "license": "MIT",
+    "tags": ["discord", "webhooks", "notifications", "alerts", "monitoring"]
+  }
+}

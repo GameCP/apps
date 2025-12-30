@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "extension_id": { "type": "string" },
+    "version": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "author": { "type": "string" },
+    "entry_point": { "type": "string" },
+    "integrity": { "type": "string" }
+  }
+}
