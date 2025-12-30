@@ -110,29 +110,36 @@ Key sections:
 
 ### API Routes
 
-- `POST /api/x/discord-notifications/webhooks` - Save webhook
-- `GET /api/x/discord-notifications/webhooks` - Get webhooks
-- `POST /api/x/discord-notifications/test` - Send test message
+- `POST /api/x/discord-notifications/webhooks` - Save webhook URL
+- `GET /api/x/discord-notifications/webhooks` - Get configured webhooks
+- `POST /api/x/discord-notifications/test` - Send test message to Discord
+- `DELETE /api/x/discord-notifications/webhooks` - Remove a webhook
 
-### Event Handlers
+### Event Listeners
 
-- `handleCrash(event, payload, ctx)` - Server crash
-- `handleStart(event, payload, ctx)` - Server start
-- `handleStop(event, payload, ctx)` - Server stop
+The extension automatically listens for these server events:
+
+- `server.status.crash` → `handleCrash()` - Send crash alert to Discord
+- `server.status.started` → `handleStart()` - Send server started notification
+- `server.status.stopped` → `handleStop()` - Send server stopped notification
 
 ## Database Collections
 
-The extension uses two collections (auto-prefixed):
+The extension uses sandboxed database collections:
 
-- `plugin_discord-notifications_webhooks` - Webhook URLs
-- `plugin_discord-notifications_logs` - Event history
+- `webhooks` - Stores Discord webhook URLs per server
+- `logs` - Event notification history
 
 ## Permissions
 
 Required permissions:
-- `server.console.read` - Read console logs
-- `server.metrics.read` - Read server metrics
-- `network.outbound` - Send HTTP requests to Discord
+- `network.outbound` - Send HTTP requests to Discord webhooks
+
+## Resource Limits
+
+- **Memory**: 128 MB
+- **Timeout**: 10 seconds per request
+- **DB Queries**: Max 10 per request
 
 ## License
 
