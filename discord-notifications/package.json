@@ -4,7 +4,8 @@
   "description": "Send game server alerts to Discord",
   "main": "dist/index.js",
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=browser --target=es2020 --outfile=dist/index.js --format=cjs --minify --external:react --external:react-dom --external:@gamecp/types/client",
+    "build": "esbuild src/index.ts --bundle --platform=browser --target=es2020 --outfile=dist/index.js --format=cjs --minify --external:react --external:react-dom --external:@gamecp/types/client && npm run postbuild",
+    "postbuild": "echo 'module.exports.DiscordIcon=et;module.exports.SettingsPage=dt;module.exports.saveWebhook=saveWebhook;module.exports.deleteWebhook=deleteWebhook;module.exports.getWebhooks=getWebhooks;module.exports.testWebhook=testWebhook;module.exports.handleCrash=handleCrash;module.exports.handleStart=handleStart;module.exports.handleStop=handleStop;' >> dist/index.js",
     "validate": "tsc --noEmit"
   },
   "dependencies": {
