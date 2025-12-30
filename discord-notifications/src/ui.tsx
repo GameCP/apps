@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TbBrandDiscord } from 'react-icons/tb';
 import { discordContent } from './content';
 import type { GameCPWindow } from '@gamecp/types';
-import { useGameCP, gamecp } from '@gamecp/types';
+import { useGameCP, gamecp } from '@gamecp/types/client';
 
 // Extend global window with GameCP SDK
 declare global {
