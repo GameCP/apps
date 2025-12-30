@@ -4,7 +4,7 @@
   "description": "Send game server alerts to Discord",
   "main": "dist/index.js",
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --target=node18 --outfile=dist/index.js --format=cjs --minify --external:react --external:react-dom --external:react-icons",
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node18 --outfile=dist/index.js --format=cjs --minify --external:react --external:react-dom --external:react-icons --external:@gamecp/types/client",
     "validate": "tsc --noEmit"
   },
   "dependencies": {
