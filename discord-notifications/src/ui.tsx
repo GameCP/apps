@@ -1,8 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { TbBrandDiscord } from 'react-icons/tb';
 
+// GameCP SDK types (these are available globally)
+declare global {
+    interface Window {
+        GameCP_SDK: {
+            Link: React.ComponentType<{ href: string; className?: string; title?: string; children: React.ReactNode }>;
+            Button: React.ComponentType<{ type?: 'button' | 'submit'; onClick?: () => void; isLoading?: boolean; disabled?: boolean; variant?: string; size?: string; children: React.ReactNode }>;
+            Card: React.ComponentType<{ title?: string; description?: string; icon?: React.ComponentType<any>; iconColor?: string; padding?: string; variant?: string; headerClassName?: string; children: React.ReactNode }>;
+            Badge: React.ComponentType<{ variant?: string; size?: string; className?: string; children: React.ReactNode }>;
+            confirm: (options: { title: string; message: string; confirmText: string; confirmButtonColor?: string }) => Promise<boolean>;
+        };
+        GameCP_API: {
+            fetch: (url: string, options?: RequestInit) => Promise<Response>;
+        };
+    }
+}
+
+interface Webhook {
+    url: string;
+    serverId?: string;
+    isLegacy?: boolean;
+}
+
+interface DiscordIconProps {
+    serverId: string;
+}
+
+interface SettingsPageProps {
+    serverId: string;
+}
+
 // Client-side UI components
-export function DiscordIcon({ serverId }) {
+export function DiscordIcon({ serverId }: DiscordIconProps) {
     const { Link } = window.GameCP_SDK;
     return (
         <Link
@@ -16,12 +46,12 @@ export function DiscordIcon({ serverId }) {
     );
 }
 
-export function SettingsPage({ serverId }) {
-    const [webhookUrl, setWebhookUrl] = useState('');
-    const [webhooks, setWebhooks] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState(null);
+export function SettingsPage({ serverId }: SettingsPageProps) {
+    const [webhookUrl, setWebhookUrl] = useState<string>('');
+    const [webhooks, setWebhooks] = useState<Webhook[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [message, setMessage] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         loadWebhooks();
@@ -32,12 +62,12 @@ export function SettingsPage({ serverId }) {
             const response = await window.GameCP_API.fetch(`/api/x/discord-notifications/webhooks?serverId=${serverId}`);
             const data = await response.json();
             setWebhooks(data.webhooks || []);
-        } catch (error) {
-            console.error('Failed to load webhooks:', error);
+        } catch (err) {
+            console.error('Failed to load webhooks:', err);
         }
     };
 
-    const handleSave = async (e) => {
+    const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setMessage('');
@@ -58,14 +88,14 @@ export function SettingsPage({ serverId }) {
                 const data = await response.json();
                 setError(data.error || 'Failed to save webhook');
             }
-        } catch (error) {
-            setError(error.message);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'An error occurred');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleDelete = async (url) => {
+    const handleDelete = async (url: string) => {
         const confirmed = await window.GameCP_SDK.confirm({
             title: 'Remove Webhook',
             message: 'Are you sure you want to remove this Discord webhook? You will stop receiving notifications in this channel.',
@@ -91,8 +121,8 @@ export function SettingsPage({ serverId }) {
                 const data = await response.json();
                 setError(data.error || 'Failed to remove webhook');
             }
-        } catch (error) {
-            setError(error.message);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'An error occurred');
         } finally {
             setLoading(false);
         }
@@ -116,8 +146,8 @@ export function SettingsPage({ serverId }) {
                 const data = await response.json();
                 setError(data.error || 'Failed to send test message');
             }
-        } catch (error) {
-            setError(error.message);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'An error occurred');
         } finally {
             setLoading(false);
         }
@@ -141,7 +171,7 @@ export function SettingsPage({ serverId }) {
                 </div>
             </div>
 
-            {/* Status Messages replaced with native panel logic or simple alerts */}
+            {/* Status Messages */}
             {(error || message) && (
                 <div className="mb-6">
                     {error && (
@@ -177,7 +207,7 @@ export function SettingsPage({ serverId }) {
                             <input
                                 type="url"
                                 value={webhookUrl}
-                                onChange={(e) => setWebhookUrl(e.target.value)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWebhookUrl(e.target.value)}
                                 placeholder="https://discord.com/api/webhooks/..."
                                 className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm transition-all"
                                 required
@@ -238,7 +268,7 @@ export function SettingsPage({ serverId }) {
                 )}
             </div>
 
-            {/* Info Box using native Card with status styling */}
+            {/* Info Box */}
             <div className="mt-6 sm:mt-8">
                 <Card
                     variant="filled"
@@ -264,4 +294,3 @@ export function SettingsPage({ serverId }) {
         </div>
     );
 }
-
