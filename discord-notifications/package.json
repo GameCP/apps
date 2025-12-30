@@ -1,10 +1,12 @@
 {
   "name": "discord-notifications",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Send game server alerts to Discord",
   "main": "dist/index.js",
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=browser --target=es2020 --outfile=dist/index.js --format=iife --global-name=ExtensionExports --minify --external:react --external:react-dom --external:@gamecp/types/client",
+    "build": "npm run build:handlers && npm run build:ui",
+    "build:handlers": "esbuild src/handlers.ts --bundle --platform=node --target=node18 --outfile=dist/handlers.js --format=iife --global-name=ExtensionExports --minify",
+    "build:ui": "esbuild src/ui.tsx --bundle --platform=browser --target=es2020 --outfile=dist/ui.js --format=iife --global-name=ExtensionExports --minify --external:react --external:react-dom --external:@gamecp/types/client",
 
     "validate": "tsc --noEmit"
   },

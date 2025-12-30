@@ -1,7 +1,7 @@
 {
   "$schema": "./schema.json",
   "extension_id": "discord-notifications",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "name": "Discord Notifications",
   "description": "Send game server alerts, crash notifications, and status updates to Discord channels via webhooks",
   "author": "GameCP Team",
