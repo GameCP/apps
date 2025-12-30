@@ -1,0 +1,36 @@
+{
+  "$schema": "./schema.json",
+  "extension_id": "server-notes",
+  "version": "1.0.0",
+  "name": "Admin Notes",
+  "description": "Add private admin notes to game servers for internal documentation and team communication",
+  "author": "GameCP Team",
+  "entry_point": "index.js",
+  "integrity": "sha384-PLACEHOLDER",
+  
+  "ui_injection": [
+    {
+      "area": "server_dashboard",
+      "component": "NotesArea",
+      "props": {}
+    }
+  ],
+  "internal_logic": {
+    "api_routes": [
+      {
+        "path": "/notes",
+        "method": "POST",
+        "handler_export": "saveNote"
+      },
+      {
+        "path": "/notes",
+        "method": "GET",
+        "handler_export": "getNote"
+      }
+    ]
+  },
+  "sandbox_config": {
+    "db_collections": ["notes"],
+    "permissions": ["server.read", "server.write"]
+  }
+}
