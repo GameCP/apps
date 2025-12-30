@@ -2,13 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TbBrandDiscord } from 'react-icons/tb';
 import { discordContent } from './content';
 import type { GameCPWindow } from '@gamecp/types';
-
-// Translation helper
-const useTranslation = () => {
-    const locale = window.GameCP_SDK?.locale || 'en';
-    const t = (translations: Record<string, string>) => translations[locale] || translations.en;
-    return { t, locale };
-};
+import { useGameCP, gamecp } from '@gamecp/types';
 
 // Extend global window with GameCP SDK
 declare global {
@@ -31,8 +25,8 @@ interface SettingsPageProps {
 
 // Client-side UI components
 export function DiscordIcon({ serverId }: DiscordIconProps) {
-    const { t } = useTranslation();
-    const { Link } = window.GameCP_SDK;
+    const { Link, t } = useGameCP();
+
     return (
         <Link
             href={`/game-servers/${serverId}/extensions/discord`}
@@ -46,7 +40,7 @@ export function DiscordIcon({ serverId }: DiscordIconProps) {
 }
 
 export function SettingsPage({ serverId }: SettingsPageProps) {
-    const { t } = useTranslation();
+    const { Button, Card, Badge, t, confirm } = useGameCP();
     const [webhookUrl, setWebhookUrl] = useState<string>('');
     const [webhooks, setWebhooks] = useState<Webhook[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -59,8 +53,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
 
     const loadWebhooks = async () => {
         try {
-            const response = await window.GameCP_API.fetch(`/api/x/discord-notifications/webhooks?serverId=${serverId}`);
-            const data = await response.json();
+            const data = await gamecp.api.get(`/api/x/discord-notifications/webhooks?serverId=${serverId}`);
             setWebhooks(data.webhooks || []);
         } catch (err) {
             console.error('Failed to load webhooks:', err);
@@ -74,29 +67,20 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
         setError(null);
 
         try {
-            const response = await window.GameCP_API.fetch('/api/x/discord-notifications/webhooks', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ serverId, webhookUrl }),
-            });
+            const data = await gamecp.api.post('/api/x/discord-notifications/webhooks', { serverId, webhookUrl });
 
-            if (response.ok) {
-                setMessage(t(discordContent.messages.success));
-                setWebhookUrl('');
-                loadWebhooks();
-            } else {
-                const data = await response.json();
-                setError(data.error || 'Failed to save webhook');
-            }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred');
+            setMessage(t(discordContent.messages.success));
+            setWebhookUrl('');
+            loadWebhooks();
+        } catch (err: any) {
+            setError(err.error || err.message || 'Failed to save webhook');
         } finally {
             setLoading(false);
         }
     };
 
     const handleDelete = async (url: string) => {
-        const confirmed = await window.GameCP_SDK.confirm({
+        const confirmed = await confirm({
             title: t(discordContent.confirm.removeTitle),
             message: t(discordContent.confirm.removeMessage),
             confirmText: t(discordContent.buttons.remove),
@@ -108,21 +92,12 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
         setMessage('');
 
         try {
-            const response = await window.GameCP_API.fetch('/api/x/discord-notifications/webhooks', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ serverId, webhookUrl: url }),
-            });
+            await gamecp.api.delete('/api/x/discord-notifications/webhooks', { serverId, webhookUrl: url });
 
-            if (response.ok) {
-                setMessage(t(discordContent.messages.removed));
-                loadWebhooks();
-            } else {
-                const data = await response.json();
-                setError(data.error || 'Failed to remove webhook');
-            }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred');
+            setMessage(t(discordContent.messages.removed));
+            loadWebhooks();
+        } catch (err: any) {
+            setError(err.error || err.message || 'Failed to remove webhook');
         } finally {
             setLoading(false);
         }
@@ -134,26 +109,14 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
         setError(null);
 
         try {
-            const response = await window.GameCP_API.fetch('/api/x/discord-notifications/test', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ serverId }),
-            });
-
-            if (response.ok) {
-                setMessage(t(discordContent.messages.testSent));
-            } else {
-                const data = await response.json();
-                setError(data.error || 'Failed to send test message');
-            }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred');
+            await gamecp.api.post('/api/x/discord-notifications/test', { serverId });
+            setMessage(t(discordContent.messages.testSent));
+        } catch (err: any) {
+            setError(err.error || err.message || 'Failed to send test message');
         } finally {
             setLoading(false);
         }
     };
-
-    const { Button, Card, Badge } = window.GameCP_SDK;
 
     return (
         <div className="p-4 sm:p-6">
