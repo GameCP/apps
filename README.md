@@ -1,61 +1,93 @@
 # GameCP Extensions
 
-Official and community extensions for GameCP.
+Official repository for GameCP extensions. Each extension is a self-contained package that adds functionality to GameCP game server management panels.
 
-## Creating a New Extension
+## 📦 Available Extensions
 
-### 1. Create Extension Directory
+- **[discord-notifications](./discord-notifications)** - Send real-time server alerts to Discord
+- **[game-scheduler](./game-scheduler)** - Automate server restarts, wipes, and tasks with visual cron builder
+- **[server-notes](./server-notes)** - Private admin notes for server documentation
 
-```bash
-mkdir -p apps/my-extension
-cd apps/my-extension
-npm init -y
+## 🛠️ Development
+
+### Extension Structure
+
+Each extension follows this standardized structure:
+
+```
+extension-name/
+├── assets/
+│   ├── icon.png              # Extension icon (512x512)
+│   └── screenshots/          # App Store screenshots
+├── src/
+│   ├── handlers.ts           # Backend handlers (isolated-vm)
+│   ├── ui.tsx                # Frontend components (React)
+│   └── ui/                   # UI components folder
+├── dist/                     # Compiled bundles (generated)
+├── release/                  # Release package (generated)
+├── gamecp.json               # Extension manifest
+├── package.json
+├── tsconfig.json
+└── README.md                 # App Store listing description
 ```
 
-### 2. Create Manifest
+### Build Commands
 
-Create `gamecp.json` following the [manifest specification](https://github.com/GameCP/appstore/blob/main/docs/manifest-spec.md).
+All extensions use the centralized `@gamecp/build` package:
 
-### 3. Build Extension
-
+#### 1. **Build** - Compile code to `dist/`
 ```bash
 npm run build
-npm run generate-hash
+```
+- Compiles UI and handlers bundles
+- Generates integrity hash
+- For development/testing
+
+#### 2. **Version Bump** - Update version in `gamecp.json`
+```bash
+npm run version:patch   # 1.0.0 → 1.0.1
+npm run version:minor   # 1.0.0 → 1.1.0
+npm run version:major   # 1.0.0 → 2.0.0
 ```
 
-### 4. Submit to App Store
-
-Visit the [GameCP App Store Developer Portal](https://apps.gamecp.com/developer) to submit your extension.
-
----
-
-## Extension Structure
-
+#### 3. **Release** - Create distribution package
+```bash
+npm run release
 ```
-apps/
-├── discord-notifications/     # Discord webhook notifications
-│   ├── gamecp.json           # Manifest
-│   ├── src/
-│   │   ├── index.jsx        # UI components
-│   │   └── handlers.js      # Server handlers
-│   ├── dist/
-│   │   └── index.js         # Built bundle
-│   └── README.md
-├── your-extension/           # Your extension here
-└── README.md                 # This file
-```
+- Builds with minification
+- Updates integrity hash automatically
+- Copies all files to `release/`
+- Creates versioned zip file (e.g., `extension-name-v1.0.0.zip`)
 
----
+**What's in the zip:**
+- ✅ `gamecp.json` (with updated integrity)
+- ✅ `README.md` (App Store listing)
+- ✅ `package.json`
+- ✅ `dist/` (compiled bundles)
+- ✅ `assets/` (icon + screenshots)
 
-## Resources
+### Creating a New Extension
 
-- [Extension Manifest Spec](https://github.com/GameCP/appstore/blob/main/docs/manifest-spec.md)
-- [App Store](https://apps.gamecp.com)
-- [Developer Portal](https://apps.gamecp.com/developer)
-- [Documentation](https://docs.gamecp.com/extensions)
+1. **Copy an existing extension** as a template
+2. **Update `gamecp.json`** with your extension details
+3. **Install dependencies**: `npm install`
+4. **Develop** your handlers and UI components
+5. **Build**: `npm run build`
+6. **Test** in your local GameCP instance
+7. **Release**: `npm run release`
+8. **Upload** the generated zip to the App Store
 
----
+## 📚 Documentation
 
-## License
+- **[Extension API Reference](../packages/types/README.md)** - Full API documentation
+- **[Manifest Specification](../packages/build/gamecp-manifest.schema.json)** - gamecp.json schema
+- **[i18n Support](./EXTENSION_I18N.md)** - Internationalization guide
 
-Each extension may have its own license. See individual extension directories for details.
+## 🔧 Shared Packages
+
+- **[@gamecp/build](../packages/build)** - Build tools and CLI
+- **[@gamecp/types](../packages/types)** - TypeScript types for extension development
+
+## 📝 License
+
+MIT

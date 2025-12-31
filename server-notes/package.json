@@ -5,6 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "gamecp-build",
+    "version:major": "gamecp-build version major",
+    "version:minor": "gamecp-build version minor",
+    "version:patch": "gamecp-build version patch",
+    "release": "gamecp-build release",
     "validate": "tsc --noEmit"
   },
   "devDependencies": {
