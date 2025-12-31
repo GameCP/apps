@@ -1,5 +1,5 @@
 {
-  "$schema": "./schema.json",
+  "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "game-scheduler",
   "version": "1.0.0",
   "name": "Scheduler",
@@ -70,11 +70,16 @@
   },
   
   "metadata": {
-    "icon": "https://cdn.gamecp.com/extensions/game-scheduler/icon.png",
+    "icon": "assets/icon.png",
+    "readme": "README.md",
     "category": "automation",
-    "homepage": "https://github.com/GameCP/game-scheduler-extension",
-    "repository": "https://github.com/GameCP/game-scheduler-extension",
+    "homepage": "https://github.com/GameCP/apps/tree/main/game-scheduler",
+    "repository": "https://github.com/GameCP/apps/tree/main/game-scheduler",
     "license": "MIT",
-    "tags": ["scheduler", "automation", "cron", "restart", "wipe", "tasks"]
+    "tags": ["scheduler", "automation", "cron", "restart", "wipe", "tasks"],
+    "screenshots": [
+      "assets/screenshots/1.png",
+      "assets/screenshots/2.png"
+    ]
   }
 }

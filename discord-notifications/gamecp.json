@@ -1,5 +1,5 @@
 {
-  "$schema": "./schema.json",
+  "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "discord-notifications",
   "version": "1.2.0",
   "name": "Discord Notifications",
@@ -97,11 +97,17 @@
   },
   
   "metadata": {
-    "icon": "https://cdn.gamecp.com/extensions/discord-notifications/icon.png",
+    "icon": "assets/icon.png",
+    "readme": "README.md",
     "category": "notifications",
     "homepage": "https://github.com/GameCP/apps/tree/main/discord-notifications",
     "repository": "https://github.com/GameCP/apps/tree/main/discord-notifications",
     "license": "MIT",
-    "tags": ["discord", "webhooks", "notifications", "alerts", "monitoring"]
+    "tags": ["discord", "webhooks", "notifications", "alerts", "monitoring"],
+    "screenshots": [
+      "assets/screenshots/1.png",
+      "assets/screenshots/2.png",
+      "assets/screenshots/3.png"
+    ]
   }
 }

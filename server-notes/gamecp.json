@@ -1,5 +1,5 @@
 {
-  "$schema": "./schema.json",
+  "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "server-notes",
   "version": "1.0.0",
   "name": "Admin Notes",
@@ -34,10 +34,15 @@
     "permissions": ["server.read", "server.write"]
   },
   "metadata": {
+    "icon": "assets/icon.png",
+    "readme": "README.md",
     "category": "utilities",
     "homepage": "https://github.com/GameCP/apps/tree/main/server-notes",
     "repository": "https://github.com/GameCP/apps/tree/main/server-notes",
     "license": "MIT",
-    "tags": ["notes", "documentation", "admin", "team"]
+    "tags": ["notes", "documentation", "admin", "team"],
+    "screenshots": [
+      "assets/screenshots/1.png"
+    ]
   }
 }

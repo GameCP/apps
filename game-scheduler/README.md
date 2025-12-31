@@ -1,47 +1,25 @@
-# Game Scheduler Extension
+# Game Scheduler
 
-Auto-Tasker Pro for GameCP - Schedule restarts, wipes, and command sequences.
+**Automate your server management with powerful, visual scheduling tools.**
 
-## Features
+Take the manual work out of running game servers. The Game Scheduler extension gives you a robust, easy-to-use interface for scheduling recurring tasks like restarts, wipes, and custom console commands. Whether you need a daily reboot or a weekly wipe cycle, this extension handles it with precision.
 
-- 🔄 **Scheduled Restarts** - Automate server restarts on a schedule
-- 🧹 **Automated Wipes** - Clear world data on a schedule (perfect for Rust/ARK)
-- ⚡ **Command Sequences** - Run RCON commands before restarts
-- 📅 **Flexible Scheduling** - Use cron expressions for precise timing
+![Banner](assets/screenshots/1.png)
 
-## Installation
+## Why you need this
 
-This extension is designed to be installed through the GameCP App Store.
+*   **Set and forget:** Configure your maintenance schedule once and let GameCP handle the rest.
+*   **Visual Cron Builder:** No need to learn complex cron syntax. Use our intuitive UI to pick days, times, and intervals.
+*   **Prevent lag:** Schedule regular restarts to keep your servers running smoothly and memory leak-free.
 
-## Development
+## Key Features
 
-```bash
-# Install dependencies
-npm install
+*   📅 **Visual Schedule Builder:** intuitive interface for creating complex schedules (e.g., "Every Friday at 5 PM").
+*   🔄 **Automated Restarts:** Schedule routine restarts to maintain server performance.
+*   🧹 **Scheduled Wipes:** Automate full or partial server wipes for competitive games like Rust.
+*   ⚡ **Custom Commands:** Execute any console command on a schedule (e.g., global announcements, save-alls).
+*   📊 **Task History:** View logs of past executions to ensure everything is running as planned.
 
-# Build the extension
-npm run build
+## How it works
 
-# The built bundle will be in dist/index.js
-```
-
-## Usage
-
-1. Navigate to your game server in GameCP
-2. Click "Scheduler" in the sidebar
-3. Create a new task with:
-   - Task name
-   - Action type (restart, command, or wipe)
-   - Cron schedule
-4. The task will execute automatically based on the schedule
-
-## Cron Expression Examples
-
-- `0 4 * * *` - Every day at 4 AM
-- `0 */6 * * *` - Every 6 hours
-- `0 0 * * 0` - Every Sunday at midnight
-- `*/30 * * * *` - Every 30 minutes
-
-## License
-
-MIT
+Install the extension and head to the "Scheduler" tab on any game server. Click "New Task", use the visual builder to set your time, choose an action (Start, Stop, Restart, or Command), and activate. Your tasks are persisted and handled by our distributed worker system for maximum reliability.

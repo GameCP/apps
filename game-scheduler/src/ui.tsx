@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TbCalendarEvent } from 'react-icons/tb';
 import { schedulerContent } from './content';
 import { useGameCP, gamecp } from '@gamecp/types/client';
-import { CronBuilder } from './CronBuilder';
+import { CronBuilder } from './ui/CronBuilder';
 
 // Client-side UI components
 export function ScheduleIcon({ serverId }: { serverId: string }) {

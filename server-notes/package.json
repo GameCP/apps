@@ -4,15 +4,15 @@
   "description": "Add private admin notes to game servers",
   "main": "dist/index.js",
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --target=node18 --outfile=dist/index.js --format=cjs --minify --external:react --external:react-dom",
+    "build": "gamecp-build",
     "validate": "tsc --noEmit"
   },
   "devDependencies": {
+    "@gamecp/build": "file:../../packages/build",
     "@gamecp/types": "file:../../packages/types",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "esbuild": "^0.19.11",
     "typescript": "^5.3.3"
   },
   "author": "GameCP Team",

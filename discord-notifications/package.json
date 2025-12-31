@@ -4,21 +4,18 @@
   "description": "Send game server alerts to Discord",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run build:handlers && npm run build:ui",
-    "build:handlers": "esbuild src/handlers.ts --bundle --platform=node --target=node18 --outfile=dist/handlers.js --format=iife --global-name=ExtensionExports --minify",
-    "build:ui": "esbuild src/ui.tsx --bundle --platform=browser --target=es2020 --outfile=dist/ui.js --format=iife --global-name=ExtensionExports --minify --external:react --external:react-dom --external:@gamecp/types/client",
-
+    "build": "gamecp-build",
     "validate": "tsc --noEmit"
   },
   "dependencies": {
     "react-icons": "^5.0.0"
   },
   "devDependencies": {
+    "@gamecp/build": "file:../../packages/build",
     "@gamecp/types": "file:../../packages/types",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "esbuild": "^0.19.11",
     "typescript": "^5.3.3"
   },
   "author": "GameCP Team",
