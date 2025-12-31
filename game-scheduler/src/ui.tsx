@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TbCalendarEvent } from 'react-icons/tb';
 import { schedulerContent } from './content';
 import { useGameCP, gamecp } from '@gamecp/types/client';
+import { CronBuilder } from './CronBuilder';
 
 // Client-side UI components
 export function ScheduleIcon({ serverId }: { serverId: string }) {
@@ -158,26 +159,21 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                                 onChange={(e) => setActionType(e.target.value)}
                                 className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm transition-all"
                             >
+                                <option value="start">{t(schedulerContent.form.actionStart)}</option>
+                                <option value="stop">{t(schedulerContent.form.actionStop)}</option>
                                 <option value="restart">{t(schedulerContent.form.actionRestart)}</option>
                                 <option value="command">{t(schedulerContent.form.actionCommand)}</option>
-                                <option value="wipe">{t(schedulerContent.form.actionWipe)}</option>
                             </select>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-foreground mb-1">
+                            <label className="block text-sm font-semibold text-foreground mb-3">
                                 {t(schedulerContent.form.schedule)} <span className="text-red-500">*</span>
                             </label>
-                            <p className="text-xs text-muted-foreground mb-2">
-                                {t(schedulerContent.form.scheduleHint)}
-                            </p>
-                            <input
-                                type="text"
+                            <CronBuilder
                                 value={schedule}
-                                onChange={(e) => setSchedule(e.target.value)}
-                                placeholder={t(schedulerContent.form.schedulePlaceholder)}
-                                className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm transition-all font-mono"
-                                required
+                                onChange={setSchedule}
+                                t={t}
                             />
                         </div>
 

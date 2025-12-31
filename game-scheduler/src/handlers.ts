@@ -10,7 +10,7 @@ interface ScheduledTask {
   _id?: string;
   serverId: string;
   name: string;
-  action: 'restart' | 'command' | 'wipe';
+  action: 'start' | 'stop' | 'restart' | 'command' | 'wipe';
   schedule: string;
   config?: {
     command?: string;
@@ -95,13 +95,16 @@ export const createTask: ApiRouteHandler = async (ctx) => {
     created_at: new Date(),
   };
 
-  await ctx.db.collection('schedules').insertOne(task);
+  const result = await ctx.db.collection('schedules').insertOne(task);
+  
+  // Add the _id to the task for the return value
+  const savedTask = { ...task, _id: result.insertedId };
 
   ctx.logger.info(`Created task: ${name} for server ${serverId}. Next run: ${nextRun}`);
 
   return {
     status: 200,
-    body: { message: 'Task created successfully', task }
+    body: { message: 'Task created successfully', task: savedTask }
   };
 };
 
@@ -143,6 +146,14 @@ export const processScheduledTasks: TypedEventHandler<'cron.tick'> = async (even
   try {
     // Execute the task based on action type
     switch (task.action) {
+      case 'start':
+        await executeStart(task, ctx);
+        break;
+
+      case 'stop':
+        await executeStop(task, ctx);
+        break;
+
       case 'restart':
         await executeRestart(task, ctx);
         break;
@@ -208,6 +219,32 @@ export const processScheduledTasks: TypedEventHandler<'cron.tick'> = async (even
     } as TaskLog);
   }
 };
+
+/**
+ * Execute a start action
+ */
+async function executeStart(task: ScheduledTask, ctx: ExtensionContext): Promise<void> {
+  ctx.logger.info(`Starting server ${task.serverId}...`);
+
+  if (ctx.instance?.start) {
+    await ctx.instance.start();
+  } else {
+    throw new Error('Instance control methods not available');
+  }
+}
+
+/**
+ * Execute a stop action
+ */
+async function executeStop(task: ScheduledTask, ctx: ExtensionContext): Promise<void> {
+  ctx.logger.info(`Stopping server ${task.serverId}...`);
+
+  if (ctx.instance?.stop) {
+    await ctx.instance.stop();
+  } else {
+    throw new Error('Instance control methods not available');
+  }
+}
 
 /**
  * Execute a restart action

@@ -62,6 +62,20 @@ export const schedulerContent = {
             de: 'Aktionstyp',
             pt: 'Tipo de Ação'
         },
+        actionStart: {
+            en: 'Start Server',
+            es: 'Iniciar Servidor',
+            fr: 'Démarrer le Serveur',
+            de: 'Server Starten',
+            pt: 'Iniciar Servidor'
+        },
+        actionStop: {
+            en: 'Stop Server',
+            es: 'Detener Servidor',
+            fr: 'Arrêter le Serveur',
+            de: 'Server Stoppen',
+            pt: 'Parar Servidor'
+        },
         actionRestart: {
             en: 'Restart Server',
             es: 'Reiniciar Servidor',
