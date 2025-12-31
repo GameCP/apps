@@ -1,0 +1,80 @@
+{
+  "$schema": "./schema.json",
+  "extension_id": "game-scheduler",
+  "version": "1.0.0",
+  "name": "Scheduler",
+  "description": "Schedule restarts, automated wipes, and RCON command sequences",
+  "author": "GameCP Team",
+  "entry_point": "index.js",
+  "integrity": "sha384-EVtiE7HjtgWPReCgrWvOt5vD/CfTwmaRd1l5v1eW63eYpYbwerGT/GQ+I8c65M1m",
+  
+  "ui_injection": [
+    {
+      "method": "MOUNT",
+      "target": "server.sidebar.nav",
+      "component": "ScheduleIcon",
+      "order": 60
+    },
+    {
+      "method": "HANDLER",
+      "target": "server.page.extensions",
+      "component": "SchedulerPage",
+      "route_path": "/game-servers/:id/extensions/scheduler"
+    }
+  ],
+  
+  "internal_logic": {
+    "api_routes": [
+      {
+        "method": "GET",
+        "path": "/tasks",
+        "handler_export": "getTasks",
+        "description": "Get all scheduled tasks for a server"
+      },
+      {
+        "method": "POST",
+        "path": "/tasks",
+        "handler_export": "createTask",
+        "timeout_ms": 3000,
+        "description": "Create a new scheduled task"
+      },
+      {
+        "method": "DELETE",
+        "path": "/tasks",
+        "handler_export": "deleteTask",
+        "description": "Delete a scheduled task"
+      }
+    ],
+    "event_listeners": [
+      {
+        "event": "cron.tick",
+        "handler_export": "processScheduledTasks",
+        "async": true,
+        "description": "Process and execute scheduled tasks"
+      }
+    ]
+  },
+  
+  "sandbox_config": {
+    "db_collections": ["schedules", "task_logs"],
+    "permissions": [
+      "server.power.manage",
+      "server.console.write",
+      "server.files.write"
+    ],
+    "resource_limits": {
+      "memory_mb": 128,
+      "timeout_ms": 60000,
+      "max_db_queries_per_request": 20
+    }
+  },
+  
+  "metadata": {
+    "icon": "https://cdn.gamecp.com/extensions/game-scheduler/icon.png",
+    "category": "automation",
+    "homepage": "https://github.com/GameCP/game-scheduler-extension",
+    "repository": "https://github.com/GameCP/game-scheduler-extension",
+    "license": "MIT",
+    "tags": ["scheduler", "automation", "cron", "restart", "wipe", "tasks"]
+  }
+}
