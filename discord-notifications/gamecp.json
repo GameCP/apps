@@ -99,8 +99,8 @@
   "metadata": {
     "icon": "https://cdn.gamecp.com/extensions/discord-notifications/icon.png",
     "category": "notifications",
-    "homepage": "https://github.com/GameCP/discord-notifications-extension",
-    "repository": "https://github.com/GameCP/discord-notifications-extension",
+    "homepage": "https://github.com/GameCP/apps/tree/main/discord-notifications",
+    "repository": "https://github.com/GameCP/apps/tree/main/discord-notifications",
     "license": "MIT",
     "tags": ["discord", "webhooks", "notifications", "alerts", "monitoring"]
   }

@@ -32,5 +32,12 @@
   "sandbox_config": {
     "db_collections": ["notes"],
     "permissions": ["server.read", "server.write"]
+  },
+  "metadata": {
+    "category": "utilities",
+    "homepage": "https://github.com/GameCP/apps/tree/main/server-notes",
+    "repository": "https://github.com/GameCP/apps/tree/main/server-notes",
+    "license": "MIT",
+    "tags": ["notes", "documentation", "admin", "team"]
   }
 }
