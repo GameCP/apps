@@ -5,7 +5,8 @@
   "name": "Discord Notifications",
   "description": "Send game server alerts, crash notifications, and status updates to Discord channels via webhooks",
   "author": "GameCP Team",
-  "entry_point": "index.js",
+  "ui_bundle": "dist/index.js",
+  "handlers_bundle": "dist/handlers.js",
   "integrity": "sha384-2NY0W8ccIJ+vJbqhXH+3dRxZy+a++KGsH1fOLuvysLIoIQg41KiqwJaNj34p01xT",
   "ui_injection": [
     {

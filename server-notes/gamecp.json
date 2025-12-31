@@ -5,7 +5,8 @@
   "name": "Admin Notes",
   "description": "Add private admin notes to game servers for internal documentation and team communication",
   "author": "GameCP Team",
-  "entry_point": "index.js",
+  "ui_bundle": "dist/index.js",
+  "handlers_bundle": "dist/handlers.js",
   "integrity": "sha384-Ls1edq3jZy+KamrTZBo953qGEaXAPnzu2CjbnJcZpNR/QmrDzIIFY4ANT5MQ3e9t",
   "ui_injection": [
     {

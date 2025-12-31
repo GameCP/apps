@@ -5,7 +5,8 @@
   "name": "Scheduler",
   "description": "Schedule restarts, automated wipes, and RCON command sequences",
   "author": "GameCP Team",
-  "entry_point": "index.js",
+  "ui_bundle": "dist/index.js",
+  "handlers_bundle": "dist/handlers.js",
   "integrity": "sha384-g9QE5IqQqRK2FW8pF9hTVwodUgEmDQab8C0iNM9ToiRCfRu6WjwmRGg8oebhODH0",
   "ui_injection": [
     {
