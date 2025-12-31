@@ -1,7 +1,7 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "brand-kit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "Brand Kit",
   "description": "Add custom branded headers and footers to your dashboards. Perfect for white-label providers.",
   "author": "GameCP Team",
@@ -57,5 +57,5 @@
       "customization"
     ]
   },
-  "integrity": "sha384-yvzkmPSGu8zEMc0JB+DTYJbrGnPrfvK1AKTdpb7dnCOb4jOYjytsMH7Zyln0io0M"
+  "integrity": "sha384-Ohf5xK0GPyvg0c8IL/Lslywdfn4DIfGYXHdtchcFqHPKksUUxwhQLLFEQEnK43nY"
 }

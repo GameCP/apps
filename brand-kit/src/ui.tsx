@@ -29,9 +29,14 @@ export function PageBrandingWrapper({ children, originalProps }: PageBrandingWra
     const headerSubtext = config.headerSubtext || '';
     const footerText = config.footerText || '';
 
+    // If no branding configured, just return children
+    if (!headerText && !footerText) {
+        return <>{children}</>;
+    }
+
     return (
-        <div className="relative">
-            {/* Custom Header */}
+        <>
+            {/* Custom Header - will be inside the page padding */}
             {headerText && (
                 <div className="mb-6 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 overflow-hidden">
                     <div className="px-6 py-4">
@@ -58,7 +63,7 @@ export function PageBrandingWrapper({ children, originalProps }: PageBrandingWra
                     </p>
                 </div>
             )}
-        </div>
+        </>
     );
 }
 
