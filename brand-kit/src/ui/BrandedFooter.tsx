@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGameCP } from '@gamecp/types/client';
 
 interface BrandedFooterProps {
     originalProps: any;
@@ -10,8 +11,8 @@ interface BrandedFooterProps {
  * Displays custom footer text at the bottom of pages
  */
 export function BrandedFooter({ originalProps }: BrandedFooterProps) {
-    const config = (typeof window !== 'undefined' && (window as any).GameCP_ExtensionConfig?.['brand-kit']) || {};
-
+    const { getConfig } = useGameCP();
+    const config = getConfig('brand-kit');
     const footerText = config.footerText || '';
 
     if (!footerText) {

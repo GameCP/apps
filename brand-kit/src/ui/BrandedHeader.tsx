@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGameCP } from '@gamecp/types/client';
 
 interface BrandedHeaderProps {
     originalProps: any;
@@ -10,20 +11,13 @@ interface BrandedHeaderProps {
  * Displays custom header text at the top of pages
  */
 export function BrandedHeader({ originalProps }: BrandedHeaderProps) {
-    const config = (typeof window !== 'undefined' && (window as any).GameCP_ExtensionConfig?.['brand-kit']) || {};
+    const { Card, getConfig } = useGameCP();
+    const config = getConfig('brand-kit');
 
     const headerText = config.headerText || '';
     const headerSubtext = config.headerSubtext || '';
 
     if (!headerText) {
-        return null;
-    }
-
-    // Access Card from GameCP SDK
-    const Card = (window as any).GameCP_SDK?.Card;
-
-    if (!Card) {
-        // Fallback if SDK not loaded
         return null;
     }
 
