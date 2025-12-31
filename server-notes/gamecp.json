@@ -6,8 +6,7 @@
   "description": "Add private admin notes to game servers for internal documentation and team communication",
   "author": "GameCP Team",
   "entry_point": "index.js",
-  "integrity": "sha384-RTQtne7CKkevCPtKNQJXhNazvElnR7w2JQrJX4z8THz/z64fRW/V0mr7ZzDyQyaR",
-  
+  "integrity": "sha384-Ls1edq3jZy+KamrTZBo953qGEaXAPnzu2CjbnJcZpNR/QmrDzIIFY4ANT5MQ3e9t",
   "ui_injection": [
     {
       "area": "server_dashboard",
@@ -30,8 +29,13 @@
     ]
   },
   "sandbox_config": {
-    "db_collections": ["notes"],
-    "permissions": ["server.read", "server.write"]
+    "db_collections": [
+      "notes"
+    ],
+    "permissions": [
+      "server.read",
+      "server.write"
+    ]
   },
   "metadata": {
     "icon": "assets/icon.png",
@@ -40,7 +44,12 @@
     "homepage": "https://github.com/GameCP/apps/tree/main/server-notes",
     "repository": "https://github.com/GameCP/apps/tree/main/server-notes",
     "license": "MIT",
-    "tags": ["notes", "documentation", "admin", "team"],
+    "tags": [
+      "notes",
+      "documentation",
+      "admin",
+      "team"
+    ],
     "screenshots": [
       "assets/screenshots/1.png"
     ]

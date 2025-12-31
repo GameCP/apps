@@ -6,8 +6,7 @@
   "description": "Send game server alerts, crash notifications, and status updates to Discord channels via webhooks",
   "author": "GameCP Team",
   "entry_point": "index.js",
-  "integrity": "sha384-TqSJ4RHluj6Z9szRmVsH5+FfHKNtgG8Cx/lDhQv7+DIvyCZy/FFNkR/xFc/ft2hk",
-  
+  "integrity": "sha384-2NY0W8ccIJ+vJbqhXH+3dRxZy+a++KGsH1fOLuvysLIoIQg41KiqwJaNj34p01xT",
   "ui_injection": [
     {
       "method": "MOUNT",
@@ -22,7 +21,6 @@
       "route_path": "/game-servers/:id/extensions/discord"
     }
   ],
-  
   "config": {
     "webhookUrl": {
       "type": "text",
@@ -32,7 +30,6 @@
       "required": true
     }
   },
-  
   "internal_logic": {
     "api_routes": [
       {
@@ -83,9 +80,11 @@
       }
     ]
   },
-  
   "sandbox_config": {
-    "db_collections": ["webhooks", "logs"],
+    "db_collections": [
+      "webhooks",
+      "logs"
+    ],
     "permissions": [
       "network.outbound"
     ],
@@ -95,7 +94,6 @@
       "max_db_queries_per_request": 10
     }
   },
-  
   "metadata": {
     "icon": "assets/icon.png",
     "readme": "README.md",
@@ -103,7 +101,13 @@
     "homepage": "https://github.com/GameCP/apps/tree/main/discord-notifications",
     "repository": "https://github.com/GameCP/apps/tree/main/discord-notifications",
     "license": "MIT",
-    "tags": ["discord", "webhooks", "notifications", "alerts", "monitoring"],
+    "tags": [
+      "discord",
+      "webhooks",
+      "notifications",
+      "alerts",
+      "monitoring"
+    ],
     "screenshots": [
       "assets/screenshots/1.png",
       "assets/screenshots/2.png",
