@@ -1,6 +1,2 @@
-/**
- * Brand Kit Extension for GameCP
- * Add custom branding to dashboards
- */
-
-export * from './ui';
+export { BrandedHeader } from './ui/BrandedHeader';
+export { BrandedFooter } from './ui/BrandedFooter';
