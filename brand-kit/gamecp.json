@@ -1,0 +1,61 @@
+{
+  "$schema": "../../packages/build/gamecp-manifest.schema.json",
+  "extension_id": "brand-kit",
+  "version": "1.0.0",
+  "name": "Brand Kit",
+  "description": "Add custom branded headers and footers to your dashboards. Perfect for white-label providers.",
+  "author": "GameCP Team",
+  "ui_bundle": "dist/index.js",
+  "handlers_bundle": "dist/handlers.js",
+  "ui_injection": [
+    {
+      "method": "AUGMENT",
+      "target": "server.dashboard.page",
+      "component": "PageBrandingWrapper",
+      "order": 1
+    },
+    {
+      "method": "AUGMENT",
+      "target": "server.dashboard.recent_activity",
+      "component": "CardBrandingWrapper",
+      "order": 1
+    }
+  ],
+  "config": {
+    "headerText": {
+      "type": "text",
+      "label": "Header Text",
+      "description": "Custom text to display at the top of dashboards",
+      "placeholder": "My Gaming Network"
+    },
+    "headerSubtext": {
+      "type": "text",
+      "label": "Header Subtext",
+      "description": "Additional text below the header",
+      "placeholder": "Professional Game Server Hosting"
+    },
+    "footerText": {
+      "type": "text",
+      "label": "Footer Text",
+      "description": "Custom footer text (leave empty to hide footer)",
+      "placeholder": "Need help? Contact support@example.com"
+    }
+  },
+  "sandbox_config": {
+    "db_collections": [],
+    "permissions": []
+  },
+  "metadata": {
+    "icon": "assets/icon.png",
+    "category": "utilities",
+    "homepage": "https://github.com/GameCP/apps/tree/main/brand-kit",
+    "repository": "https://github.com/GameCP/apps/tree/main/brand-kit",
+    "license": "MIT",
+    "tags": [
+      "branding",
+      "white-label",
+      "customization"
+    ]
+  },
+  "integrity": "sha384-yvzkmPSGu8zEMc0JB+DTYJbrGnPrfvK1AKTdpb7dnCOb4jOYjytsMH7Zyln0io0M"
+}

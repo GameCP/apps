@@ -88,7 +88,7 @@ export function NotesArea({ serverId }: NotesAreaProps) {
         <Card>
             <div className="p-6 space-y-4">
                 <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-gray-900">📝 Admin Notes</h3>
+                    <h3 className="text-lg font-bold text-gray-900">Admin Notes</h3>
                     {lastUpdated && (
                         <span className="text-xs text-gray-500">
                             Last updated: {new Date(lastUpdated).toLocaleString()}

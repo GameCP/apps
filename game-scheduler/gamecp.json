@@ -1,7 +1,7 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "game-scheduler",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "name": "Scheduler",
   "description": "Schedule restarts, automated wipes, and RCON command sequences",
   "author": "GameCP Team",
