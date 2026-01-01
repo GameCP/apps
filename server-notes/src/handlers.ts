@@ -10,6 +10,14 @@ interface Note {
  * Save admin note for a server
  */
 export const saveNote: ApiRouteHandler = async (ctx) => {
+  // Admin check
+  if (!ctx.user || ctx.user.role !== 'admin') {
+    return {
+      status: 403,
+      body: { error: 'Admin access required' }
+    };
+  }
+
   const { serverId, note } = ctx.request.body;
 
   if (!serverId) {
@@ -71,6 +79,14 @@ export const saveNote: ApiRouteHandler = async (ctx) => {
  * Get admin note for a server
  */
 export const getNote: ApiRouteHandler = async (ctx) => {
+  // Admin check
+  if (!ctx.user || ctx.user.role !== 'admin') {
+    return {
+      status: 403,
+      body: { error: 'Admin access required' }
+    };
+  }
+
   const { serverId } = ctx.request.query;
 
   if (!serverId) {

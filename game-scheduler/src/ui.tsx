@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TbCalendarEvent } from 'react-icons/tb';
 import { schedulerContent } from './content';
-import { useGameCP, gamecp } from '@gamecp/types/client';
+import { useGameCP } from '@gamecp/types/client';
 import { CronBuilder } from './ui/CronBuilder';
 
 // Client-side UI components
@@ -21,7 +21,7 @@ export function ScheduleIcon({ serverId }: { serverId: string }) {
 }
 
 export function SchedulerPage({ serverId }: { serverId: string }) {
-    const { Button, Card, Badge, t, confirm } = useGameCP();
+    const { Button, Card, Badge, api, confirm, t } = useGameCP();
     const [tasks, setTasks] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
@@ -38,7 +38,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
 
     const loadTasks = async () => {
         try {
-            const data = await gamecp.api.get(`/api/x/game-scheduler/tasks?serverId=${serverId}`);
+            const data = await api.get(`/api/x/game-scheduler/tasks?serverId=${serverId}`);
             setTasks(data.tasks || []);
         } catch (err) {
             console.error('Failed to load tasks:', err);
@@ -52,7 +52,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
         setError(null);
 
         try {
-            await gamecp.api.post('/api/x/game-scheduler/tasks', {
+            await api.post('/api/x/game-scheduler/tasks', {
                 serverId,
                 name: taskName,
                 action: actionType,
@@ -84,7 +84,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
         setError(null);
 
         try {
-            await gamecp.api.delete('/api/x/game-scheduler/tasks', { serverId, taskId });
+            await api.delete('/api/x/game-scheduler/tasks', { serverId, taskId });
             setMessage(t(schedulerContent.messages.deleted));
             loadTasks();
         } catch (err: any) {

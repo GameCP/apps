@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TbBrandDiscord } from 'react-icons/tb';
 import { discordContent } from './content';
-import type { GameCPWindow } from '@gamecp/types';
-import { useGameCP, gamecp } from '@gamecp/types/client';
-
-// Extend global window with GameCP SDK
-declare global {
-    interface Window extends GameCPWindow { }
-}
+import { useGameCP } from '@gamecp/types/client';
 
 interface Webhook {
     url: string;
@@ -40,7 +34,7 @@ export function DiscordIcon({ serverId }: DiscordIconProps) {
 }
 
 export function SettingsPage({ serverId }: SettingsPageProps) {
-    const { Button, Card, Badge, t, confirm } = useGameCP();
+    const { Button, Card, Badge, api, confirm, t } = useGameCP();
     const [webhookUrl, setWebhookUrl] = useState<string>('');
     const [webhooks, setWebhooks] = useState<Webhook[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -53,7 +47,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
 
     const loadWebhooks = async () => {
         try {
-            const data = await gamecp.api.get(`/api/x/discord-notifications/webhooks?serverId=${serverId}`);
+            const data = await api.get(`/api/x/discord-notifications/webhooks?serverId=${serverId}`);
             setWebhooks(data.webhooks || []);
         } catch (err) {
             console.error('Failed to load webhooks:', err);
@@ -67,7 +61,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
         setError(null);
 
         try {
-            const data = await gamecp.api.post('/api/x/discord-notifications/webhooks', { serverId, webhookUrl });
+            await api.post('/api/x/discord-notifications/webhooks', { serverId, webhookUrl });
 
             setMessage(t(discordContent.messages.success));
             setWebhookUrl('');
@@ -92,7 +86,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
         setMessage('');
 
         try {
-            await gamecp.api.delete('/api/x/discord-notifications/webhooks', { serverId, webhookUrl: url });
+            await api.delete('/api/x/discord-notifications/webhooks', { serverId, webhookUrl: url });
 
             setMessage(t(discordContent.messages.removed));
             loadWebhooks();
@@ -109,7 +103,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
         setError(null);
 
         try {
-            await gamecp.api.post('/api/x/discord-notifications/test', { serverId });
+            await api.post('/api/x/discord-notifications/test', { serverId });
             setMessage(t(discordContent.messages.testSent));
         } catch (err: any) {
             setError(err.error || err.message || 'Failed to send test message');

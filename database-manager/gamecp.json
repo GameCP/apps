@@ -1,0 +1,113 @@
+{
+  "$schema": "../../packages/build/gamecp-manifest.schema.json",
+  "extension_id": "database-manager",
+  "version": "1.0.10",
+  "name": "Database Manager",
+  "description": "Provision and manage databases for your game servers. Supports MySQL, PostgreSQL, Redis, and more.",
+  "author": "GameCP Team",
+  "ui_bundle": "dist/index.js",
+  "handlers_bundle": "dist/handlers.js",
+  "ui_injection": [
+    {
+      "method": "MOUNT",
+      "target": "server.dashboard.page",
+      "component": "DatabaseTab",
+      "position": "bottom",
+      "order": 10
+    },
+    {
+      "method": "MOUNT",
+      "target": "global.sidebar.nav",
+      "component": "DatabaseSourcesNav",
+      "order": 100
+    },
+    {
+      "method": "HANDLER",
+      "target": "dashboard.page",
+      "component": "DatabaseSourcesPage",
+      "route_path": "/extensions/database-manager"
+    }
+  ],
+  "metadata": {
+    "icon": "assets/icon.png",
+    "category": "utilities",
+    "tags": [
+      "database",
+      "mysql",
+      "postgresql",
+      "redis",
+      "management"
+    ],
+    "homepage": "https://github.com/GameCP/apps/tree/main/database-manager",
+    "repository": "https://github.com/GameCP/apps",
+    "license": "MIT"
+  },
+  "internal_logic": {
+    "api_routes": [
+      {
+        "path": "/databases",
+        "method": "GET",
+        "handler": "getDatabases",
+        "handler_export": "getDatabases",
+        "description": "Get all databases for a game server"
+      },
+      {
+        "path": "/databases",
+        "method": "POST",
+        "handler": "createDatabase",
+        "handler_export": "createDatabase",
+        "description": "Create a new database for a game server"
+      },
+      {
+        "path": "/databases/:id",
+        "method": "DELETE",
+        "handler": "deleteDatabase",
+        "handler_export": "deleteDatabase",
+        "description": "Delete a database"
+      },
+      {
+        "path": "/sources",
+        "method": "GET",
+        "handler": "getSources",
+        "handler_export": "getSources",
+        "description": "Get configured database sources (admin only)"
+      },
+      {
+        "path": "/sources",
+        "method": "POST",
+        "handler": "createSource",
+        "handler_export": "createSource",
+        "description": "Add a database source (admin only)"
+      },
+      {
+        "path": "/sources/:id",
+        "method": "PUT",
+        "handler": "updateSource",
+        "handler_export": "updateSource",
+        "description": "Update a database source (admin only)"
+      },
+      {
+        "path": "/sources/:id",
+        "method": "DELETE",
+        "handler": "deleteSource",
+        "handler_export": "deleteSource",
+        "description": "Delete a database source (admin only)"
+      }
+    ]
+  },
+  "sandbox_config": {
+    "permissions": [
+      "network.outbound"
+    ],
+    "db_collections": [
+      "databases",
+      "database_sources"
+    ],
+    "node_modules": [
+      "mysql2",
+      "pg",
+      "ioredis"
+    ]
+  },
+  "integrity": "sha384-VIlIBHAXQS/8NR4zG57MDysMbRKgRbJWXtzfUkcHVOA1QBPqNsNfyJRZSy/JFJtw"
+}
