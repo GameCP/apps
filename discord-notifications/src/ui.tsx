@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TbBrandDiscord } from 'react-icons/tb';
 import { discordContent } from './content';
 import { useGameCP } from '@gamecp/types/client';
+import { Card, Button, Badge } from '@gamecp/ui';
 
 interface Webhook {
     url: string;
@@ -34,7 +35,7 @@ export function DiscordIcon({ serverId }: DiscordIconProps) {
 }
 
 export function SettingsPage({ serverId }: SettingsPageProps) {
-    const { Button, Card, Badge, api, confirm, t } = useGameCP();
+    const { api, confirm, t } = useGameCP();
     const [webhookUrl, setWebhookUrl] = useState<string>('');
     const [webhooks, setWebhooks] = useState<Webhook[]>([]);
     const [loading, setLoading] = useState<boolean>(false);

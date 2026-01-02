@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
+import { Card, Button, FormInput } from '@gamecp/ui';
 
 interface NotesAreaProps {
     serverId: string;
 }
 
 export function NotesArea({ serverId }: NotesAreaProps) {
-    const { Card, Button, FormInput, user, api } = useGameCP();
+    const { user, api } = useGameCP();
     const [note, setNote] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [saving, setSaving] = useState<boolean>(false);

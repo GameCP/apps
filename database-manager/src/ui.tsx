@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
+import { Card, Button, Badge, FormInput } from '@gamecp/ui';
 import { databaseContent } from './content';
 import type { Database, DatabaseSource } from './types';
 import { HiDatabase, HiPlus, HiTrash, HiExternalLink, HiClipboardCopy, HiRefresh, HiCheckCircle, HiXCircle } from 'react-icons/hi';
@@ -9,7 +10,7 @@ interface DatabaseTabProps {
 }
 
 export function DatabaseTab({ serverId }: DatabaseTabProps) {
-    const { Card, Button, Badge, FormInput, api, confirm, t } = useGameCP();
+    const { api, confirm, t } = useGameCP();
     const [databases, setDatabases] = useState<Database[]>([]);
     const [sources, setSources] = useState<DatabaseSource[]>([]);
     const [loading, setLoading] = useState(true);
