@@ -44,7 +44,7 @@
     "icon": "assets/icon.png",
     "readme": "README.md",
     "category": "utilities",
-    "homepage": "https://github.com/GameCP/apps/tree/main/server-notes",
+    "homepage": "https://github.com/GameCP/apps/blob/main/server-notes/README.md",
     "repository": "https://github.com/GameCP/apps/tree/main/server-notes",
     "license": "MIT",
     "tags": [

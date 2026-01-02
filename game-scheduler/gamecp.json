@@ -73,7 +73,7 @@
     "icon": "assets/icon.png",
     "readme": "README.md",
     "category": "automation",
-    "homepage": "https://github.com/GameCP/apps/tree/main/game-scheduler",
+    "homepage": "https://github.com/GameCP/apps/blob/main/game-scheduler/README.md",
     "repository": "https://github.com/GameCP/apps/tree/main/game-scheduler",
     "license": "MIT",
     "tags": [

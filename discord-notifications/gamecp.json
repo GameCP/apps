@@ -99,7 +99,7 @@
     "icon": "assets/icon.png",
     "readme": "README.md",
     "category": "notifications",
-    "homepage": "https://github.com/GameCP/apps/tree/main/discord-notifications",
+    "homepage": "https://github.com/GameCP/apps/blob/main/discord-notifications/README.md",
     "repository": "https://github.com/GameCP/apps/tree/main/discord-notifications",
     "license": "MIT",
     "tags": [
