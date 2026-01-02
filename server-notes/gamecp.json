@@ -1,13 +1,13 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "server-notes",
-  "version": "1.0.7",
+  "version": "1.0.10",
   "name": "Admin Notes",
   "description": "Add private admin notes to game servers for internal documentation and team communication",
   "author": "GameCP Team",
   "ui_bundle": "dist/index.js",
   "handlers_bundle": "dist/handlers.js",
-  "integrity": "sha384-lN+JaAJRaTxg8bQ1fzJHNqaWuzVkPYPQf8nag06QBCFYVIJKlL+H3UZQV6sFD/kv",
+  "integrity": "sha384-npSYLFGGkPy0+DItBEvDdGjIsBWEdjZuazofuNBi8VqPkFwSAtYbTGpOtxD6wmHU",
   "ui_injection": [
     {
       "method": "MOUNT",
@@ -32,13 +32,8 @@
     ]
   },
   "sandbox_config": {
-    "db_collections": [
-      "notes"
-    ],
-    "permissions": [
-      "server.read",
-      "server.write"
-    ]
+    "db_collections": [],
+    "permissions": []
   },
   "metadata": {
     "icon": "assets/icon.png",
