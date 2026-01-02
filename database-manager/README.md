@@ -48,6 +48,3 @@ Connection details are displayed immediately - just copy and paste them into you
 - Databases persist even if you restart your game server
 - Admin-managed database servers ensure reliability and performance
 
-## Need Help?
-
-Your server administrator has configured the available database servers. If you need a specific database type or have questions, reach out to them through your panel's support system.
