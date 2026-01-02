@@ -162,7 +162,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                                 <option value="start">{t(schedulerContent.form.actionStart)}</option>
                                 <option value="stop">{t(schedulerContent.form.actionStop)}</option>
                                 <option value="restart">{t(schedulerContent.form.actionRestart)}</option>
-                                <option value="command">{t(schedulerContent.form.actionCommand)}</option>
+                                {/* command and wipe hidden for MVP - backend still supports them */}
                             </select>
                         </div>
 

@@ -207,7 +207,32 @@ export const processScheduledTasks: TypedEventHandler<'cron.tick'> = async (even
   } catch (error: any) {
     ctx.logger.error(`Error executing task ${task.name}:`, error.message);
 
-    // Log failed execution
+    // Check if the error is because the game server doesn't exist
+    const isServerNotFound = error.message?.includes('Game server not found') || 
+                             error.message?.includes('not found');
+    
+    if (isServerNotFound) {
+      ctx.logger.warn(`Game server ${task.serverId} no longer exists. Cleaning up orphaned task ${task.name}...`);
+      
+      // Delete the orphaned task
+      await ctx.db.collection('schedules').deleteOne({ _id: task._id });
+      
+      // Log the cleanup
+      await ctx.db.collection('task_logs').insertOne({
+        taskId: task._id!,
+        serverId: task.serverId,
+        taskName: task.name,
+        action: task.action,
+        status: 'failed',
+        error: 'Game server not found - task deleted',
+        executed_at: new Date(),
+      } as TaskLog);
+      
+      ctx.logger.info(`Orphaned task ${task.name} has been automatically deleted`);
+      return; // Don't re-throw, task is cleaned up
+    }
+
+    // Log failed execution for other errors
     await ctx.db.collection('task_logs').insertOne({
       taskId: task._id!,
       serverId: task.serverId,
@@ -297,3 +322,35 @@ async function executeWipe(task: ScheduledTask, ctx: ExtensionContext): Promise<
     throw new Error('Instance control methods not available');
   }
 }
+
+/**
+ * Clean up scheduled tasks when a game server is deleted
+ * This is called via the server.lifecycle.deleted event
+ */
+export const onServerDeleted: TypedEventHandler<'server.lifecycle.deleted'> = async (event, payload, ctx) => {
+  const { serverId, serverName } = payload;
+
+  ctx.logger.info(`Server ${serverName} (${serverId}) was deleted. Cleaning up scheduled tasks...`);
+
+  try {
+    // Delete all scheduled tasks for this server
+    const result = await ctx.db.collection('schedules').deleteMany({ serverId });
+    
+    ctx.logger.info(`Deleted ${result.deletedCount} scheduled task(s) for server ${serverName}`);
+
+    // Log the cleanup
+    if (result.deletedCount > 0) {
+      await ctx.db.collection('task_logs').insertOne({
+        taskId: 'cleanup',
+        serverId,
+        taskName: 'Server Deletion Cleanup',
+        action: 'cleanup',
+        status: 'success',
+        error: `Cleaned up ${result.deletedCount} scheduled task(s)`,
+        executed_at: new Date(),
+      });
+    }
+  } catch (error: any) {
+    ctx.logger.error(`Error cleaning up tasks for deleted server ${serverName}:`, error.message);
+  }
+};

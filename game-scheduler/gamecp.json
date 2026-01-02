@@ -1,13 +1,13 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "game-scheduler",
-  "version": "1.0.10",
+  "version": "1.2.5",
   "name": "Scheduler",
-  "description": "Schedule restarts, automated wipes, and RCON command sequences",
+  "description": "Schedule automated server starts, stops, and restarts",
   "author": "GameCP Team",
   "ui_bundle": "dist/index.js",
   "handlers_bundle": "dist/handlers.js",
-  "integrity": "sha384-oPGepdpUjRobP+QwMcWukmVM9Q2+XiRsTSjrfY4zGOiBUSGhDIUOqhATmAYBuOcI",
+  "integrity": "sha384-F07+EwEJgV8ukC9THEzljUOK3tO/7GE86ihFXRdvbdWw29sAPngSDxmb7ZMZCOOj",
   "ui_injection": [
     {
       "method": "MOUNT",
@@ -50,6 +50,12 @@
         "handler_export": "processScheduledTasks",
         "async": true,
         "description": "Process and execute scheduled tasks"
+      },
+      {
+        "event": "server.lifecycle.deleted",
+        "handler_export": "onServerDeleted",
+        "async": true,
+        "description": "Clean up scheduled tasks when a game server is deleted"
       }
     ]
   },
@@ -85,8 +91,7 @@
       "tasks"
     ],
     "screenshots": [
-      "assets/screenshots/1.png",
-      "assets/screenshots/2.png"
+      "assets/screenshots/1.png"
     ]
   }
 }

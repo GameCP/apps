@@ -2,7 +2,7 @@
 
 **Automate your server management with powerful, visual scheduling tools.**
 
-Take the manual work out of running game servers. The Game Scheduler extension gives you a robust, easy-to-use interface for scheduling recurring tasks like restarts, wipes, and custom console commands. Whether you need a daily reboot or a weekly wipe cycle, this extension handles it with precision.
+Take the manual work out of running game servers. The Game Scheduler extension gives you a robust, easy-to-use interface for scheduling recurring server actions. Whether you need a daily reboot or regular maintenance stops, this extension handles it with precision.
 
 ![Banner](assets/screenshots/1.png)
 
@@ -14,12 +14,12 @@ Take the manual work out of running game servers. The Game Scheduler extension g
 
 ## Key Features
 
-*   📅 **Visual Schedule Builder:** intuitive interface for creating complex schedules (e.g., "Every Friday at 5 PM").
+*   📅 **Visual Schedule Builder:** Intuitive interface for creating complex schedules (e.g., "Every Friday at 5 PM").
 *   🔄 **Automated Restarts:** Schedule routine restarts to maintain server performance.
-*   🧹 **Scheduled Wipes:** Automate full or partial server wipes for competitive games like Rust.
-*   ⚡ **Custom Commands:** Execute any console command on a schedule (e.g., global announcements, save-alls).
+*   ⏹️ **Scheduled Stops:** Automatically stop servers during off-peak hours to save resources.
+*   ▶️ **Scheduled Starts:** Bring servers online automatically before peak hours.
 *   📊 **Task History:** View logs of past executions to ensure everything is running as planned.
 
 ## How it works
 
-Install the extension and head to the "Scheduler" tab on any game server. Click "New Task", use the visual builder to set your time, choose an action (Start, Stop, Restart, or Command), and activate. Your tasks are persisted and handled by our distributed worker system for maximum reliability.
+Install the extension and head to the "Scheduler" tab on any game server. Click "New Task", use the visual builder to set your time, choose an action (Start, Stop, or Restart), and activate. Your tasks are persisted and handled by our distributed worker system for maximum reliability.

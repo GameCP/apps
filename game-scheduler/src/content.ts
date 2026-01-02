@@ -26,13 +26,13 @@ export const schedulerContent = {
             'zh-TW': '工作排程器'
         },
         description: {
-            en: 'Schedule restarts, wipes, and command sequences for your game server',
-            es: 'Programa reinicios, limpiezas y secuencias de comandos para tu servidor de juegos',
-            ro: 'Programați reporniri, ștergeri și secvențe de comenzi pentru serverul dvs. de jocuri',
-            'pt-BR': 'Agende reinicializações, limpezas e sequências de comandos para seu servidor de jogos',
-            da: 'Planlæg genstarter, wipes og kommandosekvenser til din spilserver',
-            'zh-CN': '为您的游戏服务器安排重启、清档和命令序列',
-            'zh-TW': '為您的遊戲伺服器排程重啟、清除和命令序列'
+            en: 'Schedule automated starts, stops, and restarts for your game server',
+            es: 'Programa inicios, paradas y reinicios automáticos para tu servidor de juegos',
+            ro: 'Programați porniri, opriri și reporniri automate pentru serverul dvs. de jocuri',
+            'pt-BR': 'Agende inícios, paradas e reinicializações automáticas para seu servidor de jogos',
+            da: 'Planlæg automatiske starter, stop og genstarter til din spilserver',
+            'zh-CN': '为您的游戏服务器安排自动启动、停止和重启',
+            'zh-TW': '為您的遊戲伺服器排程自動啟動、停止和重啟'
         }
     },
     createTask: {
@@ -46,13 +46,13 @@ export const schedulerContent = {
             'zh-TW': '建立排程工作'
         },
         description: {
-            en: 'Set up automated restarts, wipes, or command sequences',
-            es: 'Configura reinicios automáticos, limpiezas o secuencias de comandos',
-            ro: 'Configurați reporniri automate, ștergeri sau secvențe de comenzi',
-            'pt-BR': 'Configure reinicializações automáticas, limpezas ou sequências de comandos',
-            da: 'Konfigurer automatiske genstarter, wipes eller kommandosekvenser',
-            'zh-CN': '设置自动重启、清档或命令序列',
-            'zh-TW': '設定自動重啟、清除或命令序列'
+            en: 'Set up automated server start, stop, or restart schedules',
+            es: 'Configura horarios automáticos de inicio, parada o reinicio del servidor',
+            ro: 'Configurați programări automate de pornire, oprire sau repornire a serverului',
+            'pt-BR': 'Configure agendamentos automáticos de início, parada ou reinicialização do servidor',
+            da: 'Konfigurer automatiske server start, stop eller genstart tidsplaner',
+            'zh-CN': '设置服务器自动启动、停止或重启计划',
+            'zh-TW': '設定伺服器自動啟動、停止或重啟排程'
         }
     },
     form: {
