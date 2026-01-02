@@ -1,86 +1,53 @@
 # Database Manager
 
-Provision and manage databases for your game servers with support for MySQL, PostgreSQL, Redis, and MongoDB.
+Automatically provision and manage databases for your game servers. No technical knowledge required - just click, create, and connect.
 
-## Features
+## What You Get
 
-- **Multi-Database Support**: MySQL, PostgreSQL, Redis, MongoDB
-- **Auto-Provisioning**: Automatically create databases with unique credentials
-- **Adminer Integration**: Web-based database management interface
-- **Connection Management**: Easy access to connection strings
-- **Admin Configuration**: Centralized database server management
+- **Instant Database Creation**: Create MySQL, PostgreSQL, Redis, or MongoDB databases with one click
+- **Automatic Setup**: Unique credentials generated automatically - no configuration needed
+- **Easy Access**: Copy connection details or open the web-based database manager directly
+- **Secure by Default**: Each database gets its own isolated credentials for maximum security
 
-## Screenshots
 
-![Database Overview](assets/screenshot-overview.png)
-*Database management interface*
+## How It Works
 
-![Game Server Databases](assets/screenshot-game-server.png)
-*Per-server database provisioning*
+### For Your Game Servers
 
-![Admin Configuration](assets/screenshot-admin.png)
-*Database source configuration*
+1. Open any game server in your panel
+2. Click the "Databases" tab in the sidebar
+3. Click "Create Database" and select a database type
+4. Done! Your database is ready to use
 
-## Installation
+Connection details are displayed immediately - just copy and paste them into your game server configuration.
 
-1. Install the extension from the App Store
-2. Configure database servers in the admin panel
-3. Users can create databases for their game servers
+### Managing Your Databases
 
-## Configuration
+- **View Connection Info**: Host, port, username, password, and database name
+- **Open Database Manager**: Click "Open Manager" to access a web interface for managing your data
+- **Delete When Done**: Remove databases you no longer need with one click
 
-### Admin Setup
+## Perfect For
 
-**To configure database servers, navigate to:**
-```
-/extensions/database-manager
-```
+- **Minecraft Servers**: Store player data, economy systems, and plugin configurations
+- **ARK Servers**: Save mod data and custom configurations
+- **Rust Servers**: Keep oxide plugin data persistent
+- **Any Game**: If your game or mods need a database, this extension has you covered
 
-Or use the sidebar link "Database Sources" that appears for admins.
+## What Database Types Are Available?
 
-1. Click "Add Source"
-2. Select database type (MySQL, PostgreSQL, Redis, or MongoDB)
-3. Enter connection details:
-   - **Name**: Friendly name (e.g., "Production MySQL")
-   - **Host**: Database server hostname
-   - **Port**: Database server port
-   - **Admin Username**: Root/admin username
-   - **Admin Password**: Root/admin password
-   - **Adminer URL**: URL to your Adminer instance (required)
-4. Click "Add Source"
+- **MySQL**: The most common choice for game servers and plugins
+- **PostgreSQL**: Advanced features for complex data needs
+- **Redis**: Lightning-fast in-memory storage for caching and real-time data
+- **MongoDB**: Flexible document storage for dynamic data structures
 
-The source will now be available for users to create databases from.
+## Security & Reliability
 
-### User Usage
+- Every database gets unique, randomly-generated credentials
+- You can only access databases you created
+- Databases persist even if you restart your game server
+- Admin-managed database servers ensure reliability and performance
 
-1. Navigate to your game server
-2. Go to the "Databases" tab
-3. Click "Create Database"
-4. Select a database server
-5. Database is automatically provisioned with unique credentials
+## Need Help?
 
-## Adminer Integration
-
-For MySQL and PostgreSQL databases, users can click "Open Manager" to access Adminer, a web-based database management tool similar to phpMyAdmin.
-
-### Setting up Adminer
-
-1. Download Adminer: https://www.adminer.org/
-2. Place `adminer.php` in your web server
-3. Configure reverse proxy or direct access
-4. Users will be automatically logged in with their database credentials
-
-## Security
-
-- Each database gets unique credentials
-- Passwords are randomly generated (16 characters)
-- Admin credentials are stored securely
-- Users can only access their own databases
-
-## Supported Games
-
-Any game that requires a database can use this extension:
-- Minecraft (plugins with MySQL)
-- ARK: Survival Evolved (mods)
-- Rust (oxide plugins)
-- Custom game servers
+Your server administrator has configured the available database servers. If you need a specific database type or have questions, reach out to them through your panel's support system.
