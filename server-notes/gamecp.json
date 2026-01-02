@@ -7,13 +7,14 @@
   "author": "GameCP Team",
   "ui_bundle": "dist/index.js",
   "handlers_bundle": "dist/handlers.js",
-  "integrity": "sha384-s5g/3HX53WXLFjEZjZ3taDWajOpBPo0zvWX7zEyoR6tcy3V0brwj8uRdCK4bxzoa",
+  "integrity": "sha384-lN+JaAJRaTxg8bQ1fzJHNqaWuzVkPYPQf8nag06QBCFYVIJKlL+H3UZQV6sFD/kv",
   "ui_injection": [
     {
       "method": "MOUNT",
       "target": "server.dashboard.widget",
       "component": "NotesArea",
-      "col_span": 3
+      "col_span": 3,
+      "order": 1
     }
   ],
   "internal_logic": {

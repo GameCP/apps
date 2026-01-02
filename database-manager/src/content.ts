@@ -6,6 +6,20 @@ export const databaseContent = {
             pt: 'Bancos de dados',
             ro: 'Baze de date',
             da: 'Databaser'
+        },
+        provisioningTitle: {
+            en: 'Database Provisioning',
+            es: 'Aprovisionamiento de bases de datos',
+            pt: 'Provisionamento de banco de dados',
+            ro: 'Provizionarea bazelor de date',
+            da: 'Databaseprovisionering'
+        },
+        provisioningDescription: {
+            en: 'Configure automatic database provisioning',
+            es: 'Configurar aprovisionamiento automático',
+            pt: 'Configurar provisionamento automático',
+            ro: 'Configurați provizionarea automată',
+            da: 'Konfigurer automatisk provisionering'
         }
     },
     page: {

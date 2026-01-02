@@ -1,7 +1,7 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "database-manager",
-  "version": "1.0.10",
+  "version": "1.2.2",
   "name": "Database Manager",
   "description": "Provision and manage databases for your game servers. Supports MySQL, PostgreSQL, Redis, and more.",
   "author": "GameCP Team",
@@ -10,16 +10,34 @@
   "ui_injection": [
     {
       "method": "MOUNT",
-      "target": "server.dashboard.page",
+      "target": "server.sidebar.nav",
+      "component": "ServerDatabaseNav",
+      "order": 60
+    },
+    {
+      "method": "HANDLER",
+      "target": "server.page.extensions",
       "component": "DatabaseTab",
-      "position": "bottom",
-      "order": 10
+      "route_path": "/database-manager"
     },
     {
       "method": "MOUNT",
       "target": "global.sidebar.nav",
       "component": "DatabaseSourcesNav",
       "order": 100
+    },
+    {
+      "method": "AUGMENT",
+      "target": "games.edit.form",
+      "component": "GameDatabaseSettings",
+      "position": "end",
+      "order": 50
+    },
+    {
+      "method": "MOUNT",
+      "target": "games.edit.navigation",
+      "component": "DatabaseNavItem",
+      "order": 50
     },
     {
       "method": "HANDLER",
@@ -92,6 +110,20 @@
         "handler": "deleteSource",
         "handler_export": "deleteSource",
         "description": "Delete a database source (admin only)"
+      },
+      {
+        "path": "/databases/suspend-server",
+        "method": "POST",
+        "handler": "suspendServerDatabases",
+        "handler_export": "suspendServerDatabases",
+        "description": "Suspend all databases for a server"
+      },
+      {
+        "path": "/databases/unsuspend-server",
+        "method": "POST",
+        "handler": "unsuspendServerDatabases",
+        "handler_export": "unsuspendServerDatabases",
+        "description": "Unsuspend all databases for a server"
       }
     ]
   },
@@ -109,5 +141,5 @@
       "ioredis"
     ]
   },
-  "integrity": "sha384-VIlIBHAXQS/8NR4zG57MDysMbRKgRbJWXtzfUkcHVOA1QBPqNsNfyJRZSy/JFJtw"
+  "integrity": "sha384-F27lj7r0mCTrnhUcgC49Jn4BYpgtEPCo49O3yecg4jVCS/T3uodBPiJGHm+GxRL9"
 }

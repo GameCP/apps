@@ -93,27 +93,31 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
 
     if (loading) {
         return (
-            <Card>
-                <div className="p-6 text-center text-muted-foreground">
-                    Loading databases...
-                </div>
-            </Card>
+            <div className="p-6">
+                <Card>
+                    <div className="p-6 text-center text-muted-foreground">
+                        Loading databases...
+                    </div>
+                </Card>
+            </div>
         );
     }
 
     if (sources.length === 0) {
         return (
-            <Card>
-                <div className="p-6 text-center">
-                    <HiDatabase className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">{t(databaseContent.info.noSources)}</p>
-                </div>
-            </Card>
+            <div className="p-6">
+                <Card>
+                    <div className="p-6 text-center">
+                        <HiDatabase className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-muted-foreground">{t(databaseContent.info.noSources)}</p>
+                    </div>
+                </Card>
+            </div>
         );
     }
 
     return (
-        <div className="space-y-6">
+        <div className="p-6 space-y-6">
             <Card
                 title={t(databaseContent.page.title)}
                 description={t(databaseContent.page.description)}

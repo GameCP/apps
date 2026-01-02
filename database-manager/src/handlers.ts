@@ -55,14 +55,31 @@ export async function getDatabases(ctx: ExtensionContext): Promise<ApiResponse> 
 
 // Create a new database
 export async function createDatabase(ctx: ExtensionContext): Promise<ApiResponse> {
-    const { serverId, sourceId, name } = ctx.request.body as CreateDatabaseRequest;
+    const { serverId, sourceId, name, type } = ctx.request.body as CreateDatabaseRequest & { type?: string };
 
-    if (!serverId || !sourceId) {
-        return { status: 400, body: { error: 'Server ID and source ID required' } };
+    if (!serverId) {
+        return { status: 400, body: { error: 'Server ID required' } };
+    }
+
+    // If sourceId not provided, auto-select based on type
+    let selectedSourceId = sourceId;
+    if (!selectedSourceId) {
+        const dbType = type || 'mysql';
+        const sources = await ctx.db.collection('database_sources')
+            .find({ type: dbType, enabled: true })
+            .toArray() as DatabaseSource[];
+        
+        if (sources.length === 0) {
+            return { status: 404, body: { error: `No enabled ${dbType} database sources available` } };
+        }
+        
+        // Pick the first available source
+        selectedSourceId = sources[0]._id;
+        ctx.logger.info(`Auto-selected database source: ${sources[0].name}`, { type: dbType });
     }
 
     // Get the database source
-    const source = await ctx.db.collection('database_sources').findOne({ _id: sourceId }) as DatabaseSource | null;
+    const source = await ctx.db.collection('database_sources').findOne({ _id: selectedSourceId }) as DatabaseSource | null;
 
     if (!source || !source.enabled) {
         return { status: 404, body: { error: 'Database source not found or disabled' } };
@@ -192,6 +209,83 @@ export async function deleteDatabase(ctx: ExtensionContext): Promise<ApiResponse
 
     return { status: 200, body: { message: 'Database deleted' } };
 }
+
+// Suspend a database (disable access)
+export async function suspendDatabase(ctx: ExtensionContext): Promise<ApiResponse> {
+    const { id } = ctx.request.params;
+
+    if (!id) {
+        return { status: 400, body: { error: 'Database ID required' } };
+    }
+
+    const result = await ctx.db.collection('databases').updateOne(
+        { _id: id },
+        { $set: { status: 'suspended' } }
+    );
+
+    if (result.matchedCount === 0) {
+        return { status: 404, body: { error: 'Database not found' } };
+    }
+
+    ctx.logger.info('Database suspended', { id });
+    return { status: 200, body: { message: 'Database suspended' } };
+}
+
+// Unsuspend a database (enable access)
+export async function unsuspendDatabase(ctx: ExtensionContext): Promise<ApiResponse> {
+    const { id } = ctx.request.params;
+
+    if (!id) {
+        return { status: 400, body: { error: 'Database ID required' } };
+    }
+
+    const result = await ctx.db.collection('databases').updateOne(
+        { _id: id },
+        { $set: { status: 'active' } }
+    );
+
+    if (result.matchedCount === 0) {
+        return { status: 404, body: { error: 'Database not found' } };
+    }
+
+    ctx.logger.info('Database unsuspended', { id });
+    return { status: 200, body: { message: 'Database unsuspended' } };
+}
+
+// Suspend all databases for a server
+export async function suspendServerDatabases(ctx: ExtensionContext): Promise<ApiResponse> {
+    const { serverId } = ctx.request.body;
+
+    if (!serverId) {
+        return { status: 400, body: { error: 'Server ID required' } };
+    }
+
+    const result = await ctx.db.collection('databases').updateMany(
+        { serverId },
+        { $set: { status: 'suspended' } }
+    );
+
+    ctx.logger.info('Server databases suspended', { serverId, count: result.modifiedCount });
+    return { status: 200, body: { message: `${result.modifiedCount} database(s) suspended` } };
+}
+
+// Unsuspend all databases for a server
+export async function unsuspendServerDatabases(ctx: ExtensionContext): Promise<ApiResponse> {
+    const { serverId } = ctx.request.body;
+
+    if (!serverId) {
+        return { status: 400, body: { error: 'Server ID required' } };
+    }
+
+    const result = await ctx.db.collection('databases').updateMany(
+        { serverId },
+        { $set: { status: 'active' } }
+    );
+
+    ctx.logger.info('Server databases unsuspended', { serverId, count: result.modifiedCount });
+    return { status: 200, body: { message: `${result.modifiedCount} database(s) unsuspended` } };
+}
+
 
 // Get all database sources (admin only)
 export async function getSources(ctx: ExtensionContext): Promise<ApiResponse> {
