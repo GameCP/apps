@@ -12,7 +12,6 @@
     "validate": "tsc --noEmit"
   },
   "devDependencies": {
-    "@gamecp/build": "file:../../packages/build",
     "@gamecp/types": "file:../../packages/types",
     "@types/node": "^20.10.6",
     "@types/react": "^19.2.7",
@@ -22,6 +21,7 @@
   "author": "GameCP Team",
   "license": "MIT",
   "dependencies": {
+    "@gamecp/build": "^1.0.2",
     "@gamecp/ui": "^0.1.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
