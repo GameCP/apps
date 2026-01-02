@@ -10,6 +10,17 @@ Provision and manage databases for your game servers with support for MySQL, Pos
 - **Connection Management**: Easy access to connection strings
 - **Admin Configuration**: Centralized database server management
 
+## Screenshots
+
+![Database Overview](assets/screenshot-overview.png)
+*Database management interface*
+
+![Game Server Databases](assets/screenshot-game-server.png)
+*Per-server database provisioning*
+
+![Admin Configuration](assets/screenshot-admin.png)
+*Database source configuration*
+
 ## Installation
 
 1. Install the extension from the App Store

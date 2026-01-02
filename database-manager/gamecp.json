@@ -48,6 +48,11 @@
   ],
   "metadata": {
     "icon": "assets/icon.png",
+    "screenshots": [
+      "assets/screenshot-overview.png",
+      "assets/screenshot-game-server.png",
+      "assets/screenshot-admin.png"
+    ],
     "category": "utilities",
     "tags": [
       "database",
