@@ -1,13 +1,8 @@
 import type { ApiRouteHandler } from '@gamecp/types';
 
-interface Note {
-  serverId: string;
-  note: string;
-  updatedAt: string;
-}
-
 /**
  * Save admin note for a server
+ * Stores in server.extensionData['server-notes']
  */
 export const saveNote: ApiRouteHandler = async (ctx) => {
   // Admin check
@@ -42,20 +37,20 @@ export const saveNote: ApiRouteHandler = async (ctx) => {
   }
 
   try {
-    // Check if note exists
-    const existingNotes = await ctx.db.collection('notes').find({ serverId }).toArray();
-
-    if (existingNotes.length > 0) {
-      // Update existing note
-      await ctx.db.collection('notes').deleteOne({ serverId });
-    }
-
-    // Insert new/updated note
-    await ctx.db.collection('notes').insertOne({
-      serverId,
+    // Store note in server's extensionData
+    const noteData = {
       note,
       updatedAt: new Date().toISOString()
+    };
+
+    // Use the extension data API
+    const response = await ctx.api.put(`/api/game-servers/${serverId}/extension-data/server-notes`, {
+      data: noteData
     });
+
+    if (!response.success) {
+      throw new Error('Failed to save note');
+    }
 
     ctx.logger.info(`Note saved for server ${serverId}`);
 
@@ -77,6 +72,7 @@ export const saveNote: ApiRouteHandler = async (ctx) => {
 
 /**
  * Get admin note for a server
+ * Reads from server.extensionData['server-notes']
  */
 export const getNote: ApiRouteHandler = async (ctx) => {
   // Admin check
@@ -97,20 +93,15 @@ export const getNote: ApiRouteHandler = async (ctx) => {
   }
 
   try {
-    const notes: Note[] = await ctx.db.collection('notes').find({ serverId }).toArray();
-
-    if (notes.length === 0) {
-      return {
-        status: 200,
-        body: { note: '' }
-      };
-    }
+    // Fetch note from server's extensionData
+    const response = await ctx.api.get(`/api/game-servers/${serverId}/extension-data/server-notes`);
+    const noteData = response.data || {};
 
     return {
       status: 200,
       body: {
-        note: notes[0].note,
-        updatedAt: notes[0].updatedAt
+        note: noteData.note || '',
+        updatedAt: noteData.updatedAt || null
       }
     };
   } catch (error) {
@@ -121,3 +112,4 @@ export const getNote: ApiRouteHandler = async (ctx) => {
     };
   }
 };
+

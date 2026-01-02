@@ -10,9 +10,7 @@ import type {
 // Extension-specific types
 interface Webhook {
   url: string;
-  serverId: string;
-  isLegacy?: boolean;
-  createdAt?: Date;
+  createdAt?: string;
 }
 
 interface DiscordEmbed {
@@ -31,8 +29,39 @@ interface DiscordMessage {
   embeds: DiscordEmbed[];
 }
 
+interface DiscordExtensionData {
+  webhooks: Webhook[];
+  logs?: Array<{
+    event: string;
+    timestamp: string;
+    payload: any;
+  }>;
+}
+
+/**
+ * Get extension data for a server
+ */
+async function getExtensionData(ctx: ExtensionContext, serverId: string): Promise<DiscordExtensionData> {
+  try {
+    const response = await ctx.api.get(`/api/game-servers/${serverId}/extension-data/discord-notifications`);
+    return response.data || { webhooks: [] };
+  } catch (error) {
+    return { webhooks: [] };
+  }
+}
+
+/**
+ * Save extension data for a server
+ */
+async function saveExtensionData(ctx: ExtensionContext, serverId: string, data: DiscordExtensionData): Promise<void> {
+  await ctx.api.put(`/api/game-servers/${serverId}/extension-data/discord-notifications`, {
+    data
+  });
+}
+
 /**
  * Save Discord webhook URL
+ * Stores in server.extensionData['discord-notifications']
  */
 export const saveWebhook: ApiRouteHandler = async (ctx) => {
   const { serverId, webhookUrl } = ctx.request.body;
@@ -56,12 +85,18 @@ export const saveWebhook: ApiRouteHandler = async (ctx) => {
     };
   }
 
-  // Save to database
-  await ctx.db.collection('webhooks').insertOne({
-    serverId,
-    url: webhookUrl,
-    createdAt: new Date(),
+  // Get existing data
+  const data = await getExtensionData(ctx, serverId);
+  
+  // Add new webhook
+  data.webhooks = data.webhooks || [];
+  data.webhooks.push({
+    url: trimmedUrl,
+    createdAt: new Date().toISOString()
   });
+  
+  // Save back
+  await saveExtensionData(ctx, serverId, data);
 
   return {
     status: 200,
@@ -75,10 +110,14 @@ export const saveWebhook: ApiRouteHandler = async (ctx) => {
 export const deleteWebhook: ApiRouteHandler = async (ctx) => {
   const { serverId, webhookUrl } = ctx.request.body;
 
-  await ctx.db.collection('webhooks').deleteOne({
-    serverId,
-    url: webhookUrl,
-  });
+  // Get existing data
+  const data = await getExtensionData(ctx, serverId);
+  
+  // Remove webhook
+  data.webhooks = (data.webhooks || []).filter(w => w.url !== webhookUrl);
+  
+  // Save back
+  await saveExtensionData(ctx, serverId, data);
 
   return {
     status: 200,
@@ -91,14 +130,15 @@ export const deleteWebhook: ApiRouteHandler = async (ctx) => {
  */
 export const getWebhooks: ApiRouteHandler = async (ctx) => {
   const { serverId } = ctx.request.query;
-  let webhooks: Webhook[] = await ctx.db.collection("webhooks").find({ serverId }).toArray();
+  
+  const data = await getExtensionData(ctx, serverId);
+  let webhooks = data.webhooks || [];
 
-  // Self-migration/Legacy support: If no webhooks in DB but we have a legacy config URL, return it
+  // Legacy support: If no webhooks but we have a legacy config URL, return it
   if (webhooks.length === 0 && ctx.config.webhookUrl) {
     webhooks = [{
       url: ctx.config.webhookUrl,
-      serverId,
-      isLegacy: true
+      createdAt: new Date().toISOString()
     }];
   }
 
@@ -114,9 +154,9 @@ export const getWebhooks: ApiRouteHandler = async (ctx) => {
 export const testWebhook: ApiRouteHandler = async (ctx) => {
   const { serverId } = ctx.request.body;
 
-  // Get webhooks via our own helper logic to ensure we include legacy
-  const webhooksRes = await getWebhooks({ ...ctx, request: { ...ctx.request, query: { serverId } } });
-  const webhooks = webhooksRes.body.webhooks as Webhook[];
+  // Get webhooks
+  const data = await getExtensionData(ctx, serverId);
+  const webhooks = data.webhooks || [];
 
   if (webhooks.length === 0) {
     return {
@@ -147,8 +187,8 @@ export const testWebhook: ApiRouteHandler = async (ctx) => {
  */
 export const handleCrash: TypedEventHandler<'server.status.crash'> = async (event, payload, ctx) => {
   const { serverId, serverName, crashReason } = payload;
-  const webhooksRes = await getWebhooks({ ...ctx, request: { ...ctx.request, query: { serverId } } });
-  const webhooks = webhooksRes.body.webhooks as Webhook[];
+  const data = await getExtensionData(ctx, serverId);
+  const webhooks = data.webhooks || [];
 
   for (const webhook of webhooks) {
     await sendDiscordMessage(ctx, webhook.url, {
@@ -164,13 +204,6 @@ export const handleCrash: TypedEventHandler<'server.status.crash'> = async (even
       }]
     });
   }
-
-  await ctx.db.collection("logs").insertOne({
-    serverId,
-    event: "crash",
-    timestamp: new Date(),
-    payload
-  });
 };
 
 /**
@@ -178,8 +211,8 @@ export const handleCrash: TypedEventHandler<'server.status.crash'> = async (even
  */
 export const handleStart: TypedEventHandler<'server.status.started'> = async (event, payload, ctx) => {
   const { serverId, serverName } = payload;
-  const webhooksRes = await getWebhooks({ ...ctx, request: { ...ctx.request, query: { serverId } } });
-  const webhooks = webhooksRes.body.webhooks as Webhook[];
+  const data = await getExtensionData(ctx, serverId);
+  const webhooks = data.webhooks || [];
 
   for (const webhook of webhooks) {
     await sendDiscordMessage(ctx, webhook.url, {
@@ -198,8 +231,8 @@ export const handleStart: TypedEventHandler<'server.status.started'> = async (ev
  */
 export const handleStop: TypedEventHandler<'server.status.stopped'> = async (event, payload, ctx) => {
   const { serverId, serverName } = payload;
-  const webhooksRes = await getWebhooks({ ...ctx, request: { ...ctx.request, query: { serverId } } });
-  const webhooks = webhooksRes.body.webhooks as Webhook[];
+  const data = await getExtensionData(ctx, serverId);
+  const webhooks = data.webhooks || [];
 
   for (const webhook of webhooks) {
     await sendDiscordMessage(ctx, webhook.url, {
@@ -224,3 +257,4 @@ async function sendDiscordMessage(ctx: ExtensionContext, webhookUrl: string, pay
     throw new Error(`Discord API error: ${response.status}`);
   }
 }
+
