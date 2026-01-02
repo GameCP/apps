@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
 import { databaseContent } from './content';
 import type { DatabaseSource, DatabaseType } from './types';
-import { HiDatabase, HiPlus, HiTrash, HiPencil, HiCheckCircle, HiXCircle } from 'react-icons/hi';
+import { HiDatabase, HiPlus, HiTrash, HiPencil, HiCheckCircle, HiXCircle, HiRefresh } from 'react-icons/hi';
+
+interface TestResult {
+    success: boolean;
+    message: string;
+    latencyMs: number;
+}
 
 export function DatabaseSourcesPage() {
     const { Card, Button, Badge, FormInput, api, confirm, t } = useGameCP();
@@ -10,6 +16,8 @@ export function DatabaseSourcesPage() {
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [editingSource, setEditingSource] = useState<DatabaseSource | null>(null);
+    const [testingConnection, setTestingConnection] = useState(false);
+    const [testResult, setTestResult] = useState<TestResult | null>(null);
     const [formData, setFormData] = useState({
         type: 'mysql' as DatabaseType,
         name: '',
@@ -87,6 +95,7 @@ export function DatabaseSourcesPage() {
     const resetForm = () => {
         setShowForm(false);
         setEditingSource(null);
+        setTestResult(null);
         setFormData({
             type: 'mysql',
             name: '',
@@ -96,6 +105,30 @@ export function DatabaseSourcesPage() {
             adminPassword: '',
             adminerUrl: '',
         });
+    };
+
+    const handleTestConnection = async () => {
+        setTestingConnection(true);
+        setTestResult(null);
+
+        try {
+            const result = await api.post('/api/x/database-manager/sources/test-connection', {
+                type: formData.type,
+                host: formData.host,
+                port: formData.port,
+                adminUsername: formData.adminUsername,
+                adminPassword: formData.adminPassword,
+            });
+            setTestResult(result);
+        } catch (error: any) {
+            setTestResult({
+                success: false,
+                message: error.error || error.message || 'Connection test failed',
+                latencyMs: 0,
+            });
+        } finally {
+            setTestingConnection(false);
+        }
     };
 
     const getDefaultPort = (type: DatabaseType): number => {
@@ -198,25 +231,55 @@ export function DatabaseSourcesPage() {
                                     required
                                 />
 
-                                <FormInput
-                                    label={t(databaseContent.admin.adminUsername)}
-                                    name="adminUsername"
-                                    type="text"
-                                    value={formData.adminUsername}
-                                    onChange={(e) => setFormData({ ...formData, adminUsername: e.target.value })}
-                                    placeholder={t(databaseContent.admin.adminUsernamePlaceholder)}
-                                    required
-                                />
+                                {/* Username and password only required for MySQL and PostgreSQL */}
+                                {(formData.type === 'mysql' || formData.type === 'postgresql') && (
+                                    <>
+                                        <FormInput
+                                            label={t(databaseContent.admin.adminUsername)}
+                                            name="adminUsername"
+                                            type="text"
+                                            value={formData.adminUsername}
+                                            onChange={(e) => setFormData({ ...formData, adminUsername: e.target.value })}
+                                            placeholder={t(databaseContent.admin.adminUsernamePlaceholder)}
+                                            required
+                                        />
 
-                                <FormInput
-                                    label={t(databaseContent.admin.adminPassword)}
-                                    name="adminPassword"
-                                    type="password"
-                                    value={formData.adminPassword}
-                                    onChange={(e) => setFormData({ ...formData, adminPassword: e.target.value })}
-                                    showHidePassword
-                                    required
-                                />
+                                        <FormInput
+                                            label={t(databaseContent.admin.adminPassword)}
+                                            name="adminPassword"
+                                            type="password"
+                                            value={formData.adminPassword}
+                                            onChange={(e) => setFormData({ ...formData, adminPassword: e.target.value })}
+                                            showHidePassword
+                                            required
+                                        />
+                                    </>
+                                )}
+
+                                {/* Optional credentials for Redis and MongoDB */}
+                                {(formData.type === 'redis' || formData.type === 'mongodb') && (
+                                    <>
+                                        <FormInput
+                                            label={t(databaseContent.admin.adminUsername)}
+                                            name="adminUsername"
+                                            type="text"
+                                            value={formData.adminUsername}
+                                            onChange={(e) => setFormData({ ...formData, adminUsername: e.target.value })}
+                                            placeholder={t(databaseContent.admin.adminUsernamePlaceholder)}
+                                            description="Optional - leave blank if authentication is not enabled"
+                                        />
+
+                                        <FormInput
+                                            label={t(databaseContent.admin.adminPassword)}
+                                            name="adminPassword"
+                                            type="password"
+                                            value={formData.adminPassword}
+                                            onChange={(e) => setFormData({ ...formData, adminPassword: e.target.value })}
+                                            showHidePassword
+                                            description="Optional - leave blank if authentication is not enabled"
+                                        />
+                                    </>
+                                )}
 
                                 <div className="md:col-span-2">
                                     <FormInput
@@ -232,7 +295,35 @@ export function DatabaseSourcesPage() {
                                 </div>
                             </div>
 
+                            {/* Test Connection Result */}
+                            {testResult && (
+                                <div className={`p-4 rounded-lg border ${testResult.success ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'}`}>
+                                    <div className="flex items-center gap-2">
+                                        {testResult.success ? (
+                                            <HiCheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+                                        ) : (
+                                            <HiXCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+                                        )}
+                                        <span className={`font-medium ${testResult.success ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'}`}>
+                                            {testResult.message}
+                                        </span>
+                                        {testResult.success && testResult.latencyMs > 0 && (
+                                            <span className="text-sm text-muted-foreground">({testResult.latencyMs}ms)</span>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="flex gap-2">
+                                <Button
+                                    type="button"
+                                    onClick={handleTestConnection}
+                                    variant="secondary"
+                                    disabled={!formData.host || !formData.port || testingConnection}
+                                >
+                                    <HiRefresh className={`w-4 h-4 mr-2 ${testingConnection ? 'animate-spin' : ''}`} />
+                                    {testingConnection ? 'Testing...' : 'Test Connection'}
+                                </Button>
                                 <Button type="submit" variant="primary">
                                     {editingSource ? t(databaseContent.admin.updateSource) : t(databaseContent.admin.addSource)}
                                 </Button>

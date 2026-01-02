@@ -29,7 +29,7 @@ export function GameDatabaseSettings({ gameId, extensionData, onChange }: GameDa
 
     return (
         <Card>
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6" id="database-provisioning">
                 <div className="flex items-center justify-between border-b border-border pb-4">
                     <div>
                         <h3 className="text-lg font-bold text-foreground">Database Provisioning</h3>

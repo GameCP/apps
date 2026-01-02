@@ -314,8 +314,14 @@ export async function createSource(ctx: ExtensionContext): Promise<ApiResponse> 
     
     const { type, name, host, port, adminUsername, adminPassword, adminerUrl } = ctx.request.body;
 
-    if (!type || !name || !host || !port || !adminUsername || !adminPassword || !adminerUrl) {
-        return { status: 400, body: { error: 'All fields required' } };
+    // Basic required fields
+    if (!type || !name || !host || !port) {
+        return { status: 400, body: { error: 'Type, name, host, and port are required' } };
+    }
+
+    // Username/password required only for mysql and postgresql
+    if ((type === 'mysql' || type === 'postgresql') && (!adminUsername || !adminPassword)) {
+        return { status: 400, body: { error: 'Admin username and password are required for MySQL/PostgreSQL' } };
     }
 
     const source: Omit<DatabaseSource, '_id'> = {
@@ -323,9 +329,9 @@ export async function createSource(ctx: ExtensionContext): Promise<ApiResponse> 
         name,
         host,
         port,
-        adminUsername,
-        adminPassword,
-        adminerUrl,
+        adminUsername: adminUsername || '',
+        adminPassword: adminPassword || '',
+        adminerUrl: adminerUrl || '',
         enabled: true,
         createdAt: new Date(),
     };
@@ -386,4 +392,141 @@ export async function deleteSource(ctx: ExtensionContext): Promise<ApiResponse> 
     }
 
     return { status: 200, body: { message: 'Source deleted' } };
+}
+
+// Test connection to a database source (admin only)
+export async function testConnection(ctx: ExtensionContext): Promise<ApiResponse> {
+    // Admin check
+    if (!ctx.user || ctx.user.role !== 'admin') {
+        return { status: 403, body: { error: 'Admin access required' } };
+    }
+
+    const { type, host, port, adminUsername, adminPassword } = ctx.request.body;
+
+    if (!type || !host || !port) {
+        return { status: 400, body: { error: 'Type, host, and port are required' } };
+    }
+
+    const startTime = Date.now();
+
+    try {
+        if (type === 'mysql' && ctx.mysql) {
+            // Test MySQL connection
+            await ctx.mysql.query(
+                { host, port, user: adminUsername, password: adminPassword },
+                'SELECT 1 as test'
+            );
+        } else if (type === 'postgresql' && ctx.pg) {
+            // Test PostgreSQL connection
+            await ctx.pg.query(
+                { host, port, user: adminUsername, password: adminPassword, database: 'postgres' },
+                'SELECT 1 as test'
+            );
+        } else if (type === 'redis' && ctx.redis) {
+            // Test Redis connection
+            await ctx.redis.command(
+                { host, port, password: adminPassword || undefined },
+                'PING'
+            );
+        } else if (type === 'mongodb') {
+            // MongoDB test not yet implemented - would need mongodb driver
+            return { 
+                status: 200, 
+                body: { 
+                    success: true, 
+                    message: 'MongoDB connection test not yet implemented',
+                    latencyMs: 0 
+                } 
+            };
+        } else {
+            return { status: 400, body: { error: `Unsupported database type: ${type}` } };
+        }
+
+        const latencyMs = Date.now() - startTime;
+
+        ctx.logger.info('Connection test successful', { type, host, port, latencyMs });
+
+        return {
+            status: 200,
+            body: {
+                success: true,
+                message: `Connection successful`,
+                latencyMs
+            }
+        };
+
+    } catch (err: any) {
+        const latencyMs = Date.now() - startTime;
+        ctx.logger.error('Connection test failed', { type, host, port, error: err.message });
+
+        return {
+            status: 200, // Return 200 so the UI can show the error nicely
+            body: {
+                success: false,
+                message: err.message || 'Connection failed',
+                latencyMs
+            }
+        };
+    }
+}
+
+// Test connection to a provisioned database (for users)
+export async function testDatabaseConnection(ctx: ExtensionContext): Promise<ApiResponse> {
+    const { id } = ctx.request.params;
+
+    if (!id) {
+        return { status: 400, body: { error: 'Database ID required' } };
+    }
+
+    const database = await ctx.db.collection('databases').findOne({ _id: id }) as Database | null;
+
+    if (!database) {
+        return { status: 404, body: { error: 'Database not found' } };
+    }
+
+    const startTime = Date.now();
+
+    try {
+        if (database.type === 'mysql' && ctx.mysql) {
+            await ctx.mysql.query(
+                { host: database.host, port: database.port, user: database.username, password: database.password, database: database.name },
+                'SELECT 1 as test'
+            );
+        } else if (database.type === 'postgresql' && ctx.pg) {
+            await ctx.pg.query(
+                { host: database.host, port: database.port, user: database.username, password: database.password, database: database.name },
+                'SELECT 1 as test'
+            );
+        } else if (database.type === 'redis' && ctx.redis) {
+            await ctx.redis.command(
+                { host: database.host, port: database.port, password: database.password || undefined },
+                'PING'
+            );
+        } else {
+            return { status: 400, body: { error: `Unsupported database type: ${database.type}` } };
+        }
+
+        const latencyMs = Date.now() - startTime;
+
+        return {
+            status: 200,
+            body: {
+                success: true,
+                message: 'Connection successful',
+                latencyMs
+            }
+        };
+
+    } catch (err: any) {
+        const latencyMs = Date.now() - startTime;
+
+        return {
+            status: 200,
+            body: {
+                success: false,
+                message: err.message || 'Connection failed',
+                latencyMs
+            }
+        };
+    }
 }

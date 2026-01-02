@@ -1,221 +1,284 @@
+/**
+ * Game Scheduler Extension - Translation Content
+ * Supports: en, es, ro, pt-BR, da, zh-CN, zh-TW (matching main app)
+ */
+
 export const schedulerContent = {
     nav: {
         title: {
             en: 'Scheduler',
             es: 'Programador',
-            fr: 'Planificateur',
-            de: 'Planer',
-            pt: 'Agendador'
+            ro: 'Planificator',
+            'pt-BR': 'Agendador',
+            da: 'Planlægger',
+            'zh-CN': '计划任务',
+            'zh-TW': '排程器'
         }
     },
     page: {
         title: {
             en: 'Task Scheduler',
             es: 'Programador de Tareas',
-            fr: 'Planificateur de Tâches',
-            de: 'Aufgabenplaner',
-            pt: 'Agendador de Tarefas'
+            ro: 'Planificator de Sarcini',
+            'pt-BR': 'Agendador de Tarefas',
+            da: 'Opgaveplanlægger',
+            'zh-CN': '任务计划程序',
+            'zh-TW': '工作排程器'
         },
         description: {
             en: 'Schedule restarts, wipes, and command sequences for your game server',
             es: 'Programa reinicios, limpiezas y secuencias de comandos para tu servidor de juegos',
-            fr: 'Planifiez les redémarrages, les nettoyages et les séquences de commandes pour votre serveur de jeu',
-            de: 'Planen Sie Neustarts, Bereinigungen und Befehlssequenzen für Ihren Spielserver',
-            pt: 'Agende reinicializações, limpezas e sequências de comandos para seu servidor de jogos'
+            ro: 'Programați reporniri, ștergeri și secvențe de comenzi pentru serverul dvs. de jocuri',
+            'pt-BR': 'Agende reinicializações, limpezas e sequências de comandos para seu servidor de jogos',
+            da: 'Planlæg genstarter, wipes og kommandosekvenser til din spilserver',
+            'zh-CN': '为您的游戏服务器安排重启、清档和命令序列',
+            'zh-TW': '為您的遊戲伺服器排程重啟、清除和命令序列'
         }
     },
     createTask: {
         title: {
             en: 'Create Scheduled Task',
             es: 'Crear Tarea Programada',
-            fr: 'Créer une Tâche Planifiée',
-            de: 'Geplante Aufgabe Erstellen',
-            pt: 'Criar Tarefa Agendada'
+            ro: 'Creați Sarcină Planificată',
+            'pt-BR': 'Criar Tarefa Agendada',
+            da: 'Opret planlagt opgave',
+            'zh-CN': '创建计划任务',
+            'zh-TW': '建立排程工作'
         },
         description: {
             en: 'Set up automated restarts, wipes, or command sequences',
             es: 'Configura reinicios automáticos, limpiezas o secuencias de comandos',
-            fr: 'Configurez des redémarrages automatiques, des nettoyages ou des séquences de commandes',
-            de: 'Richten Sie automatische Neustarts, Bereinigungen oder Befehlssequenzen ein',
-            pt: 'Configure reinicializações automáticas, limpezas ou sequências de comandos'
+            ro: 'Configurați reporniri automate, ștergeri sau secvențe de comenzi',
+            'pt-BR': 'Configure reinicializações automáticas, limpezas ou sequências de comandos',
+            da: 'Konfigurer automatiske genstarter, wipes eller kommandosekvenser',
+            'zh-CN': '设置自动重启、清档或命令序列',
+            'zh-TW': '設定自動重啟、清除或命令序列'
         }
     },
     form: {
         taskName: {
             en: 'Task Name',
             es: 'Nombre de la Tarea',
-            fr: 'Nom de la Tâche',
-            de: 'Aufgabenname',
-            pt: 'Nome da Tarefa'
+            ro: 'Numele Sarcinii',
+            'pt-BR': 'Nome da Tarefa',
+            da: 'Opgavenavn',
+            'zh-CN': '任务名称',
+            'zh-TW': '工作名稱'
         },
         taskNamePlaceholder: {
             en: 'Daily Restart',
             es: 'Reinicio Diario',
-            fr: 'Redémarrage Quotidien',
-            de: 'Täglicher Neustart',
-            pt: 'Reinicialização Diária'
+            ro: 'Repornire Zilnică',
+            'pt-BR': 'Reinicialização Diária',
+            da: 'Daglig genstart',
+            'zh-CN': '每日重启',
+            'zh-TW': '每日重啟'
         },
         actionType: {
             en: 'Action Type',
             es: 'Tipo de Acción',
-            fr: 'Type d\'Action',
-            de: 'Aktionstyp',
-            pt: 'Tipo de Ação'
+            ro: 'Tipul Acțiunii',
+            'pt-BR': 'Tipo de Ação',
+            da: 'Handlingstype',
+            'zh-CN': '操作类型',
+            'zh-TW': '動作類型'
         },
         actionStart: {
             en: 'Start Server',
             es: 'Iniciar Servidor',
-            fr: 'Démarrer le Serveur',
-            de: 'Server Starten',
-            pt: 'Iniciar Servidor'
+            ro: 'Porniți Serverul',
+            'pt-BR': 'Iniciar Servidor',
+            da: 'Start server',
+            'zh-CN': '启动服务器',
+            'zh-TW': '啟動伺服器'
         },
         actionStop: {
             en: 'Stop Server',
             es: 'Detener Servidor',
-            fr: 'Arrêter le Serveur',
-            de: 'Server Stoppen',
-            pt: 'Parar Servidor'
+            ro: 'Opriți Serverul',
+            'pt-BR': 'Parar Servidor',
+            da: 'Stop server',
+            'zh-CN': '停止服务器',
+            'zh-TW': '停止伺服器'
         },
         actionRestart: {
             en: 'Restart Server',
             es: 'Reiniciar Servidor',
-            fr: 'Redémarrer le Serveur',
-            de: 'Server Neustarten',
-            pt: 'Reiniciar Servidor'
+            ro: 'Reporniți Serverul',
+            'pt-BR': 'Reiniciar Servidor',
+            da: 'Genstart server',
+            'zh-CN': '重启服务器',
+            'zh-TW': '重啟伺服器'
         },
         actionCommand: {
             en: 'Run Command',
             es: 'Ejecutar Comando',
-            fr: 'Exécuter une Commande',
-            de: 'Befehl Ausführen',
-            pt: 'Executar Comando'
+            ro: 'Executați Comandă',
+            'pt-BR': 'Executar Comando',
+            da: 'Kør kommando',
+            'zh-CN': '运行命令',
+            'zh-TW': '執行命令'
         },
         actionWipe: {
             en: 'Wipe & Restart',
             es: 'Limpiar y Reiniciar',
-            fr: 'Nettoyer et Redémarrer',
-            de: 'Bereinigen & Neustarten',
-            pt: 'Limpar e Reiniciar'
+            ro: 'Ștergeți și Reporniți',
+            'pt-BR': 'Limpar e Reiniciar',
+            da: 'Wipe og genstart',
+            'zh-CN': '清档并重启',
+            'zh-TW': '清除並重啟'
         },
         schedule: {
             en: 'Schedule (Cron Expression)',
             es: 'Programación (Expresión Cron)',
-            fr: 'Planification (Expression Cron)',
-            de: 'Zeitplan (Cron-Ausdruck)',
-            pt: 'Agendamento (Expressão Cron)'
+            ro: 'Programare (Expresie Cron)',
+            'pt-BR': 'Agendamento (Expressão Cron)',
+            da: 'Tidsplan (Cron-udtryk)',
+            'zh-CN': '计划（Cron 表达式）',
+            'zh-TW': '排程（Cron 表達式）'
         },
         scheduleHint: {
             en: 'Examples: "0 4 * * *" (4 AM daily), "0 */6 * * *" (every 6 hours)',
             es: 'Ejemplos: "0 4 * * *" (4 AM diario), "0 */6 * * *" (cada 6 horas)',
-            fr: 'Exemples: "0 4 * * *" (4h du matin quotidien), "0 */6 * * *" (toutes les 6 heures)',
-            de: 'Beispiele: "0 4 * * *" (täglich um 4 Uhr), "0 */6 * * *" (alle 6 Stunden)',
-            pt: 'Exemplos: "0 4 * * *" (4h diariamente), "0 */6 * * *" (a cada 6 horas)'
+            ro: 'Exemple: "0 4 * * *" (4 dimineața zilnic), "0 */6 * * *" (la fiecare 6 ore)',
+            'pt-BR': 'Exemplos: "0 4 * * *" (4h diariamente), "0 */6 * * *" (a cada 6 horas)',
+            da: 'Eksempler: "0 4 * * *" (kl. 4 dagligt), "0 */6 * * *" (hver 6. time)',
+            'zh-CN': '示例："0 4 * * *"（每天凌晨4点）、"0 */6 * * *"（每6小时）',
+            'zh-TW': '範例："0 4 * * *"（每日凌晨4點）、"0 */6 * * *"（每6小時）'
         },
         schedulePlaceholder: {
             en: '0 4 * * *',
             es: '0 4 * * *',
-            fr: '0 4 * * *',
-            de: '0 4 * * *',
-            pt: '0 4 * * *'
+            ro: '0 4 * * *',
+            'pt-BR': '0 4 * * *',
+            da: '0 4 * * *',
+            'zh-CN': '0 4 * * *',
+            'zh-TW': '0 4 * * *'
         }
     },
     buttons: {
         create: {
             en: 'Create Task',
             es: 'Crear Tarea',
-            fr: 'Créer une Tâche',
-            de: 'Aufgabe Erstellen',
-            pt: 'Criar Tarefa'
+            ro: 'Creați Sarcină',
+            'pt-BR': 'Criar Tarefa',
+            da: 'Opret opgave',
+            'zh-CN': '创建任务',
+            'zh-TW': '建立工作'
         },
         delete: {
             en: 'Delete',
             es: 'Eliminar',
-            fr: 'Supprimer',
-            de: 'Löschen',
-            pt: 'Excluir'
+            ro: 'Ștergeți',
+            'pt-BR': 'Excluir',
+            da: 'Slet',
+            'zh-CN': '删除',
+            'zh-TW': '刪除'
         }
     },
     tasks: {
         title: {
             en: 'Scheduled Tasks',
             es: 'Tareas Programadas',
-            fr: 'Tâches Planifiées',
-            de: 'Geplante Aufgaben',
-            pt: 'Tarefas Agendadas'
+            ro: 'Sarcini Planificate',
+            'pt-BR': 'Tarefas Agendadas',
+            da: 'Planlagte opgaver',
+            'zh-CN': '计划任务',
+            'zh-TW': '排程工作'
         },
         active: {
             en: 'Active',
             es: 'Activo',
-            fr: 'Actif',
-            de: 'Aktiv',
-            pt: 'Ativo'
+            ro: 'Activ',
+            'pt-BR': 'Ativo',
+            da: 'Aktiv',
+            'zh-CN': '活跃',
+            'zh-TW': '活躍'
         },
         action: {
             en: 'Action',
             es: 'Acción',
-            fr: 'Action',
-            de: 'Aktion',
-            pt: 'Ação'
+            ro: 'Acțiune',
+            'pt-BR': 'Ação',
+            da: 'Handling',
+            'zh-CN': '操作',
+            'zh-TW': '動作'
         },
         schedule: {
             en: 'Schedule',
             es: 'Programación',
-            fr: 'Planification',
-            de: 'Zeitplan',
-            pt: 'Agendamento'
+            ro: 'Programare',
+            'pt-BR': 'Agendamento',
+            da: 'Tidsplan',
+            'zh-CN': '计划',
+            'zh-TW': '排程'
         },
         nextRun: {
             en: 'Next run',
             es: 'Próxima ejecución',
-            fr: 'Prochaine exécution',
-            de: 'Nächste Ausführung',
-            pt: 'Próxima execução'
+            ro: 'Următoarea execuție',
+            'pt-BR': 'Próxima execução',
+            da: 'Næste kørsel',
+            'zh-CN': '下次运行',
+            'zh-TW': '下次執行'
         }
     },
     messages: {
         created: {
             en: 'Task created successfully!',
             es: '¡Tarea creada exitosamente!',
-            fr: 'Tâche créée avec succès!',
-            de: 'Aufgabe erfolgreich erstellt!',
-            pt: 'Tarefa criada com sucesso!'
+            ro: 'Sarcina a fost creată cu succes!',
+            'pt-BR': 'Tarefa criada com sucesso!',
+            da: 'Opgave oprettet!',
+            'zh-CN': '任务创建成功！',
+            'zh-TW': '工作建立成功！'
         },
         deleted: {
             en: 'Task deleted successfully',
             es: 'Tarea eliminada exitosamente',
-            fr: 'Tâche supprimée avec succès',
-            de: 'Aufgabe erfolgreich gelöscht',
-            pt: 'Tarefa excluída com sucesso'
+            ro: 'Sarcina a fost ștearsă cu succes',
+            'pt-BR': 'Tarefa excluída com sucesso',
+            da: 'Opgave slettet',
+            'zh-CN': '任务删除成功',
+            'zh-TW': '工作刪除成功'
         },
         createFailed: {
             en: 'Failed to create task',
             es: 'Error al crear la tarea',
-            fr: 'Échec de la création de la tâche',
-            de: 'Fehler beim Erstellen der Aufgabe',
-            pt: 'Falha ao criar tarefa'
+            ro: 'Nu s-a putut crea sarcina',
+            'pt-BR': 'Falha ao criar tarefa',
+            da: 'Kunne ikke oprette opgave',
+            'zh-CN': '创建任务失败',
+            'zh-TW': '建立工作失敗'
         },
         deleteFailed: {
             en: 'Failed to delete task',
             es: 'Error al eliminar la tarea',
-            fr: 'Échec de la suppression de la tâche',
-            de: 'Fehler beim Löschen der Aufgabe',
-            pt: 'Falha ao excluir tarefa'
+            ro: 'Nu s-a putut șterge sarcina',
+            'pt-BR': 'Falha ao excluir tarefa',
+            da: 'Kunne ikke slette opgave',
+            'zh-CN': '删除任务失败',
+            'zh-TW': '刪除工作失敗'
         }
     },
     confirm: {
         deleteTitle: {
             en: 'Delete Task',
             es: 'Eliminar Tarea',
-            fr: 'Supprimer la Tâche',
-            de: 'Aufgabe Löschen',
-            pt: 'Excluir Tarefa'
+            ro: 'Ștergeți Sarcina',
+            'pt-BR': 'Excluir Tarefa',
+            da: 'Slet opgave',
+            'zh-CN': '删除任务',
+            'zh-TW': '刪除工作'
         },
         deleteMessage: {
             en: 'Are you sure you want to delete this scheduled task?',
             es: '¿Estás seguro de que quieres eliminar esta tarea programada?',
-            fr: 'Êtes-vous sûr de vouloir supprimer cette tâche planifiée?',
-            de: 'Sind Sie sicher, dass Sie diese geplante Aufgabe löschen möchten?',
-            pt: 'Tem certeza de que deseja excluir esta tarefa agendada?'
+            ro: 'Sigur doriți să ștergeți această sarcină planificată?',
+            'pt-BR': 'Tem certeza de que deseja excluir esta tarefa agendada?',
+            da: 'Er du sikker på, at du vil slette denne planlagte opgave?',
+            'zh-CN': '您确定要删除此计划任务吗？',
+            'zh-TW': '您確定要刪除此排程工作嗎？'
         }
     }
 };

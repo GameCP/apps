@@ -155,15 +155,11 @@ const { t } = window.GameCP_SDK.useIntl();
 Extensions should support the same languages as the main application:
 - English (en) - Default
 - Spanish (es)
-- French (fr)
-- German (de)
-- Portuguese (pt)
-- Italian (it)
-- Dutch (nl)
-- Russian (ru)
-- Chinese (zh)
-- Japanese (ja)
-- Korean (ko)
+- Romanian (ro)
+- Portuguese Brazil (pt-BR)
+- Danish (da)
+- Chinese Simplified (zh-CN)
+- Chinese Traditional (zh-TW)
 
 ## Best Practices
 

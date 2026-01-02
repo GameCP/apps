@@ -2,20 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
 import { databaseContent } from './content';
 import type { Database, DatabaseSource } from './types';
-import { HiDatabase, HiPlus, HiTrash, HiExternalLink, HiClipboardCopy } from 'react-icons/hi';
+import { HiDatabase, HiPlus, HiTrash, HiExternalLink, HiClipboardCopy, HiRefresh, HiCheckCircle, HiXCircle } from 'react-icons/hi';
 
 interface DatabaseTabProps {
     serverId: string;
 }
 
 export function DatabaseTab({ serverId }: DatabaseTabProps) {
-    const { Card, Button, Badge, api, confirm, t } = useGameCP();
+    const { Card, Button, Badge, FormInput, api, confirm, t } = useGameCP();
     const [databases, setDatabases] = useState<Database[]>([]);
     const [sources, setSources] = useState<DatabaseSource[]>([]);
     const [loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(false);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [selectedSource, setSelectedSource] = useState('');
+    const [testingDb, setTestingDb] = useState<string | null>(null);
+    const [testResults, setTestResults] = useState<Record<string, { success: boolean; message: string; latencyMs: number }>>({});
 
     useEffect(() => {
         loadData();
@@ -91,6 +93,18 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
         return `${source.adminerUrl}?${params.toString()}`;
     };
 
+    const testConnection = async (dbId: string) => {
+        setTestingDb(dbId);
+        try {
+            const result = await api.post(`/api/x/database-manager/databases/${dbId}/test`, {});
+            setTestResults(prev => ({ ...prev, [dbId]: result }));
+        } catch (error: any) {
+            setTestResults(prev => ({ ...prev, [dbId]: { success: false, message: error.error || 'Test failed', latencyMs: 0 } }));
+        } finally {
+            setTestingDb(null);
+        }
+    };
+
     if (loading) {
         return (
             <div className="p-6">
@@ -124,7 +138,7 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
                 icon={HiDatabase}
                 padding="lg"
             >
-                <div className="space-y-4">
+                <div className="space-y-4 mt-4">
                     {/* Create Button */}
                     {!showCreateForm && (
                         <Button
@@ -214,29 +228,75 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
                                     </div>
 
                                     {/* Connection Details */}
-                                    <div className="bg-muted/30 rounded p-3 space-y-2 text-sm font-mono mb-3">
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <div>
-                                                <span className="text-muted-foreground">{t(databaseContent.connection.host)}:</span>
-                                                <span className="ml-2 text-foreground">{db.host}</span>
-                                            </div>
-                                            <div>
-                                                <span className="text-muted-foreground">{t(databaseContent.connection.port)}:</span>
-                                                <span className="ml-2 text-foreground">{db.port}</span>
-                                            </div>
-                                            <div>
-                                                <span className="text-muted-foreground">{t(databaseContent.connection.username)}:</span>
-                                                <span className="ml-2 text-foreground">{db.username}</span>
-                                            </div>
-                                            <div>
-                                                <span className="text-muted-foreground">{t(databaseContent.connection.password)}:</span>
-                                                <span className="ml-2 text-foreground">••••••••</span>
-                                            </div>
+                                    <div className="space-y-3 mb-3">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            <FormInput
+                                                label={t(databaseContent.connection.host)}
+                                                name={`host-${db._id}`}
+                                                value={db.host}
+                                                onChange={() => { }}
+                                                readOnly
+                                                copyable
+                                            />
+                                            <FormInput
+                                                label={t(databaseContent.connection.port)}
+                                                name={`port-${db._id}`}
+                                                value={db.port}
+                                                onChange={() => { }}
+                                                readOnly
+                                                copyable
+                                            />
+                                            <FormInput
+                                                label={t(databaseContent.connection.username)}
+                                                name={`username-${db._id}`}
+                                                value={db.username}
+                                                onChange={() => { }}
+                                                readOnly
+                                                copyable
+                                            />
+                                            <FormInput
+                                                label={t(databaseContent.connection.password)}
+                                                name={`password-${db._id}`}
+                                                type="password"
+                                                value={db.password}
+                                                onChange={() => { }}
+                                                readOnly
+                                                copyable
+                                                showHidePassword
+                                            />
                                         </div>
                                     </div>
 
+                                    {/* Test Result */}
+                                    {testResults[db._id] && (
+                                        <div className={`mb-3 p-3 rounded-lg border ${testResults[db._id].success ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'}`}>
+                                            <div className="flex items-center gap-2">
+                                                {testResults[db._id].success ? (
+                                                    <HiCheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
+                                                ) : (
+                                                    <HiXCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
+                                                )}
+                                                <span className={`text-sm font-medium ${testResults[db._id].success ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'}`}>
+                                                    {testResults[db._id].message}
+                                                </span>
+                                                {testResults[db._id].success && testResults[db._id].latencyMs > 0 && (
+                                                    <span className="text-xs text-muted-foreground">({testResults[db._id].latencyMs}ms)</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
                                     {/* Actions */}
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-2 flex-wrap">
+                                        <Button
+                                            onClick={() => testConnection(db._id)}
+                                            variant="secondary"
+                                            size="sm"
+                                            disabled={testingDb === db._id}
+                                        >
+                                            <HiRefresh className={`w-4 h-4 mr-2 ${testingDb === db._id ? 'animate-spin' : ''}`} />
+                                            {testingDb === db._id ? 'Testing...' : 'Test Connection'}
+                                        </Button>
                                         <Button
                                             onClick={() => copyConnectionString(db.connectionString)}
                                             variant="secondary"
