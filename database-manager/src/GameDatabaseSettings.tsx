@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGameCP } from '@gamecp/types/client';
+import { Card, FormInput, Switch } from '@gamecp/ui';
 
 interface GameDatabaseSettingsProps {
     gameId: string;
@@ -8,7 +9,7 @@ interface GameDatabaseSettingsProps {
 }
 
 export function GameDatabaseSettings({ gameId, extensionData, onChange }: GameDatabaseSettingsProps) {
-    const { Card, FormInput, Switch } = useGameCP();
+    const { } = useGameCP();
 
     // Get this extension's data from the extensionData object
     const EXTENSION_ID = 'database-manager';
