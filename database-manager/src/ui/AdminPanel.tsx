@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, Badge, FormInput, useConfirmDialog, Container, Typography } from '@gamecp/ui';
+import { Card, Button, Badge, FormInput, useConfirmDialog, Container, Typography, SkeletonItem, SkeletonCard } from '@gamecp/ui';
 import { lang } from '../lang';
 import type { DatabaseSource, DatabaseType } from '../types';
 import { HiDatabase, HiPlus, HiTrash, HiPencil, HiCheckCircle, HiXCircle, HiRefresh } from 'react-icons/hi';
@@ -145,12 +145,43 @@ export function DatabaseSourcesPage() {
 
     if (loading) {
         return (
-            <Container>
-                <Card padding="lg">
-                    <Typography variant="muted" className="text-center">
-                        {t(lang.admin.loading)}
-                    </Typography>
-                </Card>
+            <Container className="space-y-6">
+                {/* Header - Static content, render directly */}
+                <div className="flex items-center justify-between">
+                    <div>
+                        <Typography as="h1" size="2xl" className="font-bold">{t(lang.admin.title)}</Typography>
+                        <Typography variant="muted" className="mt-1">
+                            {t(lang.admin.description)}
+                        </Typography>
+                    </div>
+                    <SkeletonItem width="w-36" height="h-10" />
+                </div>
+
+                {/* Sources List Skeleton */}
+                <div className="grid grid-cols-1 gap-4">
+                    {[1, 2, 3].map((i) => (
+                        <SkeletonCard key={i}>
+                            <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <SkeletonItem width="w-40" height="h-6" />
+                                        <SkeletonItem width="w-16" height="h-5" rounded />
+                                        <SkeletonItem width="w-16" height="h-5" rounded />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <SkeletonItem width="w-36" height="h-4" />
+                                        <SkeletonItem width="w-48" height="h-4" />
+                                        <SkeletonItem width="w-32" height="h-3" />
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <SkeletonItem width="w-9" height="h-9" />
+                                    <SkeletonItem width="w-9" height="h-9" />
+                                </div>
+                            </div>
+                        </SkeletonCard>
+                    ))}
+                </div>
             </Container>
         );
     }

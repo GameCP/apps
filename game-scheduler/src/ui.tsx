@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TbCalendarEvent } from 'react-icons/tb';
 import { lang } from './lang';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, Badge, FormInput, useConfirmDialog, Container, Typography } from '@gamecp/ui';
+import { Card, Button, Badge, FormInput, useConfirmDialog, Container, Typography, SkeletonItem, SkeletonCard } from '@gamecp/ui';
 import { CronBuilder } from './ui/CronBuilder';
 
 // Client-side UI components
@@ -11,7 +11,7 @@ export function ScheduleIcon({ serverId }: { serverId: string }) {
 
     return (
         <Link
-            href={`/ game - servers / ${serverId} /extensions/scheduler`}
+            href={`/game-servers/${serverId}/extensions/scheduler`}
             className="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-foreground hover:bg-muted hover:text-foreground transition-all duration-150 ease-in-out"
             title={t(lang.page.title)}
         >
@@ -26,6 +26,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
     const { confirm, dialog } = useConfirmDialog();
     const [tasks, setTasks] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
     const [message, setMessage] = useState('');
     const [error, setError] = useState<string | null>(null);
 
@@ -40,12 +41,92 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
 
     const loadTasks = async () => {
         try {
-            const data = await api.get(`/ api / x / game - scheduler / tasks ? serverId = ${serverId} `);
+            const data = await api.get(`/api/x/game-scheduler/tasks?serverId=${serverId}`);
             setTasks(data.tasks || []);
         } catch (err) {
             console.error('Failed to load tasks:', err);
+        } finally {
+            setInitialLoading(false);
         }
     };
+
+    // Loading skeleton - mirrors the final layout structure
+    if (initialLoading) {
+        return (
+            <Container className="space-y-6">
+                {/* Header - Static content, render directly */}
+                <div className="mb-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                            <Typography as="h1" size="xl" className="sm:text-2xl font-bold">
+                                {t(lang.page.title)}
+                            </Typography>
+                            <Typography variant="muted" size="sm" className="sm:text-base mt-1">
+                                {t(lang.page.description)}
+                            </Typography>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-4 sm:space-y-6">
+                    {/* Create Task Card - Render card with static title, skeleton form fields */}
+                    <Card
+                        title={t(lang.createTask.title)}
+                        description={t(lang.createTask.description)}
+                        icon={TbCalendarEvent}
+                        iconColor="blue"
+                        padding="lg"
+                    >
+                        <div className="space-y-6 mt-4">
+                            {/* Task Name Field */}
+                            <div>
+                                <SkeletonItem width="w-24" height="h-4" className="mb-2" />
+                                <SkeletonItem width="w-full" height="h-10" />
+                            </div>
+                            {/* Action Type Field */}
+                            <div>
+                                <SkeletonItem width="w-28" height="h-4" className="mb-2" />
+                                <SkeletonItem width="w-full" height="h-10" />
+                            </div>
+                            {/* Schedule Field */}
+                            <div>
+                                <SkeletonItem width="w-20" height="h-4" className="mb-3" />
+                                <SkeletonItem width="w-full" height="h-32" />
+                            </div>
+                            {/* Submit Button */}
+                            <SkeletonItem width="w-32" height="h-10" />
+                        </div>
+                    </Card>
+
+                    {/* Tasks List Skeleton */}
+                    <Card
+                        title={t(lang.tasks.title)}
+                        padding="none"
+                        headerClassName="p-4 sm:px-6 border-b border-border"
+                    >
+                        <div className="divide-y divide-border">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="px-4 py-4 sm:px-6 flex items-center justify-between">
+                                    <div className="flex-1 min-w-0 mr-4">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <SkeletonItem width="w-16" height="h-5" rounded />
+                                            <SkeletonItem width="w-32" height="h-5" />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <SkeletonItem width="w-40" height="h-3" />
+                                            <SkeletonItem width="w-48" height="h-3" />
+                                            <SkeletonItem width="w-36" height="h-3" />
+                                        </div>
+                                    </div>
+                                    <SkeletonItem width="w-20" height="h-8" />
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
+                </div>
+            </Container>
+        );
+    }
 
     const handleCreateTask = async (e: React.FormEvent) => {
         e.preventDefault();

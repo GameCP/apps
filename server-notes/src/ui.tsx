@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, FormInput, Container, Typography } from '@gamecp/ui';
+import { Card, Button, FormInput, Container, Typography, SkeletonItem, SkeletonCard } from '@gamecp/ui';
 import { lang } from './lang';
 
 interface NotesAreaProps {
@@ -64,8 +64,15 @@ export function NotesArea({ serverId }: NotesAreaProps) {
 
     if (loading) {
         return (
-            <Card padding="lg">
-                <Typography variant="muted">{t(lang.loading)}</Typography>
+            <Card padding="lg" contentClassName="space-y-4">
+                <div className="flex items-center justify-between">
+                    <Typography as="h3" size="lg" className="font-bold">{t(lang.title)}</Typography>
+                    <SkeletonItem width="w-40" height="h-4" />
+                </div>
+                <SkeletonItem width="w-full" height="h-40" />
+                <div className="flex items-center justify-end">
+                    <SkeletonItem width="w-24" height="h-10" />
+                </div>
             </Card>
         );
     }

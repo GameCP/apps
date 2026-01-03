@@ -3,7 +3,7 @@ import { TbBrandDiscord } from 'react-icons/tb';
 import { HiInformationCircle } from 'react-icons/hi';
 import { lang } from './lang';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, FormInput, Container, Typography, Badge, useConfirmDialog } from '@gamecp/ui';
+import { Card, Button, FormInput, Container, Typography, Badge, useConfirmDialog, SkeletonItem, SkeletonCard } from '@gamecp/ui';
 
 interface Webhook {
     url: string;
@@ -41,6 +41,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
     const [webhookUrl, setWebhookUrl] = useState<string>('');
     const [webhooks, setWebhooks] = useState<Webhook[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [initialLoading, setInitialLoading] = useState<boolean>(true);
     const [message, setMessage] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
 
@@ -50,12 +51,93 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
 
     const loadWebhooks = async () => {
         try {
-            const data = await api.get(`/ api / x / discord - notifications / webhooks ? serverId = ${serverId} `);
+            const data = await api.get(`/api/x/discord-notifications/webhooks?serverId=${serverId}`);
             setWebhooks(data.webhooks || []);
         } catch (err) {
             console.error('Failed to load webhooks:', err);
+        } finally {
+            setInitialLoading(false);
         }
     };
+
+    // Loading skeleton - mirrors the final layout structure
+    if (initialLoading) {
+        return (
+            <Container className="space-y-6">
+                {/* Header - Static content, render directly */}
+                <div className="mb-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                            <Typography as="h1" size="xl" className="sm:text-2xl font-bold">
+                                {t(lang.page.title)}
+                            </Typography>
+                            <Typography variant="muted" size="sm" className="sm:text-base mt-1">
+                                {t(lang.page.description)}
+                            </Typography>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-4 sm:space-y-6">
+                    {/* Configuration Card - Render card with static title, skeleton form fields */}
+                    <Card
+                        title={t(lang.config.title)}
+                        description={t(lang.config.description)}
+                        icon={TbBrandDiscord}
+                        iconColor="blue"
+                        padding="lg"
+                    >
+                        <div className="space-y-6 mt-4">
+                            {/* Webhook URL Field */}
+                            <div>
+                                <SkeletonItem width="w-28" height="h-4" className="mb-2" />
+                                <SkeletonItem width="w-full" height="h-10" />
+                                <SkeletonItem width="w-48" height="h-3" className="mt-2" />
+                            </div>
+                            {/* Buttons */}
+                            <div className="flex flex-col sm:flex-row gap-3">
+                                <SkeletonItem width="w-24" height="h-10" />
+                                <SkeletonItem width="w-32" height="h-10" />
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Webhooks List Skeleton */}
+                    <Card
+                        title={t(lang.integrations.title)}
+                        padding="none"
+                        headerClassName="p-4 sm:px-6 border-b border-border"
+                    >
+                        <div className="divide-y divide-border">
+                            {[1, 2].map((i) => (
+                                <div key={i} className="px-4 py-4 sm:px-6 flex items-center justify-between">
+                                    <div className="flex items-center min-w-0 mr-4">
+                                        <SkeletonItem width="w-14" height="h-5" rounded className="mr-3" />
+                                        <SkeletonItem width="w-64" height="h-4" />
+                                    </div>
+                                    <SkeletonItem width="w-20" height="h-8" />
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
+                </div>
+
+                {/* Info Box - Render static structure with skeleton for content */}
+                <div className="mt-6 sm:mt-8">
+                    <Card
+                        variant="filled"
+                        padding="md"
+                        title={t(lang.info.title)}
+                    >
+                        <div className="flex items-start">
+                            <HiInformationCircle className="w-5 h-5 text-muted-foreground mr-3 mt-0.5 flex-shrink-0" />
+                            <SkeletonItem width="w-full" height="h-12" />
+                        </div>
+                    </Card>
+                </div>
+            </Container>
+        );
+    }
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();

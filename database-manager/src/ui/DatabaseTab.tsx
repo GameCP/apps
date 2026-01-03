@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, Badge, FormInput, useConfirmDialog, Container, EmptyState, Typography } from '@gamecp/ui';
+import { Card, Button, Badge, FormInput, useConfirmDialog, Container, EmptyState, Typography, SkeletonItem, SkeletonCard } from '@gamecp/ui';
 import { lang } from '../lang';
 import type { Database, DatabaseSource } from '../types';
 import { HiDatabase, HiPlus, HiTrash, HiExternalLink, HiClipboardCopy, HiRefresh, HiCheckCircle, HiXCircle } from 'react-icons/hi';
@@ -109,11 +109,61 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
 
     if (loading) {
         return (
-            <Container>
-                <Card padding="lg">
-                    <Typography variant="muted" className="text-center">
-                        {t(lang.info.loading)}
-                    </Typography>
+            <Container className="space-y-6">
+                <Card
+                    title={t(lang.page.title)}
+                    description={t(lang.page.description)}
+                    icon={HiDatabase}
+                    padding="lg"
+                    contentClassName="space-y-4"
+                >
+                    {/* Create Button Skeleton */}
+                    <SkeletonItem width="w-36" height="h-10" />
+
+                    {/* Databases List Skeleton */}
+                    <div className="space-y-4">
+                        {[1, 2].map((i) => (
+                            <div key={i} className="bg-background border border-border rounded-lg p-4">
+                                <div className="flex items-start justify-between mb-3">
+                                    <div className="flex-1 min-w-0">
+                                        <SkeletonItem width="w-32" height="h-5" className="mb-2" />
+                                        <div className="flex items-center gap-2">
+                                            <SkeletonItem width="w-16" height="h-5" rounded />
+                                            <SkeletonItem width="w-28" height="h-4" />
+                                        </div>
+                                    </div>
+                                    <SkeletonItem width="w-9" height="h-9" />
+                                </div>
+
+                                {/* Connection Details Grid */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                                    <div>
+                                        <SkeletonItem width="w-12" height="h-4" className="mb-2" />
+                                        <SkeletonItem width="w-full" height="h-10" />
+                                    </div>
+                                    <div>
+                                        <SkeletonItem width="w-12" height="h-4" className="mb-2" />
+                                        <SkeletonItem width="w-full" height="h-10" />
+                                    </div>
+                                    <div>
+                                        <SkeletonItem width="w-20" height="h-4" className="mb-2" />
+                                        <SkeletonItem width="w-full" height="h-10" />
+                                    </div>
+                                    <div>
+                                        <SkeletonItem width="w-20" height="h-4" className="mb-2" />
+                                        <SkeletonItem width="w-full" height="h-10" />
+                                    </div>
+                                </div>
+
+                                {/* Actions */}
+                                <div className="flex gap-2 flex-wrap">
+                                    <SkeletonItem width="w-32" height="h-9" />
+                                    <SkeletonItem width="w-36" height="h-9" />
+                                    <SkeletonItem width="w-28" height="h-9" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </Card>
             </Container>
         );

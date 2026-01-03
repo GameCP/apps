@@ -13,7 +13,6 @@
     "validate": "tsc --noEmit"
   },
   "dependencies": {
-    "@gamecp/ui": "^0.1.0",
     "cron-parser": "^5.4.0",
     "react": "^19.2.3",
     "react-cron-generator": "^2.1.0",
@@ -21,11 +20,16 @@
     "react-icons": "^5.0.1"
   },
   "devDependencies": {
-    "@gamecp/build": "^1.0.2",
+    "@gamecp/build": "file:../../packages/build",
     "@gamecp/types": "file:../../packages/types",
+    "@gamecp/ui": "file:../../packages/ui",
     "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "framer-motion": "^12.23.26",
+    "next": "^15.5.9",
+    "next-intlayer": "^7.5.6",
+    "react-tooltip": "^5.30.0",
     "typescript": "^5.9.3"
   },
   "author": "GameCP Team",

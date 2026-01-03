@@ -141,6 +141,20 @@ export const deleteTask: ApiRouteHandler = async (ctx) => {
 export const processScheduledTasks: TypedEventHandler<'cron.tick'> = async (event, payload, ctx) => {
   const { task } = payload as CronTickPayload;
 
+  // Validate task has required fields
+  if (!task || !task._id || !task.serverId) {
+    ctx.logger.error('Invalid task payload: missing required fields');
+    return;
+  }
+
+  // Verify the task still exists before processing
+  // (it may have been deleted between scheduling and execution)
+  const existingTask = await ctx.db.collection('schedules').findOne({ _id: task._id });
+  if (!existingTask) {
+    ctx.logger.warn(`Task ${task.name || task._id} no longer exists in the database. Skipping execution.`);
+    return;
+  }
+
   ctx.logger.info(`Processing task: ${task.name} (${task._id}) for server ${task.serverId}`);
 
   try {
@@ -205,14 +219,15 @@ export const processScheduledTasks: TypedEventHandler<'cron.tick'> = async (even
     ctx.logger.info(`Task ${task.name} executed successfully. Next run: ${nextRun}`);
 
   } catch (error: any) {
-    ctx.logger.error(`Error executing task ${task.name}:`, error.message);
+    const taskIdentifier = task.name || task._id;
+    ctx.logger.error(`Error executing task ${taskIdentifier}:`, error.message);
 
     // Check if the error is because the game server doesn't exist
     const isServerNotFound = error.message?.includes('Game server not found') || 
                              error.message?.includes('not found');
     
     if (isServerNotFound) {
-      ctx.logger.warn(`Game server ${task.serverId} no longer exists. Cleaning up orphaned task ${task.name}...`);
+      ctx.logger.warn(`Game server ${task.serverId} no longer exists. Cleaning up orphaned task ${taskIdentifier}...`);
       
       // Delete the orphaned task
       await ctx.db.collection('schedules').deleteOne({ _id: task._id });
@@ -221,14 +236,14 @@ export const processScheduledTasks: TypedEventHandler<'cron.tick'> = async (even
       await ctx.db.collection('task_logs').insertOne({
         taskId: task._id!,
         serverId: task.serverId,
-        taskName: task.name,
+        taskName: taskIdentifier,
         action: task.action,
         status: 'failed',
         error: 'Game server not found - task deleted',
         executed_at: new Date(),
       } as TaskLog);
       
-      ctx.logger.info(`Orphaned task ${task.name} has been automatically deleted`);
+      ctx.logger.info(`Orphaned task ${taskIdentifier} has been automatically deleted`);
       return; // Don't re-throw, task is cleaned up
     }
 
