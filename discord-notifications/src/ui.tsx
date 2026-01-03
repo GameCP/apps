@@ -156,19 +156,15 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                     padding="lg"
                 >
                     <form onSubmit={handleSave} className="space-y-6 mt-4">
-                        <div>
-                            <label className="block text-sm font-semibold text-foreground mb-1">
-                                {t(discordContent.form.webhookUrl)} <span className="text-red-500">*</span>
-                            </label>
-                            <p className="text-xs text-muted-foreground mb-2">
-                                {t(discordContent.form.webhookHint)}
-                            </p>
-                            <input
+                        <div className="space-y-4">
+                            <FormInput
+                                label={t(discordContent.form.webhookUrl)}
+                                name="webhookUrl"
                                 type="url"
                                 value={webhookUrl}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWebhookUrl(e.target.value)}
+                                onChange={(e) => setWebhookUrl(e.target.value)}
                                 placeholder={t(discordContent.form.webhookPlaceholder)}
-                                className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm transition-all"
+                                description={t(discordContent.form.webhookHint)}
                                 required
                             />
                         </div>
