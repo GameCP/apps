@@ -186,7 +186,7 @@ export function DatabaseSourcesPage() {
                                     name="type"
                                     type="select"
                                     value={formData.type}
-                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                                    onChange={(e) => {
                                         const type = e.target.value as DatabaseType;
                                         setFormData({
                                             ...formData,
@@ -208,7 +208,7 @@ export function DatabaseSourcesPage() {
                                     name="name"
                                     type="text"
                                     value={formData.name}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     placeholder={t(databaseContent.admin.namePlaceholder)}
                                     required
                                 />
@@ -218,7 +218,7 @@ export function DatabaseSourcesPage() {
                                     name="host"
                                     type="text"
                                     value={formData.host}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, host: e.target.value })}
+                                    onChange={(e) => setFormData({ ...formData, host: e.target.value })}
                                     placeholder={t(databaseContent.admin.hostPlaceholder)}
                                     required
                                 />
@@ -228,7 +228,7 @@ export function DatabaseSourcesPage() {
                                     name="port"
                                     type="number"
                                     value={formData.port}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, port: parseInt(e.target.value) })}
+                                    onChange={(e) => setFormData({ ...formData, port: parseInt(e.target.value) })}
                                     required
                                 />
 
@@ -240,7 +240,7 @@ export function DatabaseSourcesPage() {
                                             name="adminUsername"
                                             type="text"
                                             value={formData.adminUsername}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, adminUsername: e.target.value })}
+                                            onChange={(e) => setFormData({ ...formData, adminUsername: e.target.value })}
                                             placeholder={t(databaseContent.admin.adminUsernamePlaceholder)}
                                             required
                                         />
@@ -250,7 +250,7 @@ export function DatabaseSourcesPage() {
                                             name="adminPassword"
                                             type="password"
                                             value={formData.adminPassword}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, adminPassword: e.target.value })}
+                                            onChange={(e) => setFormData({ ...formData, adminPassword: e.target.value })}
                                             showHidePassword
                                             required
                                         />
@@ -265,7 +265,7 @@ export function DatabaseSourcesPage() {
                                             name="adminUsername"
                                             type="text"
                                             value={formData.adminUsername}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, adminUsername: e.target.value })}
+                                            onChange={(e) => setFormData({ ...formData, adminUsername: e.target.value })}
                                             placeholder={t(databaseContent.admin.adminUsernamePlaceholder)}
                                             description="Optional - leave blank if authentication is not enabled"
                                         />
@@ -275,7 +275,7 @@ export function DatabaseSourcesPage() {
                                             name="adminPassword"
                                             type="password"
                                             value={formData.adminPassword}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, adminPassword: e.target.value })}
+                                            onChange={(e) => setFormData({ ...formData, adminPassword: e.target.value })}
                                             showHidePassword
                                             description="Optional - leave blank if authentication is not enabled"
                                         />
@@ -288,7 +288,7 @@ export function DatabaseSourcesPage() {
                                         name="adminerUrl"
                                         type="url"
                                         value={formData.adminerUrl}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, adminerUrl: e.target.value })}
+                                        onChange={(e) => setFormData({ ...formData, adminerUrl: e.target.value })}
                                         placeholder="https://adminer.example.com"
                                         description="URL to your Adminer instance for web-based database management."
                                         required
