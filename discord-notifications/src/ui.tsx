@@ -35,7 +35,8 @@ export function DiscordIcon({ serverId }: DiscordIconProps) {
 }
 
 export function SettingsPage({ serverId }: SettingsPageProps) {
-    const { api, confirm, t } = useGameCP();
+    const { api, t } = useGameCP();
+    const { confirm, dialog } = useConfirmDialog();
     const [webhookUrl, setWebhookUrl] = useState<string>('');
     const [webhooks, setWebhooks] = useState<Webhook[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
