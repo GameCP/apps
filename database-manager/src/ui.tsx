@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, Badge, FormInput } from '@gamecp/ui';
+import { Card, Button, Badge, FormInput, useConfirmDialog } from '@gamecp/ui';
 import { databaseContent } from './content';
 import type { Database, DatabaseSource } from './types';
 import { HiDatabase, HiPlus, HiTrash, HiExternalLink, HiClipboardCopy, HiRefresh, HiCheckCircle, HiXCircle } from 'react-icons/hi';
@@ -10,7 +10,8 @@ interface DatabaseTabProps {
 }
 
 export function DatabaseTab({ serverId }: DatabaseTabProps) {
-    const { api, confirm, t } = useGameCP();
+    const { api, t } = useGameCP();
+    const { confirm, dialog } = useConfirmDialog();
     const [databases, setDatabases] = useState<Database[]>([]);
     const [sources, setSources] = useState<DatabaseSource[]>([]);
     const [loading, setLoading] = useState(true);
@@ -28,7 +29,7 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
         setLoading(true);
         try {
             const [dbRes, sourcesRes] = await Promise.all([
-                api.get(`/api/x/database-manager/databases?serverId=${serverId}`),
+                api.get(`/ api / x / database - manager / databases ? serverId = ${serverId} `),
                 api.get('/api/x/database-manager/sources'),
             ]);
             setDatabases(dbRes.databases || []);
@@ -69,7 +70,7 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
         if (!confirmed) return;
 
         try {
-            await api.delete(`/api/x/database-manager/databases/${id}`);
+            await api.delete(`/ api / x / database - manager / databases / ${id} `);
             await loadData();
         } catch (error: any) {
             alert(error.error || 'Failed to delete database');
@@ -91,13 +92,13 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
             username: db.username,
             db: db.name,
         });
-        return `${source.adminerUrl}?${params.toString()}`;
+        return `${source.adminerUrl}?${params.toString()} `;
     };
 
     const testConnection = async (dbId: string) => {
         setTestingDb(dbId);
         try {
-            const result = await api.post(`/api/x/database-manager/databases/${dbId}/test`, {});
+            const result = await api.post(`/ api / x / database - manager / databases / ${dbId}/test`, {});
             setTestResults(prev => ({ ...prev, [dbId]: result }));
         } catch (error: any) {
             setTestResults(prev => ({ ...prev, [dbId]: { success: false, message: error.error || 'Test failed', latencyMs: 0 } }));
@@ -324,6 +325,7 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
                     )}
                 </div>
             </Card>
+            {dialog}
         </div>
     );
 }

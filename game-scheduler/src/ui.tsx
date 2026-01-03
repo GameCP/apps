@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TbCalendarEvent } from 'react-icons/tb';
 import { schedulerContent } from './content';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, Badge } from '@gamecp/ui';
+import { Card, Button, Badge, FormInput, useConfirmDialog } from '@gamecp/ui';
 import { CronBuilder } from './ui/CronBuilder';
 
 // Client-side UI components
@@ -21,8 +21,9 @@ export function ScheduleIcon({ serverId }: { serverId: string }) {
     );
 }
 
-export function SchedulerPage({ serverId }: { serverId: string }) {
-    const { api, confirm, t } = useGameCP();
+export function GameSchedulerTab({ gameServerId }: GameSchedulerTabProps) {
+    const { api, t } = useGameCP();
+    const { confirm, dialog } = useConfirmDialog();
     const [tasks, setTasks] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, Badge, FormInput } from '@gamecp/ui';
+import { Card, Button, Badge, FormInput, useConfirmDialog } from '@gamecp/ui';
 import { databaseContent } from './content';
 import type { DatabaseSource, DatabaseType } from './types';
 import { HiDatabase, HiPlus, HiTrash, HiPencil, HiCheckCircle, HiXCircle, HiRefresh } from 'react-icons/hi';
@@ -12,7 +12,8 @@ interface TestResult {
 }
 
 export function DatabaseSourcesPage() {
-    const { api, confirm, t } = useGameCP();
+    const { api, t } = useGameCP();
+    const { confirm, dialog } = useConfirmDialog();
     const [sources, setSources] = useState<DatabaseSource[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);

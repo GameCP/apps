@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TbBrandDiscord } from 'react-icons/tb';
 import { discordContent } from './content';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, Badge } from '@gamecp/ui';
+import { Card, Button, Badge, FormInput, useConfirmDialog } from '@gamecp/ui';
 
 interface Webhook {
     url: string;
@@ -14,8 +14,8 @@ interface DiscordIconProps {
     serverId: string;
 }
 
-interface SettingsPageProps {
-    serverId: string;
+interface DiscordNotificationsTabProps {
+    gameServerId: string;
 }
 
 // Client-side UI components
