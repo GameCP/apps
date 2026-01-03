@@ -75,21 +75,26 @@ Currently supported:
 }
 ```
 
-### 2. **Use the GameCP SDK**
+### 2. **Use the GameCP UI Library**
 
-Always use `@gamecp/types/client` for UI components:
+Always use `@gamecp/ui` for UI components and `@gamecp/types/client` for SDK utilities:
 
 ```typescript
 import { useGameCP } from '@gamecp/types/client';
+import { Card, Button, Badge, FormInput, Switch } from '@gamecp/ui';
 
 export function MyComponent() {
-  const { Card, Button, Badge, Link, t } = useGameCP();
+  const { api, confirm, t } = useGameCP();
   
   return (
     <Card>
-      <Link href="/extensions/my-extension">
-        <Button variant="primary">{t(myContent.title)}</Button>
-      </Link>
+      <FormInput
+        label="Name"
+        name="name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <Button variant="primary">{t(myContent.title)}</Button>
     </Card>
   );
 }
@@ -101,9 +106,10 @@ export function MyComponent() {
 - Hardcoded English text
 
 ✅ **DO** use:
-- SDK's `Link` component
+- `@gamecp/ui` for UI components (Card, Button, Badge, FormInput, Switch, etc.)
+- SDK's `Link` component from `useGameCP()` for navigation
 - SDK's `t()` function for translations
-- SDK's UI components (`Card`, `Button`, `Badge`)
+- SDK's `api` for API calls
 
 ### 3. **Full i18n Support**
 
@@ -240,12 +246,18 @@ export async function myHandler(ctx: ExtensionContext): Promise<ApiResponse> {
 ```json
 {
   "dependencies": {
-    "@gamecp/types": "^0.2.1"
+    "@gamecp/types": "^0.2.1",
+    "@gamecp/ui": "^0.1.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.0.0",
+    "framer-motion": "^11.0.0"
   },
   "devDependencies": {
-    "@gamecp/build": "file:../../packages/build",
-    "typescript": "^5.3.3",
-    "react": "^18.2.0"
+    "@gamecp/build": "^1.0.2",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.3.3"
   }
 }
 ```
@@ -343,8 +355,10 @@ await gamecp.api.delete(`/api/x/my-extension/items/${id}`);
 ## Checklist Before Release
 
 - [ ] All text is translated (5 languages)
-- [ ] Uses SDK components (`Card`, `Button`, `Badge`, `Link`)
+- [ ] Uses `@gamecp/ui` components (Card, Button, Badge, FormInput, Switch)
+- [ ] Uses SDK utilities from `useGameCP()` (api, confirm, t, Link)
 - [ ] Uses SDK navigation (no `window.location.href`)
+- [ ] React 19 and required peer dependencies installed
 - [ ] Routes use `/extensions/` pattern
 - [ ] Icon is included (`assets/icon.png`)
 - [ ] README is complete
