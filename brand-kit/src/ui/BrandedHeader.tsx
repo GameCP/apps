@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGameCP } from '@gamecp/types/client';
+import { Card } from '@gamecp/ui';
 
 interface BrandedHeaderProps {
     originalProps: any;
@@ -11,7 +12,7 @@ interface BrandedHeaderProps {
  * Displays custom header text at the top of pages
  */
 export function BrandedHeader({ originalProps }: BrandedHeaderProps) {
-    const { Card, getConfig } = useGameCP();
+    const { getConfig } = useGameCP();
     const config = getConfig('brand-kit');
 
     const headerText = config.headerText || '';
