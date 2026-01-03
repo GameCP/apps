@@ -230,6 +230,7 @@ export function GameSchedulerTab({ gameServerId }: GameSchedulerTabProps) {
                     </Card>
                 )}
             </div>
+            {dialog}
         </div>
     );
 }
