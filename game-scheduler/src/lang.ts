@@ -3,7 +3,7 @@
  * Supports: en, es, ro, pt-BR, da, zh-CN, zh-TW (matching main app)
  */
 
-export const schedulerContent = {
+export const lang = {
     nav: {
         title: {
             en: 'Scheduler',
@@ -279,6 +279,51 @@ export const schedulerContent = {
             da: 'Er du sikker på, at du vil slette denne planlagte opgave?',
             'zh-CN': '您确定要删除此计划任务吗？',
             'zh-TW': '您確定要刪除此排程工作嗎？'
+        }
+    },
+    cronBuilder: {
+        scheduleSummary: { en: 'Schedule Summary', es: 'Resumen del Horario', ro: 'Rezumat Program', 'pt-BR': 'Resumo do Agendamento', da: 'Tidsplan oversigt', 'zh-CN': '计划摘要', 'zh-TW': '排程摘要' },
+        nextRun: { en: 'Next Run', es: 'Próxima Ejecución', ro: 'Următoarea Execuție', 'pt-BR': 'Próxima Execução', da: 'Næste Kørsel', 'zh-CN': '下次运行', 'zh-TW': '下次執行' },
+        visualBuilder: { en: 'Visual Builder', es: 'Constructor Visual', ro: 'Constructor Vizual', 'pt-BR': 'Construtor Visual', da: 'Visuel Bygger', 'zh-CN': '可视化构建器', 'zh-TW': '視覺化建構器' },
+        advancedCron: { en: 'Advanced (Cron)', es: 'Avanzado (Cron)', ro: 'Avansat (Cron)', 'pt-BR': 'Avançado (Cron)', da: 'Avanceret (Cron)', 'zh-CN': '高级（Cron）', 'zh-TW': '進階（Cron）' },
+        howOften: { en: 'How often should this run?', es: '¿Con qué frecuencia debe ejecutarse?', ro: 'Cât de des ar trebui să ruleze?', 'pt-BR': 'Com que frequência isso deve ser executado?', da: 'Hvor ofte skal dette køre?', 'zh-CN': '这应该多久运行一次？', 'zh-TW': '這應該多久執行一次？' },
+        everyHour: { en: 'Every Hour', es: 'Cada Hora', ro: 'În Fiecare Oră', 'pt-BR': 'A Cada Hora', da: 'Hver Time', 'zh-CN': '每小时', 'zh-TW': '每小時' },
+        everyDay: { en: 'Every Day', es: 'Cada Día', ro: 'În Fiecare Zi', 'pt-BR': 'Todos os Dias', da: 'Hver Dag', 'zh-CN': '每天', 'zh-TW': '每天' },
+        everyWeek: { en: 'Every Week', es: 'Cada Semana', ro: 'În Fiecare Săptămână', 'pt-BR': 'Toda Semana', da: 'Hver Uge', 'zh-CN': '每周', 'zh-TW': '每週' },
+        customAdvanced: { en: 'Custom (Switch to Advanced)', es: 'Personalizado (Cambiar a Avanzado)', ro: 'Personalizat (Treceți la Avansat)', 'pt-BR': 'Personalizado (Mudar para Avançado)', da: 'Brugerdefineret (Skift til Avanceret)', 'zh-CN': '自定义（切换到高级）', 'zh-TW': '自訂（切換到進階）' },
+        hour24: { en: 'Hour (24h)', es: 'Hora (24h)', ro: 'Oră (24h)', 'pt-BR': 'Hora (24h)', da: 'Time (24t)', 'zh-CN': '小时（24小时制）', 'zh-TW': '小時（24小時制）' },
+        hourHint: { en: '0 = Midnight, 12 = Noon, 23 = 11PM', es: '0 = Medianoche, 12 = Mediodía, 23 = 11PM', ro: '0 = Miezul nopții, 12 = Amiază, 23 = 23:00', 'pt-BR': '0 = Meia-noite, 12 = Meio-dia, 23 = 23h', da: '0 = Midnat, 12 = Middag, 23 = 23:00', 'zh-CN': '0 = 午夜, 12 = 中午, 23 = 晚上11点', 'zh-TW': '0 = 午夜, 12 = 中午, 23 = 晚上11點' },
+        minute: { en: 'Minute', es: 'Minuto', ro: 'Minut', 'pt-BR': 'Minuto', da: 'Minut', 'zh-CN': '分钟', 'zh-TW': '分鐘' },
+        minutePastHour: { en: 'Minute past the hour', es: 'Minuto pasada la hora', ro: 'Minut după oră', 'pt-BR': 'Minuto após a hora', da: 'Minut over timen', 'zh-CN': '每小时的第几分钟', 'zh-TW': '每小時的第幾分鐘' },
+        runAt: { en: 'Run at :', es: 'Ejecutar a :', ro: 'Rulează la :', 'pt-BR': 'Executar às :', da: 'Kør ved :', 'zh-CN': '运行于：', 'zh-TW': '執行於：' },
+        ofEveryHour: { en: 'of every hour', es: 'de cada hora', ro: 'din fiecare oră', 'pt-BR': 'de cada hora', da: 'af hver time', 'zh-CN': '每小时', 'zh-TW': '每小時' },
+        dayOfWeek: { en: 'Day of the Week', es: 'Día de la Semana', ro: 'Ziua Săptămânii', 'pt-BR': 'Dia da Semana', da: 'Ugedag', 'zh-CN': '星期几', 'zh-TW': '星期幾' },
+        quickPresets: { en: 'Quick Presets', es: 'Ajustes Rápidos', ro: 'Presetări Rapide', 'pt-BR': 'Predefinições Rápidas', da: 'Hurtige Forudindstillinger', 'zh-CN': '快速预设', 'zh-TW': '快速預設' },
+        rawCron: { en: 'Raw Cron Expression', es: 'Expresión Cron', ro: 'Expresie Cron', 'pt-BR': 'Expressão Cron', da: 'Rå Cron Udtryk', 'zh-CN': '原始 Cron 表达式', 'zh-TW': '原始 Cron 表達式' },
+        cronFormat: { en: 'Format: minute hour day(month) month day(week)', es: 'Formato: minuto hora día(mes) mes día(semana)', ro: 'Format: minut oră zi(lună) lună zi(săptămână)', 'pt-BR': 'Formato: minuto hora dia(mês) mês dia(semana)', da: 'Format: minut time dag(måned) måned dag(uge)', 'zh-CN': '格式：分钟 小时 日(月) 月 日(周)', 'zh-TW': '格式：分鐘 小時 日(月) 月 日(週)' },
+        needHelp: { en: 'Need help?', es: '¿Necesitas ayuda?', ro: 'Aveți nevoie de ajutor?', 'pt-BR': 'Precisa de ajuda?', da: 'Brug for hjælp?', 'zh-CN': '需要帮助？', 'zh-TW': '需要幫助？' },
+        commonExamples: { en: 'Common Examples', es: 'Ejemplos Comunes', ro: 'Exemple Comune', 'pt-BR': 'Exemplos Comuns', da: 'Almindelige Eksempler', 'zh-CN': '常见示例', 'zh-TW': '常見範例' },
+        dailyMidnight: { en: 'Daily at midnight', es: 'Diario a medianoche', ro: 'Zilnic la miezul nopții', 'pt-BR': 'Diariamente à meia-noite', da: 'Dagligt ved midnat', 'zh-CN': '每天午夜', 'zh-TW': '每天午夜' },
+        every4Hours: { en: 'Every 4 hours', es: 'Cada 4 horas', ro: 'La fiecare 4 ore', 'pt-BR': 'A cada 4 horas', da: 'Hver 4. time', 'zh-CN': '每4小时', 'zh-TW': '每4小時' },
+        everyMonday9AM: { en: 'Every Monday at 9AM', es: 'Cada lunes a las 9AM', ro: 'În fiecare luni la 9:00', 'pt-BR': 'Toda segunda-feira às 9h', da: 'Hver mandag kl. 9', 'zh-CN': '每周一上午9点', 'zh-TW': '每週一上午9點' },
+        customSchedule: { en: 'Custom Schedule', es: 'Horario Personalizado', ro: 'Program Personalizat', 'pt-BR': 'Agendamento Personalizado', da: 'Brugerdefineret Tidsplan', 'zh-CN': '自定义计划', 'zh-TW': '自訂排程' },
+        invalidExpression: { en: 'Invalid Expression', es: 'Expresión Inválida', ro: 'Expresie Invalidă', 'pt-BR': 'Expressão Inválida', da: 'Ugyldigt Udtryk', 'zh-CN': '无效表达式', 'zh-TW': '無效表達式' },
+        days: {
+            sunday: { en: 'Sunday', es: 'Domingo', ro: 'Duminică', 'pt-BR': 'Domingo', da: 'Søndag', 'zh-CN': '星期日', 'zh-TW': '星期日' },
+            monday: { en: 'Monday', es: 'Lunes', ro: 'Luni', 'pt-BR': 'Segunda', da: 'Mandag', 'zh-CN': '星期一', 'zh-TW': '星期一' },
+            tuesday: { en: 'Tuesday', es: 'Martes', ro: 'Marți', 'pt-BR': 'Terça', da: 'Tirsdag', 'zh-CN': '星期二', 'zh-TW': '星期二' },
+            wednesday: { en: 'Wednesday', es: 'Miércoles', ro: 'Miercuri', 'pt-BR': 'Quarta', da: 'Onsdag', 'zh-CN': '星期三', 'zh-TW': '星期三' },
+            thursday: { en: 'Thursday', es: 'Jueves', ro: 'Joi', 'pt-BR': 'Quinta', da: 'Torsdag', 'zh-CN': '星期四', 'zh-TW': '星期四' },
+            friday: { en: 'Friday', es: 'Viernes', ro: 'Vineri', 'pt-BR': 'Sexta', da: 'Fredag', 'zh-CN': '星期五', 'zh-TW': '星期五' },
+            saturday: { en: 'Saturday', es: 'Sábado', ro: 'Sâmbătă', 'pt-BR': 'Sábado', da: 'Lørdag', 'zh-CN': '星期六', 'zh-TW': '星期六' }
+        },
+        presets: {
+            everyHour: { en: 'Every hour', es: 'Cada hora', ro: 'În fiecare oră', 'pt-BR': 'A cada hora', da: 'Hver time', 'zh-CN': '每小时', 'zh-TW': '每小時' },
+            every6Hours: { en: 'Every 6 hours', es: 'Cada 6 horas', ro: 'La fiecare 6 ore', 'pt-BR': 'A cada 6 horas', da: 'Hver 6. time', 'zh-CN': '每6小时', 'zh-TW': '每6小時' },
+            dailyAt4AM: { en: 'Daily at 4 AM', es: 'Diario a las 4 AM', ro: 'Zilnic la 4 dimineața', 'pt-BR': 'Diariamente às 4h', da: 'Dagligt kl. 4', 'zh-CN': '每天凌晨4点', 'zh-TW': '每天凌晨4點' },
+            dailyAtMidnight: { en: 'Daily at midnight', es: 'Diario a medianoche', ro: 'Zilnic la miezul nopții', 'pt-BR': 'Diariamente à meia-noite', da: 'Dagligt ved midnat', 'zh-CN': '每天午夜', 'zh-TW': '每天午夜' },
+            weeklySunday4AM: { en: 'Weekly (Sunday 4 AM)', es: 'Semanal (Domingo 4 AM)', ro: 'Săptămânal (Duminică 4:00)', 'pt-BR': 'Semanal (Domingo 4h)', da: 'Ugentlig (Søndag kl. 4)', 'zh-CN': '每周（周日凌晨4点）', 'zh-TW': '每週（週日凌晨4點）' },
+            everyMonday9AM: { en: 'Every Monday 9 AM', es: 'Cada lunes 9 AM', ro: 'În fiecare luni la 9:00', 'pt-BR': 'Toda segunda 9h', da: 'Hver mandag kl. 9', 'zh-CN': '每周一上午9点', 'zh-TW': '每週一上午9點' }
         }
     }
 };

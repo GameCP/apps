@@ -3,7 +3,7 @@
  * Supports: en, es, ro, pt-BR, da, zh-CN, zh-TW (matching main app)
  */
 
-export const discordContent = {
+export const lang = {
   // Navigation
   nav: {
     title: {

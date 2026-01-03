@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, FormInput } from '@gamecp/ui';
+import { Card, Button, FormInput, Container, Typography } from '@gamecp/ui';
+import { lang } from './lang';
 
 interface NotesAreaProps {
     serverId: string;
 }
 
 export function NotesArea({ serverId }: NotesAreaProps) {
-    const { user, api } = useGameCP();
+    const { user, api, t } = useGameCP();
     const [note, setNote] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [saving, setSaving] = useState<boolean>(false);
@@ -34,7 +35,7 @@ export function NotesArea({ serverId }: NotesAreaProps) {
             }
         } catch (error) {
             console.error('Failed to load note:', error);
-            setMessage('Failed to load note');
+            setMessage(t(lang.messages.loadError));
         } finally {
             setLoading(false);
         }
@@ -50,12 +51,12 @@ export function NotesArea({ serverId }: NotesAreaProps) {
                 note
             });
 
-            setMessage('Note saved successfully');
+            setMessage(t(lang.messages.saveSuccess));
             setLastUpdated(new Date().toISOString());
             setTimeout(() => setMessage(''), 3000);
         } catch (error: any) {
             console.error('Failed to save note:', error);
-            setMessage(error.error || 'Failed to save note');
+            setMessage(error.error || t(lang.messages.saveError));
         } finally {
             setSaving(false);
         }
@@ -63,56 +64,53 @@ export function NotesArea({ serverId }: NotesAreaProps) {
 
     if (loading) {
         return (
-            <Card>
-                <div className="p-4">
-                    <p className="text-muted-foreground">Loading notes...</p>
-                </div>
+            <Card padding="lg">
+                <Typography variant="muted">{t(lang.loading)}</Typography>
             </Card>
         );
     }
 
     return (
-        <Card>
-            <div className="p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-foreground">Admin Notes</h3>
-                    {lastUpdated && (
-                        <span className="text-xs text-muted-foreground">
-                            Last updated: {new Date(lastUpdated).toLocaleString()}
-                        </span>
-                    )}
-                </div>
-                <FormInput
-                    label=""
-                    name="note"
-                    type="textarea"
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                    placeholder="Add private notes about this server (visible only to admins)..."
-                    rows={6}
-                    maxLength={10000}
-                    footerDescription={`${note.length} / 10,000 characters`}
-                />
-                <div className="flex items-center justify-end">
-                    <Button
-                        onClick={handleSave}
-                        disabled={saving}
-                        isLoading={saving}
-                    >
-                        Save Note
-                    </Button>
-                </div>
-                {message && (
-                    <div
-                        className={`p-3 rounded-lg text-sm ${message.includes('success')
-                            ? 'bg-green-50 text-green-800 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
-                            : 'bg-red-50 text-red-800 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
-                            }`}
-                    >
-                        {message}
-                    </div>
+        <Card padding="lg" contentClassName="space-y-4">
+            <div className="flex items-center justify-between">
+                <Typography as="h3" size="lg" className="font-bold">{t(lang.title)}</Typography>
+                {lastUpdated && (
+                    <Typography size="xs" variant="muted">
+                        {t(lang.lastUpdated)} {new Date(lastUpdated).toLocaleString()}
+                    </Typography>
                 )}
             </div>
+            <FormInput
+                label=""
+                name="note"
+                type="textarea"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder={t(lang.placeholder)}
+                rows={6}
+                maxLength={10000}
+                footerDescription={`${note.length} / 10,000 ${t(lang.characters)}`}
+            />
+            <div className="flex items-center justify-end">
+                <Button
+                    onClick={handleSave}
+                    disabled={saving}
+                    isLoading={saving}
+                    variant="primary"
+                >
+                    {t(lang.saveButton)}
+                </Button>
+            </div>
+            {message && (
+                <div
+                    className={`p-3 rounded-lg text-sm ${message.includes('success')
+                        ? 'bg-green-50 text-green-800 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
+                        : 'bg-red-50 text-red-800 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
+                        }`}
+                >
+                    {message}
+                </div>
+            )}
         </Card>
     );
 }

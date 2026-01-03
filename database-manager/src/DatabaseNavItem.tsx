@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGameCP } from '@gamecp/types/client';
 import { HiDatabase } from 'react-icons/hi';
-import { databaseContent } from './content';
+import { lang } from './lang';
 
 interface DatabaseNavItemProps {
     activeSection: string;
@@ -27,10 +27,10 @@ export function DatabaseNavItem({ activeSection, scrollToSection }: DatabaseNavI
             />
             <div className="min-w-0 flex-1">
                 <div className="text-sm font-medium truncate">
-                    {t(databaseContent.nav.provisioningTitle)}
+                    {t(lang.nav.provisioningTitle)}
                 </div>
                 <div className="text-xs mt-1 line-clamp-2">
-                    {t(databaseContent.nav.provisioningDescription)}
+                    {t(lang.nav.provisioningDescription)}
                 </div>
             </div>
         </button>

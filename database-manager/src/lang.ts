@@ -1,4 +1,4 @@
-export const databaseContent = {
+export const lang = {
     nav: {
         title: {
             en: 'Databases',
@@ -151,6 +151,69 @@ export const databaseContent = {
             da: 'Forbindelsesstreng kopieret til udklipsholder',
             'zh-CN': '连接字符串已复制到剪贴板',
             'zh-TW': '連線字串已複製到剪貼簿'
+        },
+        createError: {
+            en: 'Failed to create database',
+            es: 'Error al crear la base de datos',
+            ro: 'Eroare la crearea bazei de date',
+            'pt-BR': 'Falha ao criar banco de dados',
+            da: 'Kunne ikke oprette database',
+            'zh-CN': '创建数据库失败',
+            'zh-TW': '建立資料庫失敗'
+        },
+        deleteError: {
+            en: 'Failed to delete database',
+            es: 'Error al eliminar la base de datos',
+            ro: 'Eroare la ștergerea bazei de date',
+            'pt-BR': 'Falha ao excluir banco de dados',
+            da: 'Kunne ikke slette database',
+            'zh-CN': '删除数据库失败',
+            'zh-TW': '刪除資料庫失敗'
+        },
+        testError: {
+            en: 'Test failed',
+            es: 'Prueba fallida',
+            ro: 'Testul a eșuat',
+            'pt-BR': 'Teste falhou',
+            da: 'Test mislykkedes',
+            'zh-CN': '测试失败',
+            'zh-TW': '測試失敗'
+        },
+        testing: {
+            en: 'Testing...',
+            es: 'Probando...',
+            ro: 'Se testează...',
+            'pt-BR': 'Testando...',
+            da: 'Tester...',
+            'zh-CN': '正在测试...',
+            'zh-TW': '正在測試...'
+        },
+        testConnection: {
+            en: 'Test Connection',
+            es: 'Probar conexión',
+            ro: 'Testați conexiunea',
+            'pt-BR': 'Testar conexão',
+            da: 'Test forbindelse',
+            'zh-CN': '测试连接',
+            'zh-TW': '測試連線'
+        },
+        selectServer: {
+            en: 'Select a database server...',
+            es: 'Selecciona un servidor de base de datos...',
+            ro: 'Selectați un server de baze de date...',
+            'pt-BR': 'Selecione um servidor de banco de dados...',
+            da: 'Vælg en databaseserver...',
+            'zh-CN': '选择数据库服务器...',
+            'zh-TW': '選擇資料庫伺服器...'
+        },
+        saveError: {
+            en: 'Failed to save source',
+            es: 'Error al guardar la fuente',
+            ro: 'Nu s-a putut salva sursa',
+            'pt-BR': 'Falha ao salvar a fonte',
+            da: 'Kunne ikke gemme kilde',
+            'zh-CN': '保存来源失败',
+            'zh-TW': '儲存來源失敗'
         }
     },
     confirm: {
@@ -181,7 +244,7 @@ export const databaseContent = {
             'pt-BR': 'Nenhum servidor de banco de dados configurado. Entre em contato com seu administrador.',
             da: 'Ingen databaseservere konfigureret. Kontakt din administrator.',
             'zh-CN': '未配置数据库服务器。请联系您的管理员。',
-            'zh-TW': '未設定資料庫伺服器。請聯繫您的管理員。'
+            'zh-TW': '未设定資料庫伺服器。請聯繫您的管理員。'
         },
         noDatabases: {
             en: 'No databases created yet. Create one to get started.',
@@ -191,6 +254,24 @@ export const databaseContent = {
             da: 'Ingen databaser oprettet endnu. Opret en for at komme i gang.',
             'zh-CN': '尚未创建数据库。创建一个以开始使用。',
             'zh-TW': '尚未建立資料庫。建立一個以開始使用。'
+        },
+        loading: {
+            en: 'Loading databases...',
+            es: 'Cargando bases de datos...',
+            ro: 'Se încarcă bazele de date...',
+            'pt-BR': 'Carregando bancos de dados...',
+            da: 'Indlæser databaser...',
+            'zh-CN': '正在加载数据库...',
+            'zh-TW': '正在載入資料庫...'
+        },
+        created: {
+            en: 'Created',
+            es: 'Creado',
+            ro: 'Creat',
+            'pt-BR': 'Criado',
+            da: 'Oprettet',
+            'zh-CN': '创建于',
+            'zh-TW': '建立於'
         }
     },
     connection: {
@@ -263,6 +344,25 @@ export const databaseContent = {
         added: { en: 'Added', es: 'Agregado', ro: 'Adăugat', 'pt-BR': 'Adicionado', da: 'Tilføjet', 'zh-CN': '已添加', 'zh-TW': '已新增' },
         deleteConfirmTitle: { en: 'Delete Database Source', es: 'Eliminar fuente', ro: 'Ștergeți sursa', 'pt-BR': 'Excluir fonte', da: 'Slet kilde', 'zh-CN': '删除数据库源', 'zh-TW': '刪除資料庫來源' },
         deleteConfirmMessage: { en: 'Are you sure? This will prevent new databases from being created on this server.', es: '¿Estás seguro?', ro: 'Sigur?', 'pt-BR': 'Tem certeza?', da: 'Er du sikker?', 'zh-CN': '您确定吗？这将阻止在此服务器上创建新数据库。', 'zh-TW': '您確定嗎？這將阻止在此伺服器上建立新資料庫。' },
-        loading: { en: 'Loading database sources...', es: 'Cargando...', ro: 'Se încarcă...', 'pt-BR': 'Carregando...', da: 'Indlæser...', 'zh-CN': '正在加载数据库源...', 'zh-TW': '正在載入資料庫來源...' }
+        loading: { en: 'Loading database sources...', es: 'Cargando...', ro: 'Se încarcă...', 'pt-BR': 'Carregando...', da: 'Indlæser...', 'zh-CN': '正在加载数据库源...', 'zh-TW': '正在載入資料庫來源...' },
+        optionalAuth: { en: 'Optional - leave blank if authentication is not enabled', es: 'Opcional - dejar en blanco si la autenticación no está habilitada', ro: 'Opțional - lăsați gol dacă autentificarea nu este activată', 'pt-BR': 'Opcional - deixe em branco se a autenticação não estiver ativada', da: 'Valgfrit - lad stå tomt, hvis godkendelse ikke er aktiveret', 'zh-CN': '可选 - 如果未启用身份验证，请留空', 'zh-TW': '選填 - 如果未啟用身份驗證，請留空' },
+        adminerUrl: { en: 'Adminer URL', es: 'URL de Adminer', ro: 'URL Adminer', 'pt-BR': 'URL do Adminer', da: 'Adminer URL', 'zh-CN': 'Adminer URL', 'zh-TW': 'Adminer URL' },
+        adminerUrlDesc: { en: 'URL to your Adminer instance for web-based database management.', es: 'URL de su instancia de Adminer para la gestión de bases de datos basada en web.', ro: 'URL-ul instanței dvs. Adminer pentru gestionarea bazelor de date bazată pe web.', 'pt-BR': 'URL da sua instância do Adminer para gerenciamento de banco de dados baseado na web.', da: 'URL til din Adminer-instans til webbaseret databasestyring.', 'zh-CN': '您的 Adminer 实例的 URL，用于基于 Web 的数据库管理。', 'zh-TW': '您的 Adminer 執行個體的 URL，用於基於 Web 的資料庫管理。' }
+    },
+    provisioning: {
+        title: { en: 'Database Provisioning', es: 'Aprovisionamiento de bases de datos', ro: 'Provizionarea bazelor de date', 'pt-BR': 'Provisionamento de banco de dados', da: 'Databaseprovisionering', 'zh-CN': '数据库配置', 'zh-TW': '資料庫配置' },
+        description: { en: 'Automatically create databases for new servers', es: 'Crear automáticamente bases de datos para nuevos servidores', ro: 'Creați automat baze de date pentru servere noi', 'pt-BR': 'Criar automaticamente bancos de dados para novos servidores', da: 'Opret automatisk databaser til nye servere', 'zh-CN': '为新服务器自动创建数据库', 'zh-TW': '為新伺服器自動建立資料庫' },
+        namePattern: { en: 'Database Name Pattern', es: 'Patrón de nombre de base de datos', ro: 'Model de nume bază de date', 'pt-BR': 'Padrão de nome do banco de dados', da: 'Databasenavnsmønster', 'zh-CN': '数据库名称模式', 'zh-TW': '資料庫名稱模式' },
+        namePatternPlaceholder: { en: 'e.g., {serverId}_db', es: 'ej., {serverId}_db', ro: 'de ex., {serverId}_db', 'pt-BR': 'ex., {serverId}_db', da: 'f.eks., {serverId}_db', 'zh-CN': '例如，{serverId}_db', 'zh-TW': '例如，{serverId}_db' },
+        usernamePattern: { en: 'Username Pattern', es: 'Patrón de nombre de usuario', ro: 'Model de nume utilizator', 'pt-BR': 'Padrão de nome de usuário', da: 'Brugernavnsmønster', 'zh-CN': '用户名模式', 'zh-TW': '使用者名稱模式' },
+        usernamePatternPlaceholder: { en: 'e.g., {serverId}_user', es: 'ej., {serverId}_user', ro: 'de ex., {serverId}_user', 'pt-BR': 'ex., {serverId}_user', da: 'f.eks., {serverId}_user', 'zh-CN': '例如，{serverId}_user', 'zh-TW': '例如，{serverId}_user' },
+        autoCreate: { en: 'Auto-Create Database', es: 'Crear base de datos automáticamente', ro: 'Creați automat baza de date', 'pt-BR': 'Criar banco de dados automaticamente', da: 'Opret database automatisk', 'zh-CN': '自动创建数据库', 'zh-TW': '自動建立資料庫' },
+        autoCreateDesc: { en: 'Automatically create a database when a new server is created', es: 'Crear automáticamente una base de datos cuando se crea un nuevo servidor', ro: 'Creați automat o bază de date când se creează un server nou', 'pt-BR': 'Criar automaticamente um banco de dados quando um novo servidor é criado', da: 'Opret automatisk en database, når en ny server oprettes', 'zh-CN': '创建新服务器时自动创建数据库', 'zh-TW': '建立新伺服器時自動建立資料庫' },
+        requireDatabase: { en: 'Require Database', es: 'Requerir base de datos', ro: 'Necesită bază de date', 'pt-BR': 'Exigir banco de dados', da: 'Kræv database', 'zh-CN': '需要数据库', 'zh-TW': '需要資料庫' },
+        requireDatabaseDesc: { en: 'Server creation requires at least one database', es: 'La creación del servidor requiere al menos una base de datos', ro: 'Crearea serverului necesită cel puțin o bază de date', 'pt-BR': 'A criação do servidor requer pelo menos um banco de dados', da: 'Serveroprettelse kræver mindst én database', 'zh-CN': '服务器创建至少需要一个数据库', 'zh-TW': '伺服器建立至少需要一個資料庫' },
+        note: { en: 'Note:', es: 'Nota:', ro: 'Notă:', 'pt-BR': 'Nota:', da: 'Bemærk:', 'zh-CN': '注意：', 'zh-TW': '注意：' },
+        noteMessage: { en: 'Database sources must be configured in the', es: 'Las fuentes de bases de datos deben configurarse en el', ro: 'Sursele de baze de date trebuie configurate în', 'pt-BR': 'As fontes de banco de dados devem ser configuradas no', da: 'Databasekilder skal konfigureres i', 'zh-CN': '必须在', 'zh-TW': '必須在' },
+        adminPanel: { en: 'Database Manager admin panel', es: 'panel de administración del Gestor de bases de datos', ro: 'panoul de administrare al Managerului de baze de date', 'pt-BR': 'painel de administração do Gerenciador de banco de dados', da: 'Databasemanager admin-panel', 'zh-CN': '数据库管理器管理面板', 'zh-TW': '資料庫管理器管理面板' },
+        noteMessageEnd: { en: 'before auto-provisioning will work.', es: 'antes de que funcione el aprovisionamiento automático.', ro: 'înainte ca provizionarea automată să funcționeze.', 'pt-BR': 'antes que o provisionamento automático funcione.', da: 'før auto-provisionering vil virke.', 'zh-CN': '中配置数据库源，然后自动配置才能工作。', 'zh-TW': '中設定資料庫來源，然後自動配置才能運作。' }
     }
 };

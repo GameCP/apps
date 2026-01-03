@@ -1,6 +1,6 @@
-export { DatabaseTab } from './ui';
-export { DatabaseSourcesPage } from './admin';
+export { DatabaseTab } from './ui/DatabaseTab';
+export { DatabaseSourcesPage } from './ui/AdminPanel';
 export { DatabaseSourcesNav } from './nav';
-export { GameDatabaseSettings } from './GameDatabaseSettings';
+export { GameDatabaseSettings } from './ui/GameDatabaseSettings';
 export { DatabaseNavItem } from './DatabaseNavItem';
-export { ServerDatabaseNav } from './ServerDatabaseNav';
+export { ServerDatabaseNav } from './ui/ServerDatabaseNav';

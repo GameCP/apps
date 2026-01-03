@@ -1,17 +1,11 @@
-import React from 'react';
 import { useGameCP } from '@gamecp/types/client';
-import { Card } from '@gamecp/ui';
-
-interface BrandedHeaderProps {
-    originalProps: any;
-    position: 'top' | 'bottom';
-}
+import { Card, Container, Typography } from '@gamecp/ui';
 
 /**
  * Branded Header Component
  * Displays custom header text at the top of pages
  */
-export function BrandedHeader({ originalProps }: BrandedHeaderProps) {
+export function BrandedHeader() {
     const { getConfig } = useGameCP();
     const config = getConfig('brand-kit');
 
@@ -23,19 +17,16 @@ export function BrandedHeader({ originalProps }: BrandedHeaderProps) {
     }
 
     return (
-        <div className="px-4 lg:px-8 pt-4 lg:pt-8 mb-0">
-            <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
-                <div className="px-6 py-4">
-                    <h2 className="text-xl font-bold text-foreground">
-                        {headerText}
-                    </h2>
-                    {headerSubtext && (
-                        <p className="text-sm text-muted-foreground mt-1">
-                            {headerSubtext}
-                        </p>
-                    )}
-                </div>
+        <Container>
+            <Card padding="lg">
+                <Typography as="h2" size="xl" className="font-bold">{headerText}</Typography>
+
+                {headerSubtext && (
+                    <Typography variant="muted" size="sm" className="mt-1">
+                        {headerSubtext}
+                    </Typography>
+                )}
             </Card>
-        </div>
+        </Container>
     );
 }

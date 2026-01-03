@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
 import { HiDatabase } from 'react-icons/hi';
+import { lang } from '../lang';
 
 interface ServerDatabaseNavProps {
     serverId: string;
 }
 
 export function ServerDatabaseNav({ serverId }: ServerDatabaseNavProps) {
-    const { Link, api } = useGameCP();
+    const { Link, api, t } = useGameCP();
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
@@ -51,7 +52,7 @@ export function ServerDatabaseNav({ serverId }: ServerDatabaseNavProps) {
             className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent transition-colors w-full text-left"
         >
             <HiDatabase className="w-5 h-5" />
-            <span className="text-sm font-medium">Databases</span>
+            <span className="text-sm font-medium">{t(lang.page.title)}</span>
         </Link>
     );
 }

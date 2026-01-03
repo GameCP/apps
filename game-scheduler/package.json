@@ -1,6 +1,6 @@
 {
   "name": "game-scheduler",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "GameCP Scheduler Extension - Schedule restarts, wipes, and command sequences",
   "main": "dist/index.js",
   "type": "module",

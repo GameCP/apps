@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TbCalendarEvent } from 'react-icons/tb';
-import { schedulerContent } from './content';
+import { lang } from './lang';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, Badge, FormInput, useConfirmDialog } from '@gamecp/ui';
+import { Card, Button, Badge, FormInput, useConfirmDialog, Container, Typography } from '@gamecp/ui';
 import { CronBuilder } from './ui/CronBuilder';
 
 // Client-side UI components
@@ -11,12 +11,12 @@ export function ScheduleIcon({ serverId }: { serverId: string }) {
 
     return (
         <Link
-            href={`/game-servers/${serverId}/extensions/scheduler`}
+            href={`/ game - servers / ${serverId} /extensions/scheduler`}
             className="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-foreground hover:bg-muted hover:text-foreground transition-all duration-150 ease-in-out"
-            title={t(schedulerContent.page.title)}
+            title={t(lang.page.title)}
         >
             <TbCalendarEvent className="mr-3 h-5 w-5 transition-all duration-150 ease-in-out" />
-            <span>{t(schedulerContent.nav.title)}</span>
+            <span>{t(lang.nav.title)}</span>
         </Link>
     );
 }
@@ -40,7 +40,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
 
     const loadTasks = async () => {
         try {
-            const data = await api.get(`/api/x/game-scheduler/tasks?serverId=${serverId}`);
+            const data = await api.get(`/ api / x / game - scheduler / tasks ? serverId = ${serverId} `);
             setTasks(data.tasks || []);
         } catch (err) {
             console.error('Failed to load tasks:', err);
@@ -61,11 +61,11 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                 schedule,
             });
 
-            setMessage(t(schedulerContent.messages.created));
+            setMessage(t(lang.messages.created));
             setTaskName('');
             loadTasks();
         } catch (err: any) {
-            setError(err.message || t(schedulerContent.messages.createFailed));
+            setError(err.message || t(lang.messages.createFailed));
         } finally {
             setLoading(false);
         }
@@ -73,9 +73,9 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
 
     const handleDeleteTask = async (taskId: string) => {
         const confirmed = await confirm({
-            title: t(schedulerContent.confirm.deleteTitle),
-            message: t(schedulerContent.confirm.deleteMessage),
-            confirmText: t(schedulerContent.buttons.delete),
+            title: t(lang.confirm.deleteTitle),
+            message: t(lang.confirm.deleteMessage),
+            confirmText: t(lang.buttons.delete),
             confirmButtonColor: 'red'
         });
 
@@ -87,27 +87,27 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
 
         try {
             await api.delete('/api/x/game-scheduler/tasks', { serverId, taskId });
-            setMessage(t(schedulerContent.messages.deleted));
+            setMessage(t(lang.messages.deleted));
             loadTasks();
         } catch (err: any) {
-            setError(err.message || t(schedulerContent.messages.deleteFailed));
+            setError(err.message || t(lang.messages.deleteFailed));
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="p-4 sm:p-6">
+        <Container className="space-y-6">
             {/* Header */}
             <div className="mb-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-                            {t(schedulerContent.page.title)}
-                        </h1>
-                        <p className="text-sm sm:text-base text-muted-foreground mt-1">
-                            {t(schedulerContent.page.description)}
-                        </p>
+                        <Typography as="h1" size="xl" className="sm:text-2xl font-bold">
+                            {t(lang.page.title)}
+                        </Typography>
+                        <Typography variant="muted" size="sm" className="sm:text-base mt-1">
+                            {t(lang.page.description)}
+                        </Typography>
                     </div>
                 </div>
             </div>
@@ -131,46 +131,40 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
             <div className="space-y-4 sm:space-y-6">
                 {/* Create Task Card */}
                 <Card
-                    title={t(schedulerContent.createTask.title)}
-                    description={t(schedulerContent.createTask.description)}
+                    title={t(lang.createTask.title)}
+                    description={t(lang.createTask.description)}
                     icon={TbCalendarEvent}
                     iconColor="blue"
                     padding="lg"
                 >
                     <form onSubmit={handleCreateTask} className="space-y-6 mt-4">
-                        <div>
-                            <label className="block text-sm font-semibold text-foreground mb-1">
-                                {t(schedulerContent.form.taskName)} <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                value={taskName}
-                                onChange={(e) => setTaskName(e.target.value)}
-                                placeholder={t(schedulerContent.form.taskNamePlaceholder)}
-                                className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm transition-all"
-                                required
-                            />
-                        </div>
+                        <FormInput
+                            label={t(lang.form.taskName)}
+                            name="taskName"
+                            type="text"
+                            value={taskName}
+                            onChange={(e) => setTaskName(e.target.value)}
+                            placeholder={t(lang.form.taskNamePlaceholder)}
+                            required
+                        />
 
-                        <div>
-                            <label className="block text-sm font-semibold text-foreground mb-1">
-                                {t(schedulerContent.form.actionType)} <span className="text-red-500">*</span>
-                            </label>
-                            <select
-                                value={actionType}
-                                onChange={(e) => setActionType(e.target.value)}
-                                className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm transition-all"
-                            >
-                                <option value="start">{t(schedulerContent.form.actionStart)}</option>
-                                <option value="stop">{t(schedulerContent.form.actionStop)}</option>
-                                <option value="restart">{t(schedulerContent.form.actionRestart)}</option>
-                                {/* command and wipe hidden for MVP - backend still supports them */}
-                            </select>
-                        </div>
+                        <FormInput
+                            label={t(lang.form.actionType)}
+                            name="actionType"
+                            type="select"
+                            value={actionType}
+                            onChange={(e) => setActionType(e.target.value)}
+                            options={[
+                                { value: 'start', label: t(lang.form.actionStart) },
+                                { value: 'stop', label: t(lang.form.actionStop) },
+                                { value: 'restart', label: t(lang.form.actionRestart) },
+                            ]}
+                            required
+                        />
 
                         <div>
                             <label className="block text-sm font-semibold text-foreground mb-3">
-                                {t(schedulerContent.form.schedule)} <span className="text-red-500">*</span>
+                                {t(lang.form.schedule)} <span className="text-red-500">*</span>
                             </label>
                             <CronBuilder
                                 value={schedule}
@@ -184,7 +178,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                             isLoading={loading}
                             variant="primary"
                         >
-                            {t(schedulerContent.buttons.create)}
+                            {t(lang.buttons.create)}
                         </Button>
                     </form>
                 </Card>
@@ -192,7 +186,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                 {/* Tasks List */}
                 {tasks.length > 0 && (
                     <Card
-                        title={t(schedulerContent.tasks.title)}
+                        title={t(lang.tasks.title)}
                         padding="none"
                         headerClassName="p-4 sm:px-6 border-b border-border"
                     >
@@ -202,17 +196,17 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                                     <div className="flex-1 min-w-0 mr-4">
                                         <div className="flex items-center gap-3 mb-2">
                                             <Badge variant="success" size="sm">
-                                                {t(schedulerContent.tasks.active)}
+                                                {t(lang.tasks.active)}
                                             </Badge>
                                             <span className="font-semibold text-foreground">
                                                 {task.name}
                                             </span>
                                         </div>
                                         <div className="text-xs text-muted-foreground space-y-1">
-                                            <div>{t(schedulerContent.tasks.action)}: <span className="font-mono">{task.action}</span></div>
-                                            <div>{t(schedulerContent.tasks.schedule)}: <span className="font-mono">{task.schedule}</span></div>
+                                            <div>{t(lang.tasks.action)}: <span className="font-mono">{task.action}</span></div>
+                                            <div>{t(lang.tasks.schedule)}: <span className="font-mono">{task.schedule}</span></div>
                                             {task.next_run && (
-                                                <div>{t(schedulerContent.tasks.nextRun)}: {new Date(task.next_run).toLocaleString()}</div>
+                                                <div>{t(lang.tasks.nextRun)}: {new Date(task.next_run).toLocaleString()}</div>
                                             )}
                                         </div>
                                     </div>
@@ -222,7 +216,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                                         size="sm"
                                         isLoading={loading}
                                     >
-                                        {t(schedulerContent.buttons.delete)}
+                                        {t(lang.buttons.delete)}
                                     </Button>
                                 </div>
                             ))}
@@ -231,6 +225,6 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                 )}
             </div>
             {dialog}
-        </div>
+        </Container>
     );
 }

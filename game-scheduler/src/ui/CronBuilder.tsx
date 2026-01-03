@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CronExpressionParser } from 'cron-parser';
+import { lang } from '../lang';
+import { Card, Button, FormInput, Typography } from '@gamecp/ui';
 
 interface CronBuilderProps {
     value: string;
@@ -15,12 +17,12 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
     const [dayOfWeek, setDayOfWeek] = useState('*');
     const [scheduleInfo, setScheduleInfo] = useState({ description: '', nextRun: '' });
 
-    // Parse existing cron to set initial values
+    const cb = lang.cronBuilder;
+
     useEffect(() => {
         if (value) {
             const parts = value.split(' ');
             if (parts.length === 5) {
-                // Only update internal state if we can map it to a simple mode
                 if (parts[1] === '*' && parts[2] === '*' && parts[3] === '*' && parts[4] === '*') {
                     setFrequency('hourly');
                     setMinute(parts[0]);
@@ -35,19 +37,17 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
                     setDayOfWeek(parts[4]);
                 } else {
                     setFrequency('custom');
-                    setMode('advanced'); // Auto-switch to advanced for complex crons
+                    setMode('advanced');
                 }
             }
             updateScheduleInfo(value);
         } else {
-            // Set a default value if none provided
-            const defaultCron = '0 4 * * *'; // Daily at 4 AM
+            const defaultCron = '0 4 * * *';
             onChange(defaultCron);
             updateScheduleInfo(defaultCron);
         }
     }, []);
 
-    // Update info whenever value changes
     useEffect(() => {
         if (value) {
             updateScheduleInfo(value);
@@ -59,18 +59,18 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
             const interval = CronExpressionParser.parse(cron);
             const next = interval.next().toDate();
 
-            let desc = 'Custom Schedule';
+            let desc = t(cb.customSchedule);
             const parts = cron.split(' ');
 
             if (parts.length === 5) {
                 if (parts[1] === '*' && parts[2] === '*' && parts[3] === '*' && parts[4] === '*') {
-                    desc = `Every hour at minute ${parts[0]}`;
+                    desc = `${t(cb.everyHour)} at minute ${parts[0]}`;
                 } else if (parts[2] === '*' && parts[3] === '*' && parts[4] === '*') {
-                    desc = `Every day at ${parts[1].padStart(2, '0')}:${parts[0].padStart(2, '0')}`;
+                    desc = `${t(cb.everyDay)} at ${parts[1].padStart(2, '0')}:${parts[0].padStart(2, '0')}`;
                 } else if (parts[2] === '*' && parts[3] === '*' && parts[4] !== '*') {
-                    const daysMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                    const dayName = daysMap[parseInt(parts[4])] || 'Day ' + parts[4];
-                    desc = `Every week on ${dayName} at ${parts[1].padStart(2, '0')}:${parts[0].padStart(2, '0')}`;
+                    const daysMap = [t(cb.days.sunday), t(cb.days.monday), t(cb.days.tuesday), t(cb.days.wednesday), t(cb.days.thursday), t(cb.days.friday), t(cb.days.saturday)];
+                    const dayName = daysMap[parseInt(parts[4])] || parts[4];
+                    desc = `${t(cb.everyWeek)} on ${dayName} at ${parts[1].padStart(2, '0')}:${parts[0].padStart(2, '0')}`;
                 }
             }
 
@@ -79,20 +79,7 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
                 nextRun: next.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
             });
         } catch (e) {
-            setScheduleInfo({ description: 'Invalid Expression', nextRun: '-' });
-        }
-    };
-
-    const buildCron = () => {
-        switch (frequency) {
-            case 'hourly':
-                return `${minute} * * * *`;
-            case 'daily':
-                return `${minute} ${hour} * * *`;
-            case 'weekly':
-                return `${minute} ${hour} * * ${dayOfWeek}`;
-            default:
-                return value;
+            setScheduleInfo({ description: t(cb.invalidExpression), nextRun: '-' });
         }
     };
 
@@ -111,7 +98,6 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
     const handleTimeChange = (newHour: string, newMinute: string) => {
         setHour(newHour);
         setMinute(newMinute);
-        // Re-construct logic to ensure we don't lose state
         const cron = frequency === 'hourly' ? `${newMinute} * * * *` :
             frequency === 'daily' ? `${newMinute} ${newHour} * * *` :
                 frequency === 'weekly' ? `${newMinute} ${newHour} * * ${dayOfWeek}` : value;
@@ -125,236 +111,204 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
     };
 
     const presets = [
-        { label: 'Every hour', value: '0 * * * *', freq: 'hourly' as const, h: '0', m: '0', d: '*' },
-        { label: 'Every 6 hours', value: '0 */6 * * *', freq: 'custom' as const, h: '0', m: '0', d: '*' },
-        { label: 'Daily at 4 AM', value: '0 4 * * *', freq: 'daily' as const, h: '4', m: '0', d: '*' },
-        { label: 'Daily at midnight', value: '0 0 * * *', freq: 'daily' as const, h: '0', m: '0', d: '*' },
-        { label: 'Weekly (Sunday 4 AM)', value: '0 4 * * 0', freq: 'weekly' as const, h: '4', m: '0', d: '0' },
-        { label: 'Every Monday 9 AM', value: '0 9 * * 1', freq: 'weekly' as const, h: '9', m: '0', d: '1' },
+        { label: t(cb.presets.everyHour), value: '0 * * * *', freq: 'hourly' as const, h: '0', m: '0', d: '*' },
+        { label: t(cb.presets.every6Hours), value: '0 */6 * * *', freq: 'custom' as const, h: '0', m: '0', d: '*' },
+        { label: t(cb.presets.dailyAt4AM), value: '0 4 * * *', freq: 'daily' as const, h: '4', m: '0', d: '*' },
+        { label: t(cb.presets.dailyAtMidnight), value: '0 0 * * *', freq: 'daily' as const, h: '0', m: '0', d: '*' },
+        { label: t(cb.presets.weeklySunday4AM), value: '0 4 * * 0', freq: 'weekly' as const, h: '4', m: '0', d: '0' },
+        { label: t(cb.presets.everyMonday9AM), value: '0 9 * * 1', freq: 'weekly' as const, h: '9', m: '0', d: '1' },
     ];
 
     const handlePresetClick = (preset: typeof presets[0]) => {
-        // Update internal state to match the preset
         setFrequency(preset.freq);
         setHour(preset.h);
         setMinute(preset.m);
         setDayOfWeek(preset.d);
-        // Update the cron value
         onChange(preset.value);
     };
 
     const days = [
-        { label: 'Sunday', value: '0' },
-        { label: 'Monday', value: '1' },
-        { label: 'Tuesday', value: '2' },
-        { label: 'Wednesday', value: '3' },
-        { label: 'Thursday', value: '4' },
-        { label: 'Friday', value: '5' },
-        { label: 'Saturday', value: '6' },
+        { label: t(cb.days.sunday), value: '0' },
+        { label: t(cb.days.monday), value: '1' },
+        { label: t(cb.days.tuesday), value: '2' },
+        { label: t(cb.days.wednesday), value: '3' },
+        { label: t(cb.days.thursday), value: '4' },
+        { label: t(cb.days.friday), value: '5' },
+        { label: t(cb.days.saturday), value: '6' },
     ];
 
     return (
         <div className="space-y-6">
             {/* Schedule Info Banner */}
-            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h3 className="text-sm font-semibold text-blue-900 uppercase tracking-wide mb-1">
-                        Schedule Summary
-                    </h3>
-                    <p className="text-lg font-medium text-blue-700">
-                        {scheduleInfo.description}
-                    </p>
-                </div>
-                <div className="text-right">
-                    <span className="text-xs text-blue-500 uppercase font-semibold">Next Run</span>
-                    <div className="text-blue-800 font-mono font-medium">
-                        {scheduleInfo.nextRun}
+            <Card className="bg-primary/5 border-primary/20">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4">
+                    <div>
+                        <Typography variant="muted" size="sm" className="uppercase tracking-wide font-semibold mb-1">
+                            {t(cb.scheduleSummary)}
+                        </Typography>
+                        <Typography size="lg" className="font-medium">
+                            {scheduleInfo.description}
+                        </Typography>
+                    </div>
+                    <div className="text-right">
+                        <Typography variant="muted" size="xs" className="uppercase font-semibold">{t(cb.nextRun)}</Typography>
+                        <Typography className="font-mono font-medium">
+                            {scheduleInfo.nextRun}
+                        </Typography>
                     </div>
                 </div>
-            </div>
+            </Card>
 
             {/* Mode Tabs */}
-            <div className="border-b border-gray-200">
-                <nav className="-mb-px flex gap-6">
-                    <button
-                        type="button"
-                        onClick={() => setMode('simple')}
-                        className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${mode === 'simple'
-                            ? 'border-blue-500 text-blue-600'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                            }`}
-                    >
-                        Visual Builder
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setMode('advanced')}
-                        className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${mode === 'advanced'
-                            ? 'border-blue-500 text-blue-600'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                            }`}
-                    >
-                        Advanced (Cron)
-                    </button>
-                </nav>
+            <div className="flex gap-2">
+                <Button
+                    variant={mode === 'simple' ? 'primary' : 'secondary'}
+                    size="sm"
+                    onClick={() => setMode('simple')}
+                >
+                    {t(cb.visualBuilder)}
+                </Button>
+                <Button
+                    variant={mode === 'advanced' ? 'primary' : 'secondary'}
+                    size="sm"
+                    onClick={() => setMode('advanced')}
+                >
+                    {t(cb.advancedCron)}
+                </Button>
             </div>
 
             {mode === 'simple' ? (
-                <div className="space-y-6 animate-in fade-in duration-300">
+                <div className="space-y-6">
                     {/* Frequency Selector */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-900 mb-2">
-                            How often should this run?
-                        </label>
-                        <select
-                            value={frequency}
-                            onChange={(e) => handleFrequencyChange(e.target.value as any)}
-                            className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-base"
-                        >
-                            <option value="hourly">Every Hour</option>
-                            <option value="daily">Every Day</option>
-                            <option value="weekly">Every Week</option>
-                            <option value="custom">Custom (Switch to Advanced)</option>
-                        </select>
-                    </div>
+                    <FormInput
+                        label={t(cb.howOften)}
+                        name="frequency"
+                        type="select"
+                        value={frequency}
+                        onChange={(e) => handleFrequencyChange(e.target.value as any)}
+                        options={[
+                            { value: 'hourly', label: t(cb.everyHour) },
+                            { value: 'daily', label: t(cb.everyDay) },
+                            { value: 'weekly', label: t(cb.everyWeek) },
+                            { value: 'custom', label: t(cb.customAdvanced) },
+                        ]}
+                    />
 
                     {/* Time Picker */}
                     {(frequency !== 'custom') && (
-                        <div className="p-5 bg-gray-50 rounded-lg border border-gray-200 space-y-4">
+                        <Card padding="lg" className="bg-muted/30">
                             {(frequency === 'daily' || frequency === 'weekly') && (
                                 <div className="grid grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">
-                                            Hour (24h)
-                                        </label>
-                                        <input
-                                            type="number"
-                                            min="0"
-                                            max="23"
-                                            value={hour}
-                                            onChange={(e) => handleTimeChange(e.target.value, minute)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
-                                        />
-                                        <div className="text-xs text-gray-500 mt-1">0 = Midnight, 12 = Noon, 23 = 11PM</div>
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">
-                                            Minute
-                                        </label>
-                                        <input
-                                            type="number"
-                                            min="0"
-                                            max="59"
-                                            value={minute}
-                                            onChange={(e) => handleTimeChange(hour, e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
-                                        />
-                                    </div>
+                                    <FormInput
+                                        label={t(cb.hour24)}
+                                        name="hour"
+                                        type="number"
+                                        value={hour}
+                                        onChange={(e) => handleTimeChange(e.target.value, minute)}
+                                        description={t(cb.hourHint)}
+                                    />
+                                    <FormInput
+                                        label={t(cb.minute)}
+                                        name="minute"
+                                        type="number"
+                                        value={minute}
+                                        onChange={(e) => handleTimeChange(hour, e.target.value)}
+                                    />
                                 </div>
                             )}
 
                             {frequency === 'hourly' && (
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">
-                                        Minute past the hour
-                                    </label>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-gray-500">Run at :</span>
-                                        <input
-                                            type="number"
-                                            min="0"
-                                            max="59"
-                                            value={minute}
-                                            onChange={(e) => {
-                                                setMinute(e.target.value);
-                                                onChange(`${e.target.value} * * * *`);
-                                            }}
-                                            className="w-24 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-lg"
-                                        />
-                                        <span className="text-gray-500">of every hour</span>
-                                    </div>
+                                <div className="flex items-center gap-3">
+                                    <Typography variant="muted">{t(cb.runAt)}</Typography>
+                                    <FormInput
+                                        name="minute"
+                                        type="number"
+                                        value={minute}
+                                        onChange={(e) => {
+                                            setMinute(e.target.value);
+                                            onChange(`${e.target.value} * * * *`);
+                                        }}
+                                        className="w-24"
+                                    />
+                                    <Typography variant="muted">{t(cb.ofEveryHour)}</Typography>
                                 </div>
                             )}
 
                             {frequency === 'weekly' && (
-                                <div className="pt-2 border-t border-gray-200 mt-4">
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        Day of the Week
-                                    </label>
+                                <div className="pt-4 mt-4 border-t border-border">
+                                    <Typography size="sm" className="font-bold mb-3">
+                                        {t(cb.dayOfWeek)}
+                                    </Typography>
                                     <div className="flex flex-wrap gap-2">
                                         {days.map((day) => (
-                                            <button
+                                            <Button
                                                 key={day.value}
-                                                type="button"
+                                                variant={dayOfWeek === day.value ? 'primary' : 'secondary'}
+                                                size="sm"
                                                 onClick={() => handleDayChange(day.value)}
-                                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${dayOfWeek === day.value
-                                                    ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-200'
-                                                    : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
-                                                    }`}
                                             >
                                                 {day.label}
-                                            </button>
+                                            </Button>
                                         ))}
                                     </div>
                                 </div>
                             )}
-                        </div>
+                        </Card>
                     )}
 
                     {/* Quick Presets */}
                     <div>
-                        <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                            Quick Presets
-                        </label>
+                        <Typography variant="muted" size="xs" className="uppercase tracking-wider font-semibold mb-2">
+                            {t(cb.quickPresets)}
+                        </Typography>
                         <div className="flex flex-wrap gap-2">
-                            {presets.map((preset) => {
-                                const isSelected = value === preset.value;
-                                return (
-                                    <button
-                                        key={preset.value}
-                                        type="button"
-                                        onClick={() => handlePresetClick(preset)}
-                                        className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${isSelected
-                                                ? 'bg-blue-600 text-white ring-2 ring-blue-200'
-                                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'
-                                            }`}
-                                    >
-                                        {preset.label}
-                                    </button>
-                                );
-                            })}
+                            {presets.map((preset) => (
+                                <Button
+                                    key={preset.value}
+                                    variant={value === preset.value ? 'primary' : 'secondary'}
+                                    size="sm"
+                                    onClick={() => handlePresetClick(preset)}
+                                >
+                                    {preset.label}
+                                </Button>
+                            ))}
                         </div>
                     </div>
                 </div>
             ) : (
-                <div className="space-y-4 animate-in fade-in duration-300">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Raw Cron Expression
-                        </label>
-                        <div className="relative">
-                            <input
-                                type="text"
-                                value={value}
-                                onChange={(e) => onChange(e.target.value)}
-                                placeholder="0 4 * * *"
-                                className="w-full px-4 py-3 font-mono text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            <div className="mt-2 text-xs text-gray-500 flex justify-between">
-                                <span>Format: minute hour day(month) month day(week)</span>
-                                <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Need help?</a>
+                <div className="space-y-4">
+                    <FormInput
+                        label={t(cb.rawCron)}
+                        name="cron"
+                        type="text"
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        placeholder="0 4 * * *"
+                        description={
+                            <span className="flex justify-between">
+                                <span>{t(cb.cronFormat)}</span>
+                                <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{t(cb.needHelp)}</a>
+                            </span>
+                        }
+                    />
+
+                    <Card padding="lg" className="bg-muted/30">
+                        <Typography size="xs" className="font-bold uppercase mb-2">{t(cb.commonExamples)}</Typography>
+                        <div className="space-y-2 text-sm font-mono">
+                            <div className="flex justify-between">
+                                <span>0 0 * * *</span>
+                                <Typography variant="muted" size="sm">{t(cb.dailyMidnight)}</Typography>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>0 */4 * * *</span>
+                                <Typography variant="muted" size="sm">{t(cb.every4Hours)}</Typography>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>0 9 * * 1</span>
+                                <Typography variant="muted" size="sm">{t(cb.everyMonday9AM)}</Typography>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                        <h4 className="text-xs font-bold text-gray-500 uppercase mb-2">Common Examples</h4>
-                        <ul className="space-y-2 text-sm text-gray-600 font-mono">
-                            <li className="flex justify-between"><span>0 0 * * *</span> <span className="text-gray-400">Daily at midnight</span></li>
-                            <li className="flex justify-between"><span>0 */4 * * *</span> <span className="text-gray-400">Every 4 hours</span></li>
-                            <li className="flex justify-between"><span>0 9 * * 1</span> <span className="text-gray-400">Every Monday at 9AM</span></li>
-                        </ul>
-                    </div>
+                    </Card>
                 </div>
             )}
         </div>
