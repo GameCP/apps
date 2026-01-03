@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
+import { Card, Button, Badge, FormInput } from '@gamecp/ui';
 import { databaseContent } from './content';
 import type { DatabaseSource, DatabaseType } from './types';
 import { HiDatabase, HiPlus, HiTrash, HiPencil, HiCheckCircle, HiXCircle, HiRefresh } from 'react-icons/hi';
@@ -11,7 +12,7 @@ interface TestResult {
 }
 
 export function DatabaseSourcesPage() {
-    const { Card, Button, Badge, FormInput, api, confirm, t } = useGameCP();
+    const { api, confirm, t } = useGameCP();
     const [sources, setSources] = useState<DatabaseSource[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
@@ -185,7 +186,7 @@ export function DatabaseSourcesPage() {
                                     name="type"
                                     type="select"
                                     value={formData.type}
-                                    onChange={(e) => {
+                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                                         const type = e.target.value as DatabaseType;
                                         setFormData({
                                             ...formData,
@@ -207,7 +208,7 @@ export function DatabaseSourcesPage() {
                                     name="name"
                                     type="text"
                                     value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
                                     placeholder={t(databaseContent.admin.namePlaceholder)}
                                     required
                                 />
@@ -217,7 +218,7 @@ export function DatabaseSourcesPage() {
                                     name="host"
                                     type="text"
                                     value={formData.host}
-                                    onChange={(e) => setFormData({ ...formData, host: e.target.value })}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, host: e.target.value })}
                                     placeholder={t(databaseContent.admin.hostPlaceholder)}
                                     required
                                 />
@@ -227,7 +228,7 @@ export function DatabaseSourcesPage() {
                                     name="port"
                                     type="number"
                                     value={formData.port}
-                                    onChange={(e) => setFormData({ ...formData, port: parseInt(e.target.value) })}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, port: parseInt(e.target.value) })}
                                     required
                                 />
 
@@ -239,7 +240,7 @@ export function DatabaseSourcesPage() {
                                             name="adminUsername"
                                             type="text"
                                             value={formData.adminUsername}
-                                            onChange={(e) => setFormData({ ...formData, adminUsername: e.target.value })}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, adminUsername: e.target.value })}
                                             placeholder={t(databaseContent.admin.adminUsernamePlaceholder)}
                                             required
                                         />
@@ -249,7 +250,7 @@ export function DatabaseSourcesPage() {
                                             name="adminPassword"
                                             type="password"
                                             value={formData.adminPassword}
-                                            onChange={(e) => setFormData({ ...formData, adminPassword: e.target.value })}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, adminPassword: e.target.value })}
                                             showHidePassword
                                             required
                                         />
@@ -264,7 +265,7 @@ export function DatabaseSourcesPage() {
                                             name="adminUsername"
                                             type="text"
                                             value={formData.adminUsername}
-                                            onChange={(e) => setFormData({ ...formData, adminUsername: e.target.value })}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, adminUsername: e.target.value })}
                                             placeholder={t(databaseContent.admin.adminUsernamePlaceholder)}
                                             description="Optional - leave blank if authentication is not enabled"
                                         />
@@ -274,7 +275,7 @@ export function DatabaseSourcesPage() {
                                             name="adminPassword"
                                             type="password"
                                             value={formData.adminPassword}
-                                            onChange={(e) => setFormData({ ...formData, adminPassword: e.target.value })}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, adminPassword: e.target.value })}
                                             showHidePassword
                                             description="Optional - leave blank if authentication is not enabled"
                                         />
@@ -287,7 +288,7 @@ export function DatabaseSourcesPage() {
                                         name="adminerUrl"
                                         type="url"
                                         value={formData.adminerUrl}
-                                        onChange={(e) => setFormData({ ...formData, adminerUrl: e.target.value })}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, adminerUrl: e.target.value })}
                                         placeholder="https://adminer.example.com"
                                         description="URL to your Adminer instance for web-based database management."
                                         required
