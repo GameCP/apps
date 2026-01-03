@@ -247,6 +247,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                     </div>
                 </Card>
             </div>
+            {dialog}
         </div>
     );
 }

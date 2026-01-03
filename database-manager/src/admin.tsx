@@ -406,6 +406,7 @@ export function DatabaseSourcesPage() {
                     ))
                 )}
             </div>
+            {dialog}
         </div>
     );
 }
