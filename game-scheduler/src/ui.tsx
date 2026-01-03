@@ -21,7 +21,7 @@ export function ScheduleIcon({ serverId }: { serverId: string }) {
     );
 }
 
-export function GameSchedulerTab({ gameServerId }: GameSchedulerTabProps) {
+export function SchedulerPage({ serverId }: { serverId: string }) {
     const { api, t } = useGameCP();
     const { confirm, dialog } = useConfirmDialog();
     const [tasks, setTasks] = useState<any[]>([]);

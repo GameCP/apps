@@ -14,8 +14,8 @@ interface DiscordIconProps {
     serverId: string;
 }
 
-interface DiscordNotificationsTabProps {
-    gameServerId: string;
+interface SettingsPageProps {
+    serverId: string;
 }
 
 // Client-side UI components
