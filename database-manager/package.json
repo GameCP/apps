@@ -1,6 +1,6 @@
 {
   "name": "database-manager",
-  "version": "1.2.3",
+  "version": "1.2.21",
   "description": "Database provisioning and management for game servers",
   "main": "dist/handlers.js",
   "scripts": {
