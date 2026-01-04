@@ -15,7 +15,7 @@ export function BrandedFooter() {
     }
 
     return (
-        <Container className="pt-8">
+        <Container className="py-8">
             <Typography variant="muted" size="sm" className="text-center">
                 {footerText}
             </Typography>

@@ -1,5 +1,5 @@
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Container, Typography } from '@gamecp/ui';
+import { Card, Typography } from '@gamecp/ui';
 
 /**
  * Branded Header Component
@@ -17,16 +17,14 @@ export function BrandedHeader() {
     }
 
     return (
-        <Container>
-            <Card padding="lg">
-                <Typography as="h2" size="xl" className="font-bold">{headerText}</Typography>
+        <Card padding="lg">
+            <Typography as="h2" size="xl" className="font-bold">{headerText}</Typography>
 
-                {headerSubtext && (
-                    <Typography variant="muted" size="sm" className="mt-1">
-                        {headerSubtext}
-                    </Typography>
-                )}
-            </Card>
-        </Container>
+            {headerSubtext && (
+                <Typography variant="muted" size="sm" className="mt-1">
+                    {headerSubtext}
+                </Typography>
+            )}
+        </Card>
     );
 }

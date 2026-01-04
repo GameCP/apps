@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGameCP } from '@gamecp/types/client';
 import { Card, Button, FormInput, Container, Typography, SkeletonItem, SkeletonCard } from '@gamecp/ui';
+import { RiSaveLine, RiStickyNoteLine } from 'react-icons/ri';
 import { lang } from './lang';
 
 interface NotesAreaProps {
@@ -10,6 +11,7 @@ interface NotesAreaProps {
 export function NotesArea({ serverId }: NotesAreaProps) {
     const { user, api, t } = useGameCP();
     const [note, setNote] = useState<string>('');
+    const [originalNote, setOriginalNote] = useState<string>(''); // Track original to detect changes
     const [loading, setLoading] = useState<boolean>(true);
     const [saving, setSaving] = useState<boolean>(false);
     const [message, setMessage] = useState<string>('');
@@ -31,7 +33,11 @@ export function NotesArea({ serverId }: NotesAreaProps) {
 
             if (data.note) {
                 setNote(data.note);
+                setOriginalNote(data.note);
                 setLastUpdated(data.updatedAt);
+            } else {
+                setNote('');
+                setOriginalNote('');
             }
         } catch (error) {
             console.error('Failed to load note:', error);
@@ -53,6 +59,7 @@ export function NotesArea({ serverId }: NotesAreaProps) {
 
             setMessage(t(lang.messages.saveSuccess));
             setLastUpdated(new Date().toISOString());
+            setOriginalNote(note); // Update original after save
             setTimeout(() => setMessage(''), 3000);
         } catch (error: any) {
             console.error('Failed to save note:', error);
@@ -65,13 +72,11 @@ export function NotesArea({ serverId }: NotesAreaProps) {
     if (loading) {
         return (
             <Card padding="lg" contentClassName="space-y-4">
+                <Typography as="h3" size="lg" className="font-medium">{t(lang.title)}</Typography>
+                <SkeletonItem width="w-full" height="h-40" className="rounded-lg" />
                 <div className="flex items-center justify-between">
-                    <Typography as="h3" size="lg" className="font-bold">{t(lang.title)}</Typography>
-                    <SkeletonItem width="w-40" height="h-4" />
-                </div>
-                <SkeletonItem width="w-full" height="h-40" />
-                <div className="flex items-center justify-end">
-                    <SkeletonItem width="w-24" height="h-10" />
+                    <SkeletonItem width="w-32" height="h-4" />
+                    <SkeletonItem width="w-28" height="h-10" className="rounded-lg" />
                 </div>
             </Card>
         );
@@ -80,7 +85,10 @@ export function NotesArea({ serverId }: NotesAreaProps) {
     return (
         <Card padding="lg" contentClassName="space-y-4">
             <div className="flex items-center justify-between">
-                <Typography as="h3" size="lg" className="font-bold">{t(lang.title)}</Typography>
+                <div className="flex items-center gap-2">
+                    <RiStickyNoteLine className="w-5 h-5 text-muted-foreground" />
+                    <Typography as="h3" size="lg" className="font-medium">{t(lang.title)}</Typography>
+                </div>
                 {lastUpdated && (
                     <Typography size="xs" variant="muted">
                         {t(lang.lastUpdated)} {new Date(lastUpdated).toLocaleString()}
@@ -101,10 +109,11 @@ export function NotesArea({ serverId }: NotesAreaProps) {
             <div className="flex items-center justify-end">
                 <Button
                     onClick={handleSave}
-                    disabled={saving}
+                    disabled={saving || note === originalNote}
                     isLoading={saving}
                     variant="primary"
                 >
+                    <RiSaveLine className="h-4 w-4 mr-2" />
                     {t(lang.saveButton)}
                 </Button>
             </div>
