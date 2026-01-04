@@ -13,7 +13,7 @@
       "method": "MOUNT",
       "target": "server.dashboard.widget",
       "component": "NotesArea",
-      "col_span": 6,
+      "col_span": 3,
       "order": 1
     }
   ],
