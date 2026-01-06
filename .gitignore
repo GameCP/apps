@@ -6,3 +6,4 @@ dist
 .env.local
 release/
 *.zip
+.env.prod
