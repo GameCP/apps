@@ -28,7 +28,6 @@
     "@types/react-dom": "^19.2.3",
     "framer-motion": "^12.23.26",
     "next": "^15.5.9",
-    "next-intlayer": "^7.5.6",
     "react-tooltip": "^5.30.0",
     "typescript": "^5.9.3"
   },

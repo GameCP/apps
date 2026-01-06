@@ -2,7 +2,7 @@
 
 ## Overview
 
-Extensions can use the GameCP i18n system (powered by Intlayer) to provide multi-language support. The `GameCP_SDK` provides access to translation utilities that work seamlessly with the main application's language settings.
+Extensions can use the GameCP i18n system to provide multi-language support. The `GameCP_SDK` provides access to translation utilities that work seamlessly with the main application's language settings.
 
 ## How It Works
 
@@ -27,7 +27,6 @@ declare global {
         locale: string;
       };
       
-      // Or if using Intlayer directly
       t: (translations: Record<string, string>) => string;
       locale: string;
     };

@@ -145,7 +145,7 @@ export function DatabaseSourcesPage() {
 
     if (loading) {
         return (
-            <Container className="space-y-6">
+            <div className="space-y-6">
                 {/* Header - Static content, render directly */}
                 <div className="flex items-center justify-between">
                     <div>
@@ -182,12 +182,12 @@ export function DatabaseSourcesPage() {
                         </SkeletonCard>
                     ))}
                 </div>
-            </Container>
+            </div>
         );
     }
 
     return (
-        <Container className="space-y-6">
+        <div className="space-y-6">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
@@ -434,6 +434,6 @@ export function DatabaseSourcesPage() {
                 )}
             </div>
             {dialog}
-        </Container>
+        </div>
     );
 }

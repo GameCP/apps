@@ -2,6 +2,7 @@ import React from 'react';
 import { useGameCP } from '@gamecp/types/client';
 import { Card, FormInput, Switch, Typography } from '@gamecp/ui';
 import { lang } from '../lang';
+import { RiDatabase2Line } from 'react-icons/ri';
 
 interface GameDatabaseSettingsProps {
     gameId: string;
@@ -32,11 +33,16 @@ export function GameDatabaseSettings({ gameId, extensionData, onChange }: GameDa
     return (
         <Card id="database-provisioning" padding="lg">
             <div className="flex items-center justify-between border-b border-border pb-4">
-                <div>
-                    <Typography as="h3" size="lg" className="font-bold">{t(lang.provisioning.title)}</Typography>
-                    <Typography variant="muted" size="sm" className="mt-1">
-                        {t(lang.provisioning.description)}
-                    </Typography>
+                <div className="flex items-start gap-4">
+                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                        <RiDatabase2Line className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <Typography as="h3" size="lg" className="font-bold">{t(lang.provisioning.title)}</Typography>
+                        <Typography variant="muted" size="sm" className="mt-1">
+                            {t(lang.provisioning.description)}
+                        </Typography>
+                    </div>
                 </div>
                 <Switch
                     checked={config.enabled || false}

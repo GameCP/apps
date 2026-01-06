@@ -48,7 +48,7 @@ export const saveNote: ApiRouteHandler = async (ctx) => {
       data: noteData
     });
 
-    if (!response.success) {
+    if (!response.data?.success) {
       throw new Error('Failed to save note');
     }
 
@@ -62,10 +62,14 @@ export const saveNote: ApiRouteHandler = async (ctx) => {
       }
     };
   } catch (error) {
-    ctx.logger.error('Error saving note:', error);
+    // Extract error message properly for VM environment
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : '';
+    ctx.logger.error('Error saving note:', errorMessage);
+    ctx.logger.error('Error stack:', errorStack);
     return {
       status: 500,
-      body: { error: 'Failed to save note' }
+      body: { error: 'Failed to save note', details: errorMessage }
     };
   }
 };
@@ -93,9 +97,9 @@ export const getNote: ApiRouteHandler = async (ctx) => {
   }
 
   try {
-    // Fetch note from server's extensionData
     const response = await ctx.api.get(`/api/game-servers/${serverId}/extension-data/server-notes`);
-    const noteData = response.data || {};
+    // Response structure: { data: { data: { note, updatedAt } } }
+    const noteData = response.data?.data || {};
 
     return {
       status: 200,
@@ -105,10 +109,10 @@ export const getNote: ApiRouteHandler = async (ctx) => {
       }
     };
   } catch (error) {
-    ctx.logger.error('Error fetching note:', error);
+    const err = error as Error;
     return {
       status: 500,
-      body: { error: 'Failed to fetch note' }
+      body: { error: 'Failed to fetch note', details: err?.message }
     };
   }
 };

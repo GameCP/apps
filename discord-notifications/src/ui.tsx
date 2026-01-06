@@ -25,7 +25,7 @@ export function DiscordIcon({ serverId }: DiscordIconProps) {
 
     return (
         <Link
-            href={`/ game - servers / ${serverId} /extensions/discord`}
+            href={`/game-servers/${serverId}/extensions/discord`}
             className="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-foreground hover:bg-muted hover:text-foreground transition-all duration-150 ease-in-out"
             title={t(lang.page.title)}
         >

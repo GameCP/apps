@@ -44,7 +44,8 @@ interface DiscordExtensionData {
 async function getExtensionData(ctx: ExtensionContext, serverId: string): Promise<DiscordExtensionData> {
   try {
     const response = await ctx.api.get(`/api/game-servers/${serverId}/extension-data/discord-notifications`);
-    return response.data || { webhooks: [] };
+    // Response structure: { data: { data: { webhooks, ... } } }
+    return response.data?.data || { webhooks: [] };
   } catch (error) {
     return { webhooks: [] };
   }

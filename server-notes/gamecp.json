@@ -7,7 +7,7 @@
   "author": "GameCP Team",
   "ui_bundle": "dist/index.js",
   "handlers_bundle": "dist/handlers.js",
-  "integrity": "sha384-NvSYLNRe7w8enYplEWc6+LfTGxH70Cl/VB8JSWp3IjO/E77RpAVR/NEd3eJ4QfSI",
+  "integrity": "sha384-p1a5gCs8cn6yoGRYj7KqxjVZh/zw23ArFJiI8NjGO5n5F0+3hBIEVzzAdY9bdXka",
   "ui_injection": [
     {
       "method": "MOUNT",
