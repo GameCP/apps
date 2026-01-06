@@ -158,8 +158,20 @@ update_tenant() {
         node -e "
 const mongoose = require('mongoose');
 
+// Build connection string properly
+function buildConnStr(baseUri, dbName) {
+    const url = new URL(baseUri);
+    url.pathname = '/' + dbName;
+    // Ensure authSource=admin for cross-db access
+    if (!url.searchParams.has('authSource')) {
+        url.searchParams.set('authSource', 'admin');
+    }
+    return url.toString();
+}
+
 async function main() {
-    await mongoose.connect('$MONGODB_URI/$tenant_db');
+    const connStr = buildConnStr('$MONGODB_URI', '$tenant_db');
+    await mongoose.connect(connStr);
     
     const ext = await mongoose.connection.db.collection('userextensions').findOne(
         { extensionId: '$EXT_ID' }
@@ -184,8 +196,20 @@ main().catch(e => { console.error('   ❌ $tenant_slug: ' + e.message); });
 const fs = require('fs');
 const mongoose = require('mongoose');
 
+// Build connection string properly
+function buildConnStr(baseUri, dbName) {
+    const url = new URL(baseUri);
+    url.pathname = '/' + dbName;
+    // Ensure authSource=admin for cross-db access
+    if (!url.searchParams.has('authSource')) {
+        url.searchParams.set('authSource', 'admin');
+    }
+    return url.toString();
+}
+
 async function main() {
-    await mongoose.connect('$MONGODB_URI/$tenant_db');
+    const connStr = buildConnStr('$MONGODB_URI', '$tenant_db');
+    await mongoose.connect(connStr);
     
     const uiBundle = fs.readFileSync('$EXTENSION_DIR/dist/index.js', 'utf-8');
     const handlersBundle = fs.readFileSync('$EXTENSION_DIR/dist/handlers.js', 'utf-8');
@@ -260,7 +284,7 @@ publish_to_appstore() {
     echo -e "${BLUE}📤 Publishing to App Store...${NC}"
     
     cd "$EXTENSION_DIR"
-    GAMECP_API_KEY="$GAMECP_PUBLISHER_KEY" node "$SCRIPT_DIR/publish.js" "$APPSTORE_API_URL"
+    GAMECP_API_KEY="$GAMECP_PUBLISHER_KEY" GAMECP_APPSTORE_URL="$APPSTORE_API_URL" node "$SCRIPT_DIR/publish.js"
 }
 
 # Execute based on target
