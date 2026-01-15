@@ -84,7 +84,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                         title={t(lang.config.title)}
                         description={t(lang.config.description)}
                         icon={TbBrandDiscord}
-                        iconColor="blue"
+                        iconColor="info"
                         padding="lg"
                     >
                         <div className="space-y-6 mt-4">
@@ -235,7 +235,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                     title={t(lang.config.title)}
                     description={t(lang.config.description)}
                     icon={TbBrandDiscord}
-                    iconColor="blue"
+                    iconColor="info"
                     padding="lg"
                 >
                     <form onSubmit={handleSave} className="space-y-6 mt-4">

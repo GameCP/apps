@@ -84,8 +84,8 @@ export function GameDatabaseSettings({ gameId, extensionData, onChange }: GameDa
                         description={t(lang.provisioning.requireDatabaseDesc)}
                     />
 
-                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                        <Typography size="sm" className="text-blue-800 dark:text-blue-200">
+                    <div className="bg-info/10 dark:bg-info/20 border border-info/30 dark:border-info rounded-lg p-4">
+                        <Typography size="sm" className="text-info dark:text-blue-200">
                             <strong>{t(lang.provisioning.note)}</strong> {t(lang.provisioning.noteMessage)}{' '}
                             <a href="/admin/extensions/database-manager" className="underline hover:no-underline">
                                 {t(lang.provisioning.adminPanel)}

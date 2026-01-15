@@ -22,7 +22,7 @@ export function DatabaseNavItem({ activeSection, scrollToSection }: DatabaseNavI
                 }`}
         >
             <HiDatabase
-                className={`w-5 h-5 mt-0.5 mr-3 flex-shrink-0 ${isActive ? 'text-primary-foreground' : 'text-blue-600'
+                className={`w-5 h-5 mt-0.5 mr-3 flex-shrink-0 ${isActive ? 'text-primary-foreground' : 'text-primary'
                     }`}
             />
             <div className="min-w-0 flex-1">

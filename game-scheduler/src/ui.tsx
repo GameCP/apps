@@ -74,7 +74,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                         title={t(lang.createTask.title)}
                         description={t(lang.createTask.description)}
                         icon={TbCalendarEvent}
-                        iconColor="blue"
+                        iconColor="info"
                         padding="lg"
                     >
                         <div className="space-y-6 mt-4">
@@ -215,7 +215,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                     title={t(lang.createTask.title)}
                     description={t(lang.createTask.description)}
                     icon={TbCalendarEvent}
-                    iconColor="blue"
+                    iconColor="info"
                     padding="lg"
                 >
                     <form onSubmit={handleCreateTask} className="space-y-6 mt-4">
@@ -245,7 +245,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
 
                         <div>
                             <label className="block text-sm font-semibold text-foreground mb-3">
-                                {t(lang.form.schedule)} <span className="text-red-500">*</span>
+                                {t(lang.form.schedule)} <span className="text-danger">*</span>
                             </label>
                             <CronBuilder
                                 value={schedule}

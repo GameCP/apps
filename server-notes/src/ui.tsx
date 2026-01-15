@@ -120,8 +120,8 @@ export function NotesArea({ serverId }: NotesAreaProps) {
             {message && (
                 <div
                     className={`p-3 rounded-lg text-sm ${message.includes('success')
-                        ? 'bg-green-50 text-green-800 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
-                        : 'bg-red-50 text-red-800 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
+                        ? 'bg-success/10 text-success border border-success/30 dark:bg-success/20 dark:text-success dark:border-success'
+                        : 'bg-danger/10 text-danger border border-danger/30 dark:bg-danger/20 dark:text-danger dark:border-danger'
                         }`}
                 >
                     {message}

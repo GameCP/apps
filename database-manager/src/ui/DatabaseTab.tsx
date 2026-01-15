@@ -317,14 +317,14 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
 
                                 {/* Test Result */}
                                 {testResults[db._id] && (
-                                    <div className={`mb-3 p-3 rounded-lg border ${testResults[db._id].success ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'}`}>
+                                    <div className={`mb-3 p-3 rounded-lg border ${testResults[db._id].success ? 'bg-success/10 dark:bg-success/20 border-success/30 dark:border-success' : 'bg-danger/10 dark:bg-danger/20 border-danger/30 dark:border-danger'}`}>
                                         <div className="flex items-center gap-2">
                                             {testResults[db._id].success ? (
-                                                <HiCheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
+                                                <HiCheckCircle className="w-4 h-4 text-success dark:text-success" />
                                             ) : (
-                                                <HiXCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
+                                                <HiXCircle className="w-4 h-4 text-danger dark:text-danger" />
                                             )}
-                                            <span className={`text-sm font-medium ${testResults[db._id].success ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'}`}>
+                                            <span className={`text-sm font-medium ${testResults[db._id].success ? 'text-success dark:text-green-200' : 'text-danger dark:text-red-200'}`}>
                                                 {testResults[db._id].message}
                                             </span>
                                             {testResults[db._id].success && testResults[db._id].latencyMs > 0 && (
