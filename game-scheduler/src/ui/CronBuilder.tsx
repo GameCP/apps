@@ -198,7 +198,7 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
                     {(frequency !== 'custom') && (
                         <Card padding="lg" className="bg-muted/30">
                             {(frequency === 'daily' || frequency === 'weekly') && (
-                                <div className="grid grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                     <FormInput
                                         label={t(cb.hour24)}
                                         name="hour"

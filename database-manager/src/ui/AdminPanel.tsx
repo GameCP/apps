@@ -3,7 +3,7 @@ import { useGameCP } from '@gamecp/types/client';
 import { Card, Button, Badge, FormInput, useConfirmDialog, Container, Typography, SkeletonItem, SkeletonCard } from '@gamecp/ui';
 import { lang } from '../lang';
 import type { DatabaseSource, DatabaseType } from '../types';
-import { HiDatabase, HiPlus, HiTrash, HiPencil, HiCheckCircle, HiXCircle, HiRefresh } from 'react-icons/hi';
+import { RiDatabase2Line, RiAddLine, RiCheckboxCircleLine, RiCloseCircleLine, RiRefreshLine, RiEditLine, RiDeleteBinLine } from 'react-icons/ri';
 
 interface TestResult {
     success: boolean;
@@ -147,14 +147,14 @@ export function DatabaseSourcesPage() {
         return (
             <div className="space-y-6">
                 {/* Header - Static content, render directly */}
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <Typography as="h1" size="2xl" className="font-bold">{t(lang.admin.title)}</Typography>
                         <Typography variant="muted" className="mt-1">
                             {t(lang.admin.description)}
                         </Typography>
                     </div>
-                    <SkeletonItem width="w-36" height="h-10" />
+                    <SkeletonItem width="w-36" height="h-10" className="sm:flex-shrink-0" />
                 </div>
 
                 {/* Sources List Skeleton */}
@@ -189,7 +189,7 @@ export function DatabaseSourcesPage() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <Typography as="h1" size="2xl" className="font-bold">{t(lang.admin.title)}</Typography>
                     <Typography variant="muted" className="mt-1">
@@ -197,8 +197,8 @@ export function DatabaseSourcesPage() {
                     </Typography>
                 </div>
                 {!showForm && (
-                    <Button onClick={() => setShowForm(true)} variant="primary">
-                        <HiPlus className="w-5 h-5 mr-2" />
+                    <Button onClick={() => setShowForm(true)} variant="primary" className="sm:flex-shrink-0">
+                        <RiAddLine className="w-5 h-5 mr-2" />
                         {t(lang.admin.addSource)}
                     </Button>
                 )}
@@ -332,9 +332,9 @@ export function DatabaseSourcesPage() {
                             <div className={`p-4 rounded-lg border ${testResult.success ? 'bg-success/10 dark:bg-success/20 border-success/30 dark:border-success' : 'bg-danger/10 dark:bg-danger/20 border-danger/30 dark:border-danger'}`}>
                                 <div className="flex items-center gap-2">
                                     {testResult.success ? (
-                                        <HiCheckCircle className="w-5 h-5 text-success dark:text-success" />
+                                        <RiCheckboxCircleLine className="w-5 h-5 text-success dark:text-success" />
                                     ) : (
-                                        <HiXCircle className="w-5 h-5 text-danger dark:text-danger" />
+                                        <RiCloseCircleLine className="w-5 h-5 text-danger dark:text-danger" />
                                     )}
                                     <span className={`font-medium ${testResult.success ? 'text-success dark:text-green-200' : 'text-danger dark:text-red-200'}`}>
                                         {testResult.message}
@@ -353,7 +353,7 @@ export function DatabaseSourcesPage() {
                                 variant="secondary"
                                 disabled={!formData.host || !formData.port || testingConnection}
                             >
-                                <HiRefresh className={`w-4 h-4 mr-2 ${testingConnection ? 'animate-spin' : ''}`} />
+                                <RiRefreshLine className={`w-4 h-4 mr-2 ${testingConnection ? 'animate-spin' : ''}`} />
                                 {testingConnection ? t(lang.messages.testing) : t(lang.messages.testConnection)}
                             </Button>
                             <Button type="submit" variant="primary">
@@ -372,7 +372,7 @@ export function DatabaseSourcesPage() {
                 {sources.length === 0 ? (
                     <Card padding="lg">
                         <div className="text-center py-6">
-                            <HiDatabase className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                            <RiDatabase2Line className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                             <Typography variant="muted">
                                 {t(lang.admin.noSources)}
                             </Typography>
@@ -385,17 +385,17 @@ export function DatabaseSourcesPage() {
                                 <div className="flex-1">
                                     <div className="flex items-center gap-3 mb-2">
                                         <Typography as="h3" size="lg" className="font-bold">{source.name}</Typography>
-                                        <Badge variant={source.enabled ? 'success' : 'default'}>
+                                        <Badge variant="info">
                                             {source.type.toUpperCase()}
                                         </Badge>
                                         {source.enabled ? (
                                             <Badge variant="success" size="sm">
-                                                <HiCheckCircle className="w-3 h-3 mr-1" />
+                                                <RiCheckboxCircleLine className="w-3 h-3 mr-1" />
                                                 {t(lang.admin.enabled)}
                                             </Badge>
                                         ) : (
                                             <Badge variant="default" size="sm">
-                                                <HiXCircle className="w-3 h-3 mr-1" />
+                                                <RiCloseCircleLine className="w-3 h-3 mr-1" />
                                                 {t(lang.admin.disabled)}
                                             </Badge>
                                         )}
@@ -418,14 +418,14 @@ export function DatabaseSourcesPage() {
                                         variant="secondary"
                                         size="sm"
                                     >
-                                        <HiPencil className="w-4 h-4" />
+                                        <RiEditLine className="w-4 h-4" />
                                     </Button>
                                     <Button
                                         onClick={() => handleDelete(source._id)}
                                         variant="danger"
                                         size="sm"
                                     >
-                                        <HiTrash className="w-4 h-4" />
+                                        <RiDeleteBinLine className="w-4 h-4" />
                                     </Button>
                                 </div>
                             </div>

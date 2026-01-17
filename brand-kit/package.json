@@ -1,6 +1,6 @@
 {
   "name": "brand-kit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Add custom branding to dashboards",
   "main": "dist/index.js",
   "scripts": {
