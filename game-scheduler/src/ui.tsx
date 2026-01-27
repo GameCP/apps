@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RiCalendarEventLine } from 'react-icons/ri';
 import { lang } from './lang';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, Badge, FormInput, useConfirmDialog, Container, Typography, SkeletonItem, SkeletonCard, SidebarNavItem } from '@gamecp/ui';
+import { Card, Button, Badge, FormInput, useConfirmDialog, Container, PageHeader, SkeletonItem, SkeletonCard, SidebarNavItem } from '@gamecp/ui';
 import { CronBuilder } from './ui/CronBuilder';
 import useSWR, { mutate } from 'swr';
 
@@ -43,19 +43,11 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
     if (initialLoading) {
         return (
             <Container padding="lg" className="space-y-6">
-                {/* Header - Static content, render directly */}
-                <div className="mb-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                            <Typography as="h1" size="xl" className="sm:text-2xl font-bold">
-                                {t(lang.page.title)}
-                            </Typography>
-                            <Typography variant="muted" size="sm" className="sm:text-base mt-1">
-                                {t(lang.page.description)}
-                            </Typography>
-                        </div>
-                    </div>
-                </div>
+                <PageHeader
+                    title={t(lang.page.title)}
+                    subtitle={t(lang.page.description)}
+                    size="md"
+                />
 
                 <div className="space-y-4 sm:space-y-6">
                     {/* Create Task Card - Render card with static title, skeleton form fields */}
@@ -168,19 +160,11 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
 
     return (
         <Container padding="lg" className="space-y-6">
-            {/* Header */}
-            <div className="mb-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                        <Typography as="h1" size="xl" className="sm:text-2xl font-bold">
-                            {t(lang.page.title)}
-                        </Typography>
-                        <Typography variant="muted" size="sm" className="sm:text-base mt-1">
-                            {t(lang.page.description)}
-                        </Typography>
-                    </div>
-                </div>
-            </div>
+            <PageHeader
+                title={t(lang.page.title)}
+                subtitle={t(lang.page.description)}
+                size="md"
+            />
 
             {/* Status Messages */}
             {(error || message) && (
