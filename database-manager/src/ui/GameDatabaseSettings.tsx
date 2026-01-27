@@ -32,7 +32,7 @@ export function GameDatabaseSettings({ gameId, extensionData, onChange }: GameDa
 
     return (
         <Card id="database-provisioning" padding="lg">
-            <div className="flex items-center justify-between border-b border-border pb-4">
+            <div className="flex items-center justify-between">
                 <div className="flex items-start gap-4">
                     <div className="p-2 bg-primary/10 rounded-lg text-primary">
                         <RiDatabase2Line className="w-6 h-6" />
@@ -51,7 +51,7 @@ export function GameDatabaseSettings({ gameId, extensionData, onChange }: GameDa
             </div>
 
             {config.enabled && (
-                <div className="space-y-4">
+                <div className="space-y-4 mt-6">
                     <FormInput
                         label={t(lang.provisioning.namePattern)}
                         name="namePattern"

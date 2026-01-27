@@ -62,7 +62,13 @@ async function updateExtension(extensionDir, tenantSlug) {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
 
     const dbName = `gamecp_tenant_${tenantSlug}`;
-    const connection = await mongoose.createConnection(`${MONGODB_URI}/${dbName}`);
+    const connection = mongoose.createConnection(`${MONGODB_URI}/${dbName}`);
+
+    // Wait for connection to be ready
+    await new Promise((resolve, reject) => {
+        connection.once('connected', resolve);
+        connection.once('error', reject);
+    });
 
     try {
         const result = await connection.db.collection('userextensions').updateOne(

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGameCP } from '@gamecp/types/client';
-import { HiDatabase } from 'react-icons/hi';
+import { RiDatabase2Line } from 'react-icons/ri';
 import { lang } from './lang';
 
 interface DatabaseSourcesNavProps {
@@ -14,15 +14,21 @@ export function DatabaseSourcesNav({ user, closeSidebar }: DatabaseSourcesNavPro
     // Only show to admins
     if (user?.role !== 'admin') return null;
 
-    const { Link, t } = useGameCP();
+    const { Link, t, pathname } = useGameCP();
+    const href = '/extensions/database-manager';
+    const isActive = pathname === href || pathname?.startsWith(href + '/');
 
     return (
         <Link
-            href="/extensions/database-manager"
-            className="peer/menu-button flex w-full items-center gap-0 overflow-hidden rounded-md p-2 text-left outline-hidden ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+            href={href}
+            className={`peer/menu-button flex w-full items-center gap-0 overflow-hidden rounded-md p-2 text-left outline-hidden ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 h-8 text-sm ${isActive
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+                }`}
         >
-            <HiDatabase className="mr-4 text-xl transition-all duration-150 ease-in-out" />
+            <RiDatabase2Line className={`mr-4 text-xl transition-all duration-150 ease-in-out ${isActive ? 'text-primary-foreground' : ''}`} />
             <span className="transition-all duration-150 ease-in-out">{t(lang.admin.title)}</span>
         </Link>
     );
 }
+

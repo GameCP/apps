@@ -1,32 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { TbCalendarEvent } from 'react-icons/tb';
+import React, { useState } from 'react';
+import { RiCalendarEventLine } from 'react-icons/ri';
 import { lang } from './lang';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, Badge, FormInput, useConfirmDialog, Container, Typography, SkeletonItem, SkeletonCard } from '@gamecp/ui';
+import { Card, Button, Badge, FormInput, useConfirmDialog, Container, Typography, SkeletonItem, SkeletonCard, SidebarNavItem } from '@gamecp/ui';
 import { CronBuilder } from './ui/CronBuilder';
+import useSWR, { mutate } from 'swr';
 
 // Client-side UI components
 export function ScheduleIcon({ serverId }: { serverId: string }) {
-    const { Link, t } = useGameCP();
+    const { t } = useGameCP();
+    const href = `/game-servers/${serverId}/extensions/scheduler`;
 
     return (
-        <Link
-            href={`/game-servers/${serverId}/extensions/scheduler`}
-            className="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-foreground hover:bg-muted hover:text-foreground transition-all duration-150 ease-in-out"
+        <SidebarNavItem
+            href={href}
+            icon={RiCalendarEventLine}
             title={t(lang.page.title)}
         >
-            <TbCalendarEvent className="mr-3 h-5 w-5 transition-all duration-150 ease-in-out" />
-            <span>{t(lang.nav.title)}</span>
-        </Link>
+            {t(lang.nav.title)}
+        </SidebarNavItem>
     );
 }
 
 export function SchedulerPage({ serverId }: { serverId: string }) {
     const { api, t } = useGameCP();
     const { confirm, dialog } = useConfirmDialog();
-    const [tasks, setTasks] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
-    const [initialLoading, setInitialLoading] = useState(true);
     const [message, setMessage] = useState('');
     const [error, setError] = useState<string | null>(null);
 
@@ -35,25 +34,15 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
     const [actionType, setActionType] = useState('restart');
     const [schedule, setSchedule] = useState('0 4 * * *'); // Default: 4 AM daily
 
-    useEffect(() => {
-        loadTasks();
-    }, [serverId]);
-
-    const loadTasks = async () => {
-        try {
-            const data = await api.get(`/api/x/game-scheduler/tasks?serverId=${serverId}`);
-            setTasks(data.tasks || []);
-        } catch (err) {
-            console.error('Failed to load tasks:', err);
-        } finally {
-            setInitialLoading(false);
-        }
-    };
+    // SWR for data fetching - auto-revalidates and caches
+    const tasksKey = `/api/x/game-scheduler/tasks?serverId=${serverId}`;
+    const { data: tasksData, isLoading: initialLoading } = useSWR(tasksKey, () => api.get(tasksKey));
+    const tasks = tasksData?.tasks || [];
 
     // Loading skeleton - mirrors the final layout structure
     if (initialLoading) {
         return (
-            <Container className="space-y-6">
+            <Container padding="lg" className="space-y-6">
                 {/* Header - Static content, render directly */}
                 <div className="mb-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -73,7 +62,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                     <Card
                         title={t(lang.createTask.title)}
                         description={t(lang.createTask.description)}
-                        icon={TbCalendarEvent}
+                        icon={RiCalendarEventLine}
                         iconColor="info"
                         padding="lg"
                     >
@@ -144,7 +133,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
 
             setMessage(t(lang.messages.created));
             setTaskName('');
-            loadTasks();
+            mutate(tasksKey);
         } catch (err: any) {
             setError(err.message || t(lang.messages.createFailed));
         } finally {
@@ -157,7 +146,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
             title: t(lang.confirm.deleteTitle),
             message: t(lang.confirm.deleteMessage),
             confirmText: t(lang.buttons.delete),
-            confirmButtonColor: 'red'
+            confirmButtonColor: 'danger'
         });
 
         if (!confirmed) return;
@@ -169,7 +158,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
         try {
             await api.delete('/api/x/game-scheduler/tasks', { serverId, taskId });
             setMessage(t(lang.messages.deleted));
-            loadTasks();
+            mutate(tasksKey);
         } catch (err: any) {
             setError(err.message || t(lang.messages.deleteFailed));
         } finally {
@@ -178,7 +167,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
     };
 
     return (
-        <Container className="space-y-6">
+        <Container padding="lg" className="space-y-6">
             {/* Header */}
             <div className="mb-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -214,7 +203,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
                 <Card
                     title={t(lang.createTask.title)}
                     description={t(lang.createTask.description)}
-                    icon={TbCalendarEvent}
+                    icon={RiCalendarEventLine}
                     iconColor="info"
                     padding="lg"
                 >

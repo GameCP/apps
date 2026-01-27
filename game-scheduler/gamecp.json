@@ -1,13 +1,13 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "game-scheduler",
-  "version": "1.2.10",
+  "version": "1.2.13",
   "name": "Scheduler",
   "description": "Schedule automated server starts, stops, and restarts",
   "author": "GameCP Team",
   "ui_bundle": "dist/index.js",
   "handlers_bundle": "dist/handlers.js",
-  "integrity": "sha384-HMccYebw5wuvbCifuToouSzJUR/jJX6cZq0+H7jQD+xcOY/NDGrzIQCjmNGovKMt",
+  "integrity": "sha384-QH/Eh6SExEXbA6P5IrSEgxZl8UVuqQP2rZJgtsnV03sXjUletW2KJYGF6rPTzD5r",
   "ui_injection": [
     {
       "method": "MOUNT",

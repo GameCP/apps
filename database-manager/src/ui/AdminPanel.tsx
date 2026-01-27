@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useGameCP } from '@gamecp/types/client';
 import { Card, Button, Badge, FormInput, useConfirmDialog, Container, Typography, SkeletonItem, SkeletonCard } from '@gamecp/ui';
 import { lang } from '../lang';
 import type { DatabaseSource, DatabaseType } from '../types';
 import { RiDatabase2Line, RiAddLine, RiCheckboxCircleLine, RiCloseCircleLine, RiRefreshLine, RiEditLine, RiDeleteBinLine } from 'react-icons/ri';
+import useSWR, { mutate } from 'swr';
 
 interface TestResult {
     success: boolean;
@@ -14,8 +15,6 @@ interface TestResult {
 export function DatabaseSourcesPage() {
     const { api, t } = useGameCP();
     const { confirm, dialog } = useConfirmDialog();
-    const [sources, setSources] = useState<DatabaseSource[]>([]);
-    const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [editingSource, setEditingSource] = useState<DatabaseSource | null>(null);
     const [testingConnection, setTestingConnection] = useState(false);
@@ -30,21 +29,10 @@ export function DatabaseSourcesPage() {
         adminerUrl: '',
     });
 
-    useEffect(() => {
-        loadSources();
-    }, []);
-
-    const loadSources = async () => {
-        setLoading(true);
-        try {
-            const data = await api.get('/api/x/database-manager/sources');
-            setSources(data.sources || []);
-        } catch (error) {
-            console.error('Failed to load sources:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // SWR for data fetching
+    const sourcesKey = '/api/x/database-manager/sources';
+    const { data: sourcesData, isLoading: loading } = useSWR<{ sources: DatabaseSource[] }>(sourcesKey, () => api.get(sourcesKey));
+    const sources = sourcesData?.sources || [];
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -56,7 +44,7 @@ export function DatabaseSourcesPage() {
                 await api.post('/api/x/database-manager/sources', formData);
             }
 
-            await loadSources();
+            mutate(sourcesKey);
             resetForm();
         } catch (error: any) {
             alert(error.error || t(lang.messages.saveError));
@@ -88,7 +76,7 @@ export function DatabaseSourcesPage() {
 
         try {
             await api.delete(`/api/x/database-manager/sources/${id}`);
-            await loadSources();
+            mutate(sourcesKey);
         } catch (error: any) {
             alert(error.error || t(lang.messages.deleteError));
         }

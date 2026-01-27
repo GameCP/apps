@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGameCP } from '@gamecp/types/client';
-import { HiDatabase } from 'react-icons/hi';
+import { RiDatabase2Line } from 'react-icons/ri';
 import { lang } from './lang';
 
 interface DatabaseNavItemProps {
@@ -21,7 +21,7 @@ export function DatabaseNavItem({ activeSection, scrollToSection }: DatabaseNavI
                 : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground'
                 }`}
         >
-            <HiDatabase
+            <RiDatabase2Line
                 className={`w-5 h-5 mt-0.5 mr-3 flex-shrink-0 ${isActive ? 'text-primary-foreground' : 'text-primary'
                     }`}
             />

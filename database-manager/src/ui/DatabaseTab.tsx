@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useGameCP } from '@gamecp/types/client';
 import { Card, Button, Badge, FormInput, useConfirmDialog, Container, EmptyState, Typography, SkeletonItem, SkeletonCard } from '@gamecp/ui';
 import { lang } from '../lang';
 import type { Database, DatabaseSource } from '../types';
 import { HiDatabase, HiPlus, HiTrash, HiExternalLink, HiClipboardCopy, HiRefresh, HiCheckCircle, HiXCircle } from 'react-icons/hi';
+import useSWR, { mutate } from 'swr';
 
 interface DatabaseTabProps {
     serverId: string;
@@ -12,34 +13,22 @@ interface DatabaseTabProps {
 export function DatabaseTab({ serverId }: DatabaseTabProps) {
     const { api, t } = useGameCP();
     const { confirm, dialog } = useConfirmDialog();
-    const [databases, setDatabases] = useState<Database[]>([]);
-    const [sources, setSources] = useState<DatabaseSource[]>([]);
-    const [loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(false);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [selectedSource, setSelectedSource] = useState('');
     const [testingDb, setTestingDb] = useState<string | null>(null);
     const [testResults, setTestResults] = useState<Record<string, { success: boolean; message: string; latencyMs: number }>>({});
 
-    useEffect(() => {
-        loadData();
-    }, [serverId]);
+    // SWR for data fetching
+    const databasesKey = `/api/x/database-manager/databases?serverId=${serverId}`;
+    const sourcesKey = '/api/x/database-manager/sources';
 
-    const loadData = async () => {
-        setLoading(true);
-        try {
-            const [dbRes, sourcesRes] = await Promise.all([
-                api.get(`/api/x/database-manager/databases?serverId=${serverId}`),
-                api.get('/api/x/database-manager/sources'),
-            ]);
-            setDatabases(dbRes.databases || []);
-            setSources(sourcesRes.sources?.filter((s: DatabaseSource) => s.enabled) || []);
-        } catch (error) {
-            console.error('Failed to load databases:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { data: dbData, isLoading: loadingDatabases } = useSWR<{ databases: Database[] }>(databasesKey, () => api.get(databasesKey));
+    const { data: sourcesData, isLoading: loadingSources } = useSWR<{ sources: DatabaseSource[] }>(sourcesKey, () => api.get(sourcesKey));
+
+    const databases = dbData?.databases || [];
+    const sources = (sourcesData?.sources || []).filter(s => s.enabled);
+    const loading = loadingDatabases || loadingSources;
 
     const handleCreate = async () => {
         if (!selectedSource) return;
@@ -50,7 +39,7 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
                 serverId,
                 sourceId: selectedSource,
             });
-            await loadData();
+            mutate(databasesKey);
             setShowCreateForm(false);
             setSelectedSource('');
         } catch (error: any) {
@@ -71,7 +60,7 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
 
         try {
             await api.delete(`/api/x/database-manager/databases/${id}`);
-            await loadData();
+            mutate(databasesKey);
         } catch (error: any) {
             alert(error.error || t(lang.messages.deleteError));
         }
@@ -109,7 +98,7 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
 
     if (loading) {
         return (
-            <Container className="space-y-6">
+            <Container padding="lg" className="space-y-6">
                 <Card
                     title={t(lang.page.title)}
                     description={t(lang.page.description)}
@@ -171,7 +160,7 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
 
     if (sources.length === 0) {
         return (
-            <Container>
+            <Container padding="lg">
                 <EmptyState
                     icon={HiDatabase}
                     title={t(lang.nav.title)}
@@ -182,7 +171,7 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
     }
 
     return (
-        <Container className="space-y-6">
+        <Container padding="lg" className="space-y-6">
             <Card
                 title={t(lang.page.title)}
                 description={t(lang.page.description)}

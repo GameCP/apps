@@ -39,14 +39,17 @@ interface DiscordExtensionData {
 }
 
 /**
- * Get extension data for a server
+ * Get extension data for a server (from server.extensionData via API)
  */
 async function getExtensionData(ctx: ExtensionContext, serverId: string): Promise<DiscordExtensionData> {
   try {
     const response = await ctx.api.get(`/api/game-servers/${serverId}/extension-data/discord-notifications`);
-    // Response structure: { data: { data: { webhooks, ... } } }
-    return response.data?.data || { webhooks: [] };
+    // API returns { data: { webhooks: [...] } }, ctx.api.get wraps it as { data: <response> }
+    const extensionData = response.data?.data || { webhooks: [] };
+    ctx.logger.info(`[getExtensionData] Found ${extensionData.webhooks?.length || 0} webhooks for server ${serverId}`);
+    return extensionData;
   } catch (error) {
+    ctx.logger.error(`[getExtensionData] Error: ${error}`);
     return { webhooks: [] };
   }
 }
@@ -133,15 +136,7 @@ export const getWebhooks: ApiRouteHandler = async (ctx) => {
   const { serverId } = ctx.request.query;
   
   const data = await getExtensionData(ctx, serverId);
-  let webhooks = data.webhooks || [];
-
-  // Legacy support: If no webhooks but we have a legacy config URL, return it
-  if (webhooks.length === 0 && ctx.config.webhookUrl) {
-    webhooks = [{
-      url: ctx.config.webhookUrl,
-      createdAt: new Date().toISOString()
-    }];
-  }
+  const webhooks = data.webhooks || [];
 
   return {
     status: 200,
@@ -212,10 +207,15 @@ export const handleCrash: TypedEventHandler<'server.status.crash'> = async (even
  */
 export const handleStart: TypedEventHandler<'server.status.started'> = async (event, payload, ctx) => {
   const { serverId, serverName } = payload;
+  ctx.logger.info(`[handleStart] Received event for server: ${serverId} (${serverName})`);
+  
   const data = await getExtensionData(ctx, serverId);
   const webhooks = data.webhooks || [];
+  
+  ctx.logger.info(`[handleStart] Found ${webhooks.length} webhooks for server ${serverId}`);
 
   for (const webhook of webhooks) {
+    ctx.logger.info(`[handleStart] Sending Discord message to webhook...`);
     await sendDiscordMessage(ctx, webhook.url, {
       embeds: [{
         title: "🟢 Server Started",
@@ -224,6 +224,7 @@ export const handleStart: TypedEventHandler<'server.status.started'> = async (ev
         timestamp: (new Date()).toISOString()
       }]
     });
+    ctx.logger.info(`[handleStart] Discord message sent successfully`);
   }
 };
 

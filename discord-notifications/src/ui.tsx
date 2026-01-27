@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { TbBrandDiscord } from 'react-icons/tb';
-import { HiInformationCircle } from 'react-icons/hi';
+import React, { useState } from 'react';
+import { RiDiscordLine, RiInformationLine } from 'react-icons/ri';
 import { lang } from './lang';
 import { useGameCP } from '@gamecp/types/client';
 import { Card, Button, FormInput, Container, Typography, Badge, useConfirmDialog, SkeletonItem, SkeletonCard } from '@gamecp/ui';
+import useSWR, { mutate } from 'swr';
 
 interface Webhook {
     url: string;
@@ -20,18 +20,20 @@ interface SettingsPageProps {
 }
 
 // Client-side UI components
+import { SidebarNavItem } from '@gamecp/ui';
+
 export function DiscordIcon({ serverId }: DiscordIconProps) {
-    const { Link, t } = useGameCP();
+    const { t } = useGameCP();
+    const href = `/game-servers/${serverId}/extensions/discord`;
 
     return (
-        <Link
-            href={`/game-servers/${serverId}/extensions/discord`}
-            className="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-foreground hover:bg-muted hover:text-foreground transition-all duration-150 ease-in-out"
+        <SidebarNavItem
+            href={href}
+            icon={RiDiscordLine}
             title={t(lang.page.title)}
         >
-            <TbBrandDiscord className="mr-3 h-5 w-5 transition-all duration-150 ease-in-out" />
-            <span>{t(lang.nav.title)}</span>
-        </Link>
+            {t(lang.nav.title)}
+        </SidebarNavItem>
     );
 }
 
@@ -39,31 +41,19 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
     const { api, t } = useGameCP();
     const { confirm, dialog } = useConfirmDialog();
     const [webhookUrl, setWebhookUrl] = useState<string>('');
-    const [webhooks, setWebhooks] = useState<Webhook[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [initialLoading, setInitialLoading] = useState<boolean>(true);
     const [message, setMessage] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        loadWebhooks();
-    }, [serverId]);
-
-    const loadWebhooks = async () => {
-        try {
-            const data = await api.get(`/api/x/discord-notifications/webhooks?serverId=${serverId}`);
-            setWebhooks(data.webhooks || []);
-        } catch (err) {
-            console.error('Failed to load webhooks:', err);
-        } finally {
-            setInitialLoading(false);
-        }
-    };
+    // SWR for data fetching
+    const webhooksKey = `/api/x/discord-notifications/webhooks?serverId=${serverId}`;
+    const { data: webhooksData, isLoading: initialLoading } = useSWR<{ webhooks: Webhook[] }>(webhooksKey, () => api.get(webhooksKey));
+    const webhooks = webhooksData?.webhooks || [];
 
     // Loading skeleton - mirrors the final layout structure
     if (initialLoading) {
         return (
-            <Container className="space-y-6">
+            <Container padding="lg" className="space-y-6">
                 {/* Header - Static content, render directly */}
                 <div className="mb-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -83,7 +73,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                     <Card
                         title={t(lang.config.title)}
                         description={t(lang.config.description)}
-                        icon={TbBrandDiscord}
+                        icon={RiDiscordLine}
                         iconColor="info"
                         padding="lg"
                     >
@@ -130,7 +120,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                         title={t(lang.info.title)}
                     >
                         <div className="flex items-start">
-                            <HiInformationCircle className="w-5 h-5 text-muted-foreground mr-3 mt-0.5 flex-shrink-0" />
+                            <RiInformationLine className="w-5 h-5 text-muted-foreground mr-3 mt-0.5 flex-shrink-0" />
                             <SkeletonItem width="w-full" height="h-12" />
                         </div>
                     </Card>
@@ -150,7 +140,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
 
             setMessage(t(lang.messages.success));
             setWebhookUrl('');
-            loadWebhooks();
+            mutate(webhooksKey);
         } catch (err: any) {
             setError(err.error || err.message || t(lang.errors.saveFailed));
         } finally {
@@ -163,7 +153,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
             title: t(lang.confirm.removeTitle),
             message: t(lang.confirm.removeMessage),
             confirmText: t(lang.buttons.remove),
-            confirmButtonColor: 'red'
+            confirmButtonColor: 'danger'
         });
 
         if (!confirmed) return;
@@ -174,7 +164,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
             await api.delete('/api/x/discord-notifications/webhooks', { serverId, webhookUrl: url });
 
             setMessage(t(lang.messages.removed));
-            loadWebhooks();
+            mutate(webhooksKey);
         } catch (err: any) {
             setError(err.error || err.message || t(lang.errors.removeFailed));
         } finally {
@@ -198,7 +188,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
     };
 
     return (
-        <Container className="space-y-6">
+        <Container padding="lg" className="space-y-6">
             {/* Header */}
             <div className="mb-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -234,7 +224,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                 <Card
                     title={t(lang.config.title)}
                     description={t(lang.config.description)}
-                    icon={TbBrandDiscord}
+                    icon={RiDiscordLine}
                     iconColor="info"
                     padding="lg"
                 >
@@ -314,7 +304,7 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                     title={t(lang.info.title)}
                 >
                     <div className="flex items-start">
-                        <HiInformationCircle className="w-5 h-5 text-muted-foreground mr-3 mt-0.5 flex-shrink-0" />
+                        <RiInformationLine className="w-5 h-5 text-muted-foreground mr-3 mt-0.5 flex-shrink-0" />
                         <div className="text-xs sm:text-sm text-muted-foreground">
                             <p>
                                 {t(lang.info.description)}

@@ -205,7 +205,7 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
                                         type="number"
                                         value={hour}
                                         onChange={(e) => handleTimeChange(e.target.value, minute)}
-                                        description={t(cb.hourHint)}
+                                        footerDescription={t(cb.hourHint)}
                                     />
                                     <FormInput
                                         label={t(cb.minute)}

@@ -1,26 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useGameCP } from '@gamecp/types/client';
-import { HiDatabase } from 'react-icons/hi';
+import { RiDatabase2Line } from 'react-icons/ri';
 import { lang } from '../lang';
+import useSWR from 'swr';
 
 interface ServerDatabaseNavProps {
     serverId: string;
 }
 
-export function ServerDatabaseNav({ serverId }: ServerDatabaseNavProps) {
-    const { Link, api, t } = useGameCP();
-    const [visible, setVisible] = useState(false);
+import { SidebarNavItem } from '@gamecp/ui';
 
-    useEffect(() => {
-        const checkVisibility = async () => {
+export function ServerDatabaseNav({ serverId }: ServerDatabaseNavProps) {
+    const { api, t } = useGameCP();
+
+    // Use SWR to fetch visibility data
+    const { data: visibilityData } = useSWR<{ visible: boolean }>(
+        `/api/x/database-manager/nav-visibility?serverId=${serverId}`,
+        async () => {
             try {
                 // Check if there are any enabled sources
                 const sourcesRes = await api.get('/api/x/database-manager/sources');
                 const sources = sourcesRes.sources?.filter((s: any) => s.enabled) || [];
 
                 if (sources.length === 0) {
-                    setVisible(false);
-                    return;
+                    return { visible: false };
                 }
 
                 // Fetch server to get game config
@@ -28,32 +31,30 @@ export function ServerDatabaseNav({ serverId }: ServerDatabaseNavProps) {
                 const gameRef = serverRes.gameServer?.gameRef;
 
                 if (!gameRef) {
-                    setVisible(false);
-                    return;
+                    return { visible: false };
                 }
 
                 // Check if database is enabled in game's extensionData
                 const dbConfig = gameRef.extensionData?.['database-manager'];
-                setVisible(dbConfig?.enabled === true);
+                return { visible: dbConfig?.enabled === true };
             } catch (error) {
                 console.error('Failed to check database visibility:', error);
-                setVisible(false);
+                return { visible: false };
             }
-        };
+        }
+    );
 
-        checkVisibility();
-    }, [serverId, api]);
+    const visible = visibilityData?.visible ?? false;
 
     if (!visible) return null;
 
     return (
-        <Link
+        <SidebarNavItem
             href={`/game-servers/${serverId}/extensions/database-manager`}
-            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent transition-colors w-full text-left"
+            icon={RiDatabase2Line}
         >
-            <HiDatabase className="w-5 h-5" />
-            <span className="text-sm font-medium">{t(lang.page.title)}</span>
-        </Link>
+            {t(lang.page.title)}
+        </SidebarNavItem>
     );
 }
 
