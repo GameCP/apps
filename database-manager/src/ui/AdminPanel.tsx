@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, Badge, FormInput, useConfirmDialog, Container, Typography, SkeletonItem, SkeletonCard } from '@gamecp/ui';
+import { Card, Button, Badge, FormInput, useConfirmDialog, Typography, SkeletonItem, SkeletonCard, ErrorAlert } from '@gamecp/ui';
 import { lang } from '../lang';
 import type { DatabaseSource, DatabaseType } from '../types';
 import { RiDatabase2Line, RiAddLine, RiCheckboxCircleLine, RiCloseCircleLine, RiRefreshLine, RiEditLine, RiDeleteBinLine } from 'react-icons/ri';
@@ -19,6 +19,7 @@ export function DatabaseSourcesPage() {
     const [editingSource, setEditingSource] = useState<DatabaseSource | null>(null);
     const [testingConnection, setTestingConnection] = useState(false);
     const [testResult, setTestResult] = useState<TestResult | null>(null);
+    const [formError, setFormError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         type: 'mysql' as DatabaseType,
         name: '',
@@ -36,18 +37,26 @@ export function DatabaseSourcesPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setFormError(null);
 
         try {
+            // Build the payload - only include password if it was changed (not empty)
+            const payload = { ...formData };
+            if (editingSource && !payload.adminPassword) {
+                // Don't send password field if editing and password is empty (unchanged)
+                delete (payload as any).adminPassword;
+            }
+
             if (editingSource) {
-                await api.put(`/api/x/database-manager/sources/${editingSource._id}`, formData);
+                await api.put(`/api/x/database-manager/sources/${editingSource._id}`, payload);
             } else {
-                await api.post('/api/x/database-manager/sources', formData);
+                await api.post('/api/x/database-manager/sources', payload);
             }
 
             mutate(sourcesKey);
             resetForm();
         } catch (error: any) {
-            alert(error.error || t(lang.messages.saveError));
+            setFormError(error.error || error.message || t(lang.messages.saveError));
         }
     };
 
@@ -59,7 +68,7 @@ export function DatabaseSourcesPage() {
             host: source.host,
             port: source.port,
             adminUsername: source.adminUsername,
-            adminPassword: source.adminPassword,
+            adminPassword: '', // Always empty on edit - encrypted and can't be retrieved
             adminerUrl: source.adminerUrl || '',
         });
         setShowForm(true);
@@ -78,7 +87,7 @@ export function DatabaseSourcesPage() {
             await api.delete(`/api/x/database-manager/sources/${id}`);
             mutate(sourcesKey);
         } catch (error: any) {
-            alert(error.error || t(lang.messages.deleteError));
+            setFormError(error.error || error.message || t(lang.messages.deleteError));
         }
     };
 
@@ -86,6 +95,7 @@ export function DatabaseSourcesPage() {
         setShowForm(false);
         setEditingSource(null);
         setTestResult(null);
+        setFormError(null);
         setFormData({
             type: 'mysql',
             name: '',
@@ -198,6 +208,9 @@ export function DatabaseSourcesPage() {
                     <Typography as="h2" size="lg" className="font-bold mb-4">
                         {editingSource ? t(lang.admin.editSource) : t(lang.admin.addSourceTitle)}
                     </Typography>
+                    {formError && (
+                        <ErrorAlert message={formError} dismissible onDismiss={() => setFormError(null)} className="mb-4" />
+                    )}
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <FormInput
@@ -270,8 +283,9 @@ export function DatabaseSourcesPage() {
                                         type="password"
                                         value={formData.adminPassword}
                                         onChange={(e) => setFormData({ ...formData, adminPassword: e.target.value })}
-                                        showHidePassword
-                                        required
+                                        description={editingSource ? 'Password is encrypted. Leave blank to keep current password.' : 'Password will be securely encrypted.'}
+                                        required={!editingSource}
+                                        autoComplete="new-password"
                                     />
                                 </>
                             )}
@@ -295,8 +309,8 @@ export function DatabaseSourcesPage() {
                                         type="password"
                                         value={formData.adminPassword}
                                         onChange={(e) => setFormData({ ...formData, adminPassword: e.target.value })}
-                                        showHidePassword
-                                        description={t(lang.admin.optionalAuth)}
+                                        description={editingSource ? 'Password is encrypted. Leave blank to keep current password.' : 'Optional - password will be securely encrypted.'}
+                                        autoComplete="new-password"
                                     />
                                 </>
                             )}
@@ -353,7 +367,8 @@ export function DatabaseSourcesPage() {
                         </div>
                     </form>
                 </Card>
-            )}
+            )
+            }
 
             {/* Sources List */}
             <div className="grid grid-cols-1 gap-4">
@@ -422,6 +437,6 @@ export function DatabaseSourcesPage() {
                 )}
             </div>
             {dialog}
-        </div>
+        </div >
     );
 }

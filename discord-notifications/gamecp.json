@@ -1,13 +1,13 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "discord-notifications",
-  "version": "1.3.8",
+  "version": "1.4.2",
   "name": "Discord Notifications",
   "description": "Send game server alerts, crash notifications, and status updates to Discord channels via webhooks",
   "author": "GameCP Team",
   "ui_bundle": "dist/index.js",
   "handlers_bundle": "dist/handlers.js",
-  "integrity": "sha384-k8Cn77b3Uemtu9R6ehkEw9OF8MytBG+ZcCvp4AG3PlAfOk+Au69CS0bFjRYzAqf9",
+  "integrity": "sha384-DKfjb/wIei700FLNh5KAqGORmujlqlIeHOrXZVZEo4xv2NH5/DA1/m1ZANZ2IEGY",
   "ui_injection": [
     {
       "method": "MOUNT",

@@ -50,7 +50,15 @@ export async function getDatabases(ctx: ExtensionContext): Promise<ApiResponse> 
     }
 
     const databases = await ctx.db.collection('databases').find({ serverId }).toArray();
-    return { status: 200, body: { databases } };
+    
+    // Strip passwords from response - never expose hashed passwords
+    const sanitizedDatabases = databases.map((db: any) => ({
+        ...db,
+        password: '********', // Never show password, even hashed
+        connectionString: '', // Can't build connection string without password
+    }));
+    
+    return { status: 200, body: { databases: sanitizedDatabases } };
 }
 
 // Create a new database
@@ -90,6 +98,9 @@ export async function createDatabase(ctx: ExtensionContext): Promise<ApiResponse
     const username = `user_${databaseName.substring(0, 20)}`;
     const password = generatePassword();
 
+    // Decrypt the source admin password for use
+    const adminPassword = source.adminPassword ? await ctx.crypto.decrypt(source.adminPassword) : '';
+
     try {
         // Provision the database based on type
         if (source.type === 'mysql' && ctx.mysql) {
@@ -97,7 +108,7 @@ export async function createDatabase(ctx: ExtensionContext): Promise<ApiResponse
                 host: source.host,
                 port: source.port,
                 user: source.adminUsername,
-                password: source.adminPassword,
+                password: adminPassword,
             };
             
             // Create database
@@ -115,7 +126,7 @@ export async function createDatabase(ctx: ExtensionContext): Promise<ApiResponse
                 host: source.host,
                 port: source.port,
                 user: source.adminUsername,
-                password: source.adminPassword,
+                password: adminPassword,
                 database: 'postgres',
             };
             
@@ -134,7 +145,10 @@ export async function createDatabase(ctx: ExtensionContext): Promise<ApiResponse
         return { status: 500, body: { error: `Failed to provision database: ${err.message}` } };
     }
 
-    // Store the database record
+    // Encrypt the password for secure storage (can be decrypted internally when needed)
+    const encryptedPassword = await ctx.crypto.encrypt(password);
+
+    // Store the database record with encrypted password
     const database: Omit<Database, '_id'> = {
         serverId,
         sourceId,
@@ -143,19 +157,32 @@ export async function createDatabase(ctx: ExtensionContext): Promise<ApiResponse
         host: source.host,
         port: source.port,
         username,
-        password,
-        connectionString: buildConnectionString(source.type, source.host, source.port, databaseName, username, password),
+        password: encryptedPassword, // Stored securely encrypted
+        connectionString: '', // Don't store plain connection string
         status: 'active',
         createdAt: new Date(),
     };
 
     const result = await ctx.db.collection('databases').insertOne(database);
 
+    // Return database info - password is never shown to users, even at creation
     return {
         status: 201,
         body: {
-            database: { ...database, _id: result.insertedId },
-            message: 'Database created successfully',
+            database: {
+                _id: result.insertedId,
+                serverId,
+                sourceId,
+                type: source.type,
+                name: databaseName,
+                host: source.host,
+                port: source.port,
+                username,
+                password: '********', // Never expose password to users
+                connectionString: '', // Don't expose connection string either
+                status: 'active',
+            },
+            message: 'Database created successfully. Connection details are stored securely.',
         },
     };
 }
@@ -179,12 +206,15 @@ export async function deleteDatabase(ctx: ExtensionContext): Promise<ApiResponse
 
     if (source) {
         try {
+            // Decrypt the source admin password
+            const adminPassword = source.adminPassword ? await ctx.crypto.decrypt(source.adminPassword) : '';
+
             if (source.type === 'mysql' && ctx.mysql) {
                 const config: MySQLConfig = {
                     host: source.host,
                     port: source.port,
                     user: source.adminUsername,
-                    password: source.adminPassword,
+                    password: adminPassword,
                 };
                 await ctx.mysql.query(config, `DROP DATABASE IF EXISTS \`${database.name}\``);
                 await ctx.mysql.query(config, `DROP USER IF EXISTS '${database.username}'@'%'`);
@@ -194,7 +224,7 @@ export async function deleteDatabase(ctx: ExtensionContext): Promise<ApiResponse
                     host: source.host,
                     port: source.port,
                     user: source.adminUsername,
-                    password: source.adminPassword,
+                    password: adminPassword,
                     database: 'postgres',
                 };
                 await ctx.pg.query(config, `DROP DATABASE IF EXISTS "${database.name}"`);
@@ -296,11 +326,11 @@ export async function getSources(ctx: ExtensionContext): Promise<ApiResponse> {
     
     const sources = await ctx.db.collection('database_sources').find({}).toArray();
     
-    // Mask passwords for security
-    const sanitizedSources = sources.map((source: any) => ({
-        ...source,
-        adminPassword: '********',
-    }));
+    // Remove passwords entirely from response - never send them to the client
+    const sanitizedSources = sources.map((source: any) => {
+        const { adminPassword, ...rest } = source;
+        return rest;
+    });
 
     return { status: 200, body: { sources: sanitizedSources } };
 }
@@ -324,13 +354,16 @@ export async function createSource(ctx: ExtensionContext): Promise<ApiResponse> 
         return { status: 400, body: { error: 'Admin username and password are required for MySQL/PostgreSQL' } };
     }
 
+    // Encrypt the admin password before storing
+    const encryptedPassword = adminPassword ? await ctx.crypto.encrypt(adminPassword) : '';
+
     const source: Omit<DatabaseSource, '_id'> = {
         type,
         name,
         host,
         port,
         adminUsername: adminUsername || '',
-        adminPassword: adminPassword || '',
+        adminPassword: encryptedPassword,
         adminerUrl: adminerUrl || '',
         enabled: true,
         createdAt: new Date(),
@@ -338,10 +371,12 @@ export async function createSource(ctx: ExtensionContext): Promise<ApiResponse> 
 
     const result = await ctx.db.collection('database_sources').insertOne(source);
 
+    // Return source without password
+    const { adminPassword: _, ...sourceWithoutPassword } = source;
     return {
         status: 201,
         body: {
-            source: { ...source, _id: result.insertedId, adminPassword: '********' },
+            source: { ...sourceWithoutPassword, _id: result.insertedId },
         },
     };
 }
@@ -354,10 +389,15 @@ export async function updateSource(ctx: ExtensionContext): Promise<ApiResponse> 
     }
     
     const { id } = ctx.request.params;
-    const updates = ctx.request.body;
+    const updates = { ...ctx.request.body };
 
     if (!id) {
         return { status: 400, body: { error: 'Source ID required' } };
+    }
+
+    // Encrypt adminPassword if it's being updated
+    if (updates.adminPassword) {
+        updates.adminPassword = await ctx.crypto.encrypt(updates.adminPassword);
     }
 
     const result = await ctx.db.collection('database_sources').updateOne(
@@ -470,7 +510,8 @@ export async function testConnection(ctx: ExtensionContext): Promise<ApiResponse
     }
 }
 
-// Test connection to a provisioned database (for users)
+// Test connection to a provisioned database
+// Decrypts stored password internally - no user input needed
 export async function testDatabaseConnection(ctx: ExtensionContext): Promise<ApiResponse> {
     const { id } = ctx.request.params;
 
@@ -484,22 +525,25 @@ export async function testDatabaseConnection(ctx: ExtensionContext): Promise<Api
         return { status: 404, body: { error: 'Database not found' } };
     }
 
+    // Decrypt the stored password for use in connection test
+    const decryptedPassword = await ctx.crypto.decrypt(database.password);
+
     const startTime = Date.now();
 
     try {
         if (database.type === 'mysql' && ctx.mysql) {
             await ctx.mysql.query(
-                { host: database.host, port: database.port, user: database.username, password: database.password, database: database.name },
+                { host: database.host, port: database.port, user: database.username, password: decryptedPassword, database: database.name },
                 'SELECT 1 as test'
             );
         } else if (database.type === 'postgresql' && ctx.pg) {
             await ctx.pg.query(
-                { host: database.host, port: database.port, user: database.username, password: database.password, database: database.name },
+                { host: database.host, port: database.port, user: database.username, password: decryptedPassword, database: database.name },
                 'SELECT 1 as test'
             );
         } else if (database.type === 'redis' && ctx.redis) {
             await ctx.redis.command(
-                { host: database.host, port: database.port, password: database.password || undefined },
+                { host: database.host, port: database.port, password: decryptedPassword },
                 'PING'
             );
         } else {

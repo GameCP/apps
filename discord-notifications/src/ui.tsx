@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { RiDiscordLine, RiInformationLine } from 'react-icons/ri';
+import { RiDiscordLine } from 'react-icons/ri';
 import { lang } from './lang';
 import { useGameCP } from '@gamecp/types/client';
-import { Card, Button, FormInput, Container, PageHeader, Badge, useConfirmDialog, SkeletonItem, SkeletonCard } from '@gamecp/ui';
+import { Card, Button, FormInput, Container, PageHeader, Badge, useConfirmDialog, SkeletonItem, SkeletonCard, Notice } from '@gamecp/ui';
 import useSWR, { mutate } from 'swr';
 
 interface Webhook {
@@ -104,18 +104,11 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
                     </Card>
                 </div>
 
-                {/* Info Box - Render static structure with skeleton for content */}
+                {/* Info Box - Static content, no skeleton needed */}
                 <div className="mt-6 sm:mt-8">
-                    <Card
-                        variant="filled"
-                        padding="md"
-                        title={t(lang.info.title)}
-                    >
-                        <div className="flex items-start">
-                            <RiInformationLine className="w-5 h-5 text-muted-foreground mr-3 mt-0.5 flex-shrink-0" />
-                            <SkeletonItem width="w-full" height="h-12" />
-                        </div>
-                    </Card>
+                    <Notice title={t(lang.info.title)} variant="info">
+                        <p>{t(lang.info.description)}</p>
+                    </Notice>
                 </div>
             </Container>
         );
@@ -282,20 +275,9 @@ export function SettingsPage({ serverId }: SettingsPageProps) {
 
             {/* Info Box */}
             <div className="mt-6 sm:mt-8">
-                <Card
-                    variant="filled"
-                    padding="md"
-                    title={t(lang.info.title)}
-                >
-                    <div className="flex items-start">
-                        <RiInformationLine className="w-5 h-5 text-muted-foreground mr-3 mt-0.5 flex-shrink-0" />
-                        <div className="text-xs sm:text-sm text-muted-foreground">
-                            <p>
-                                {t(lang.info.description)}
-                            </p>
-                        </div>
-                    </div>
-                </Card>
+                <Notice title={t(lang.info.title)} variant="info">
+                    <p>{t(lang.info.description)}</p>
+                </Notice>
             </div>
             {dialog}
         </Container>
