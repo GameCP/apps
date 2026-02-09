@@ -1,13 +1,13 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "game-scheduler",
-  "version": "1.2.14",
+  "version": "1.2.17",
   "name": "Scheduler",
   "description": "Schedule automated server starts, stops, and restarts",
   "author": "GameCP Team",
   "ui_bundle": "dist/index.js",
   "handlers_bundle": "dist/handlers.js",
-  "integrity": "sha384-QH/Eh6SExEXbA6P5IrSEgxZl8UVuqQP2rZJgtsnV03sXjUletW2KJYGF6rPTzD5r",
+  "integrity": "sha384-3rNex1hMxbH4NEz0DPiyIMRLP32+a0Z8NLBkjL21dm/rkXqRAe9GgoQlKJaFx8+8",
   "ui_injection": [
     {
       "method": "MOUNT",
@@ -39,7 +39,7 @@
       },
       {
         "method": "DELETE",
-        "path": "/tasks",
+        "path": "/tasks/:id",
         "handler_export": "deleteTask",
         "description": "Delete a scheduled task"
       }

@@ -162,6 +162,7 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
             {/* Mode Tabs */}
             <div className="flex gap-2">
                 <Button
+                    type="button"
                     variant={mode === 'simple' ? 'primary' : 'secondary'}
                     size="sm"
                     onClick={() => setMode('simple')}
@@ -169,6 +170,7 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
                     {t(cb.visualBuilder)}
                 </Button>
                 <Button
+                    type="button"
                     variant={mode === 'advanced' ? 'primary' : 'secondary'}
                     size="sm"
                     onClick={() => setMode('advanced')}
@@ -221,6 +223,7 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
                                 <div className="flex items-center gap-3">
                                     <Typography variant="muted">{t(cb.runAt)}</Typography>
                                     <FormInput
+                                        label=""
                                         name="minute"
                                         type="number"
                                         value={minute}
@@ -242,6 +245,7 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
                                     <div className="flex flex-wrap gap-2">
                                         {days.map((day) => (
                                             <Button
+                                                type="button"
                                                 key={day.value}
                                                 variant={dayOfWeek === day.value ? 'primary' : 'secondary'}
                                                 size="sm"
@@ -264,6 +268,7 @@ export const CronBuilder: React.FC<CronBuilderProps> = ({ value, onChange, t }) 
                         <div className="flex flex-wrap gap-2">
                             {presets.map((preset) => (
                                 <Button
+                                    type="button"
                                     key={preset.value}
                                     variant={value === preset.value ? 'primary' : 'secondary'}
                                     size="sm"

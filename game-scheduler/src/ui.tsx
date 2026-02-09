@@ -148,7 +148,7 @@ export function SchedulerPage({ serverId }: { serverId: string }) {
         setError(null);
 
         try {
-            await api.delete('/api/x/game-scheduler/tasks', { serverId, taskId });
+            await api.delete(`/api/x/game-scheduler/tasks/${taskId}?serverId=${serverId}`);
             setMessage(t(lang.messages.deleted));
             mutate(tasksKey);
         } catch (err: any) {

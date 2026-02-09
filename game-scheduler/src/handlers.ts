@@ -112,12 +112,13 @@ export const createTask: ApiRouteHandler = async (ctx) => {
  * Delete a scheduled task
  */
 export const deleteTask: ApiRouteHandler = async (ctx) => {
-  const { serverId, taskId } = ctx.request.body;
+  const taskId = ctx.request.params?.id;
+  const serverId = ctx.request.query?.serverId;
 
   if (!serverId || !taskId) {
     return {
       status: 400,
-      body: { error: 'serverId and taskId are required' }
+      body: { error: 'serverId (query) and taskId (url param) are required' }
     };
   }
 
@@ -130,7 +131,7 @@ export const deleteTask: ApiRouteHandler = async (ctx) => {
 
   return {
     status: 200,
-    body: { message: 'Task deleted successfully' }
+    body: { message: 'Task deleted successfully', taskId }
   };
 };
 
