@@ -1,2 +1,2 @@
 export { ScheduleIcon, SchedulerPage } from './ui';
-export { getTasks, createTask, deleteTask, processScheduledTasks } from './handlers';
+export { getTasks, getLogs, createTask, updateTask, toggleTask, deleteTask, clearLogs, processScheduledTasks, onServerDeleted } from './handlers';

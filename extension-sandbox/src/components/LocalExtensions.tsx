@@ -273,7 +273,7 @@ function LocalExtensionCard({ extension, isEnabled, isSelected, onToggle, onSele
             layout
             className={`
         group p-4 rounded-xl border bg-card cursor-pointer transition-all
-        ${isSelected ? 'border-accent ring-2 ring-accent/20' : 'border-border hover:border-muted'}
+        ${isSelected ? 'border-accent ring-1 ring-accent/20' : 'border-border hover:border-muted'}
       `}
             onClick={onSelect}
         >

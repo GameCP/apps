@@ -264,7 +264,7 @@ function ExtensionCard({ extension, isSelected, onSelect, onToggle, onRemove }: 
             exit={{ opacity: 0, scale: 0.95 }}
             className={`
         group p-5 rounded-xl border bg-card hover-lift cursor-pointer transition-colors
-        ${isSelected ? 'border-accent ring-2 ring-accent/20' : 'border-border'}
+        ${isSelected ? 'border-accent ring-1 ring-accent/20' : 'border-border'}
       `}
             onClick={onSelect}
         >

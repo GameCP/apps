@@ -1,11 +1,20 @@
 {
   "name": "database-manager",
-  "version": "1.2.30",
+  "version": "1.2.31",
   "description": "Database provisioning and management for game servers",
   "main": "dist/handlers.js",
   "scripts": {
+    "preinstall": "node ../scripts/resolve-file-deps.js || true",
     "build": "gamecp-build",
-    "dev": "gamecp-build --watch"
+    "dev": "gamecp-build --watch",
+    "version:major": "gamecp-build version major",
+    "version:minor": "gamecp-build version minor",
+    "version:patch": "gamecp-build version patch",
+    "release": "gamecp-build release",
+    "validate": "tsc --noEmit",
+    "deploy": "../deploy.sh $(basename $(pwd)) --env local --target local",
+    "deploy:prod": "../deploy.sh $(basename $(pwd)) --env prod --target appstore",
+    "deploy:all": "../deploy.sh $(basename $(pwd)) --env prod --target all"
   },
   "keywords": [
     "gamecp",
@@ -27,7 +36,7 @@
   "devDependencies": {
     "@gamecp/build": "file:../../packages/build",
     "@gamecp/types": "file:../../packages/types",
-    "@gamecp/ui": "^0.1.35",
+    "@gamecp/ui": "file:../../packages/ui",
     "@types/node": "^25.0.3",
     "@types/pg": "^8.16.0",
     "@types/react": "^19.2.7",

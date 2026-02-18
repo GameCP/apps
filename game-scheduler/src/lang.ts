@@ -26,13 +26,33 @@ export const lang = {
             'zh-TW': '工作排程器'
         },
         description: {
-            en: 'Schedule automated starts, stops, and restarts for your game server',
-            es: 'Programa inicios, paradas y reinicios automáticos para tu servidor de juegos',
-            ro: 'Programați porniri, opriri și reporniri automate pentru serverul dvs. de jocuri',
-            'pt-BR': 'Agende inícios, paradas e reinicializações automáticas para seu servidor de jogos',
-            da: 'Planlæg automatiske starter, stop og genstarter til din spilserver',
-            'zh-CN': '为您的游戏服务器安排自动启动、停止和重启',
-            'zh-TW': '為您的遊戲伺服器排程自動啟動、停止和重啟'
+            en: 'Schedule automated restarts, commands, server actions, and more',
+            es: 'Programa reinicios automáticos, comandos, acciones del servidor y más',
+            ro: 'Programați reporniri automate, comenzi, acțiuni de server și altele',
+            'pt-BR': 'Agende reinicializações automáticas, comandos, ações do servidor e mais',
+            da: 'Planlæg automatiske genstarter, kommandoer, serverhandlinger og mere',
+            'zh-CN': '安排自动重启、命令、服务器操作等',
+            'zh-TW': '排程自動重啟、命令、伺服器操作等'
+        }
+    },
+    tabs: {
+        tasks: {
+            en: 'Tasks',
+            es: 'Tareas',
+            ro: 'Sarcini',
+            'pt-BR': 'Tarefas',
+            da: 'Opgaver',
+            'zh-CN': '任务',
+            'zh-TW': '工作'
+        },
+        history: {
+            en: 'History',
+            es: 'Historial',
+            ro: 'Istoric',
+            'pt-BR': 'Histórico',
+            da: 'Historik',
+            'zh-CN': '历史',
+            'zh-TW': '歷史'
         }
     },
     createTask: {
@@ -46,13 +66,33 @@ export const lang = {
             'zh-TW': '建立排程工作'
         },
         description: {
-            en: 'Set up automated server start, stop, or restart schedules',
-            es: 'Configura horarios automáticos de inicio, parada o reinicio del servidor',
-            ro: 'Configurați programări automate de pornire, oprire sau repornire a serverului',
-            'pt-BR': 'Configure agendamentos automáticos de início, parada ou reinicialização do servidor',
-            da: 'Konfigurer automatiske server start, stop eller genstart tidsplaner',
-            'zh-CN': '设置服务器自动启动、停止或重启计划',
-            'zh-TW': '設定伺服器自動啟動、停止或重啟排程'
+            en: 'Set up automated server operations on a schedule',
+            es: 'Configura operaciones automáticas del servidor en un horario',
+            ro: 'Configurați operațiuni automate ale serverului conform unui program',
+            'pt-BR': 'Configure operações automáticas do servidor em um agendamento',
+            da: 'Konfigurer automatiske serveroperationer efter en tidsplan',
+            'zh-CN': '按计划设置自动化服务器操作',
+            'zh-TW': '按排程設定自動化伺服器操作'
+        }
+    },
+    empty: {
+        title: {
+            en: 'No Scheduled Tasks',
+            es: 'Sin Tareas Programadas',
+            ro: 'Nicio Sarcină Planificată',
+            'pt-BR': 'Sem Tarefas Agendadas',
+            da: 'Ingen planlagte opgaver',
+            'zh-CN': '没有计划任务',
+            'zh-TW': '沒有排程工作'
+        },
+        description: {
+            en: 'Create your first scheduled task to automate server operations.',
+            es: 'Crea tu primera tarea programada para automatizar las operaciones del servidor.',
+            ro: 'Creați prima sarcină planificată pentru a automatiza operațiunile serverului.',
+            'pt-BR': 'Crie sua primeira tarefa agendada para automatizar as operações do servidor.',
+            da: 'Opret din første planlagte opgave for at automatisere serveroperationer.',
+            'zh-CN': '创建您的第一个计划任务以自动化服务器操作。',
+            'zh-TW': '建立您的第一個排程工作以自動化伺服器操作。'
         }
     },
     form: {
@@ -73,6 +113,24 @@ export const lang = {
             da: 'Daglig genstart',
             'zh-CN': '每日重启',
             'zh-TW': '每日重啟'
+        },
+        editTitle: {
+            en: 'Edit Scheduled Task',
+            es: 'Editar Tarea Programada',
+            ro: 'Editați Sarcina Planificată',
+            'pt-BR': 'Editar Tarefa Agendada',
+            da: 'Rediger planlagt opgave',
+            'zh-CN': '编辑计划任务',
+            'zh-TW': '編輯排程工作'
+        },
+        editDescription: {
+            en: 'Update this task\'s settings and schedule',
+            es: 'Actualiza la configuración y el horario de esta tarea',
+            ro: 'Actualizați setările și programul acestei sarcini',
+            'pt-BR': 'Atualize as configurações e o agendamento desta tarefa',
+            da: 'Opdater denne opgaves indstillinger og tidsplan',
+            'zh-CN': '更新此任务的设置和计划',
+            'zh-TW': '更新此工作的設定和排程'
         },
         actionType: {
             en: 'Action Type',
@@ -119,14 +177,69 @@ export const lang = {
             'zh-CN': '运行命令',
             'zh-TW': '執行命令'
         },
-        actionWipe: {
-            en: 'Wipe & Restart',
-            es: 'Limpiar y Reiniciar',
-            ro: 'Ștergeți și Reporniți',
-            'pt-BR': 'Limpar e Reiniciar',
-            da: 'Wipe og genstart',
-            'zh-CN': '清档并重启',
-            'zh-TW': '清除並重啟'
+        actionExecuteAction: {
+            en: 'Execute Server Action',
+            es: 'Ejecutar Acción del Servidor',
+            ro: 'Executați Acțiunea Serverului',
+            'pt-BR': 'Executar Ação do Servidor',
+            da: 'Udfør serverhandling',
+            'zh-CN': '执行服务器操作',
+            'zh-TW': '執行伺服器操作'
+        },
+
+        command: {
+            en: 'Command',
+            es: 'Comando',
+            ro: 'Comandă',
+            'pt-BR': 'Comando',
+            da: 'Kommando',
+            'zh-CN': '命令',
+            'zh-TW': '命令'
+        },
+        commandPlaceholder: {
+            en: 'Server restarting in 5 minutes!',
+            es: '¡Servidor reiniciando en 5 minutos!',
+            ro: 'Serverul repornește în 5 minute!',
+            'pt-BR': 'Servidor reiniciando em 5 minutos!',
+            da: 'Server genstarter om 5 minutter!',
+            'zh-CN': '服务器将在5分钟后重启！',
+            'zh-TW': '伺服器將在5分鐘後重啟！'
+        },
+        commandDescription: {
+            en: 'Console command or RCON command to send to the server',
+            es: 'Comando de consola o RCON para enviar al servidor',
+            ro: 'Comandă de consolă sau RCON de trimis la server',
+            'pt-BR': 'Comando do console ou RCON para enviar ao servidor',
+            da: 'Konsolkommando eller RCON-kommando at sende til serveren',
+            'zh-CN': '要发送到服务器的控制台或RCON命令',
+            'zh-TW': '要傳送到伺服器的主控台或RCON命令'
+        },
+        actionIdLabel: {
+            en: 'Server Action ID',
+            es: 'ID de Acción del Servidor',
+            ro: 'ID Acțiune Server',
+            'pt-BR': 'ID da Ação do Servidor',
+            da: 'Server handling ID',
+            'zh-CN': '服务器操作ID',
+            'zh-TW': '伺服器操作ID'
+        },
+        actionIdPlaceholder: {
+            en: 'save-world',
+            es: 'save-world',
+            ro: 'save-world',
+            'pt-BR': 'save-world',
+            da: 'save-world',
+            'zh-CN': 'save-world',
+            'zh-TW': 'save-world'
+        },
+        actionIdDescription: {
+            en: 'The ID of a server action defined in the game blueprint or custom actions',
+            es: 'El ID de una acción del servidor definida en el blueprint del juego o acciones personalizadas',
+            ro: 'ID-ul unei acțiuni de server definite în blueprint-ul jocului sau acțiuni personalizate',
+            'pt-BR': 'O ID de uma ação do servidor definida no blueprint do jogo ou ações personalizadas',
+            da: 'ID\'et for en serverhandling defineret i spillets blueprint eller brugerdefinerede handlinger',
+            'zh-CN': '在游戏蓝图或自定义操作中定义的服务器操作ID',
+            'zh-TW': '在遊戲藍圖或自訂操作中定義的伺服器操作ID'
         },
         schedule: {
             en: 'Schedule (Cron Expression)',
@@ -137,23 +250,104 @@ export const lang = {
             'zh-CN': '计划（Cron 表达式）',
             'zh-TW': '排程（Cron 表達式）'
         },
-        scheduleHint: {
-            en: 'Examples: "0 4 * * *" (4 AM daily), "0 */6 * * *" (every 6 hours)',
-            es: 'Ejemplos: "0 4 * * *" (4 AM diario), "0 */6 * * *" (cada 6 horas)',
-            ro: 'Exemple: "0 4 * * *" (4 dimineața zilnic), "0 */6 * * *" (la fiecare 6 ore)',
-            'pt-BR': 'Exemplos: "0 4 * * *" (4h diariamente), "0 */6 * * *" (a cada 6 horas)',
-            da: 'Eksempler: "0 4 * * *" (kl. 4 dagligt), "0 */6 * * *" (hver 6. time)',
-            'zh-CN': '示例："0 4 * * *"（每天凌晨4点）、"0 */6 * * *"（每6小时）',
-            'zh-TW': '範例："0 4 * * *"（每日凌晨4點）、"0 */6 * * *"（每6小時）'
+        preWarningLabel: {
+            en: 'Pre-Warning',
+            es: 'Aviso Previo',
+            ro: 'Avertizare Prealabilă',
+            'pt-BR': 'Aviso Prévio',
+            da: 'Forhåndsadvarsel',
+            'zh-CN': '预警',
+            'zh-TW': '預警'
         },
-        schedulePlaceholder: {
-            en: '0 4 * * *',
-            es: '0 4 * * *',
-            ro: '0 4 * * *',
-            'pt-BR': '0 4 * * *',
-            da: '0 4 * * *',
-            'zh-CN': '0 4 * * *',
-            'zh-TW': '0 4 * * *'
+        preWarningDescription: {
+            en: 'Send a broadcast message before this task executes',
+            es: 'Enviar un mensaje de transmisión antes de que se ejecute esta tarea',
+            ro: 'Trimiteți un mesaj de difuzare înainte de executarea acestei sarcini',
+            'pt-BR': 'Enviar uma mensagem de broadcast antes desta tarefa ser executada',
+            da: 'Send en broadcast-besked før denne opgave udføres',
+            'zh-CN': '在此任务执行前发送广播消息',
+            'zh-TW': '在此工作執行前傳送廣播訊息'
+        },
+        preWarningMinutes: {
+            en: 'Minutes Before',
+            es: 'Minutos Antes',
+            ro: 'Minute Înainte',
+            'pt-BR': 'Minutos Antes',
+            da: 'Minutter Før',
+            'zh-CN': '提前分钟数',
+            'zh-TW': '提前分鐘數'
+        },
+        preWarningMessage: {
+            en: 'Warning Message',
+            es: 'Mensaje de Aviso',
+            ro: 'Mesaj de Avertizare',
+            'pt-BR': 'Mensagem de Aviso',
+            da: 'Advarselsbesked',
+            'zh-CN': '警告消息',
+            'zh-TW': '警告訊息'
+        },
+        conditionsLabel: {
+            en: 'Conditions',
+            es: 'Condiciones',
+            ro: 'Condiții',
+            'pt-BR': 'Condições',
+            da: 'Betingelser',
+            'zh-CN': '条件',
+            'zh-TW': '條件'
+        },
+        conditionsDescription: {
+            en: 'Optional conditions that must be met for this task to execute',
+            es: 'Condiciones opcionales que deben cumplirse para que esta tarea se ejecute',
+            ro: 'Condiții opționale care trebuie îndeplinite pentru executarea acestei sarcini',
+            'pt-BR': 'Condições opcionais que devem ser atendidas para esta tarefa ser executada',
+            da: 'Valgfrie betingelser der skal være opfyldt for at denne opgave kan udføres',
+            'zh-CN': '此任务执行必须满足的可选条件',
+            'zh-TW': '此工作執行必須滿足的可選條件'
+        },
+        requireRunning: {
+            en: 'Server must be running',
+            es: 'El servidor debe estar en ejecución',
+            ro: 'Serverul trebuie să fie pornit',
+            'pt-BR': 'O servidor deve estar em execução',
+            da: 'Serveren skal køre',
+            'zh-CN': '服务器必须正在运行',
+            'zh-TW': '伺服器必須正在運行'
+        },
+        minPlayers: {
+            en: 'Min Players',
+            es: 'Mín. Jugadores',
+            ro: 'Min. Jucători',
+            'pt-BR': 'Mín. Jogadores',
+            da: 'Min. Spillere',
+            'zh-CN': '最少玩家数',
+            'zh-TW': '最少玩家數'
+        },
+        maxPlayers: {
+            en: 'Max Players',
+            es: 'Máx. Jugadores',
+            ro: 'Max. Jucători',
+            'pt-BR': 'Máx. Jogadores',
+            da: 'Max. Spillere',
+            'zh-CN': '最多玩家数',
+            'zh-TW': '最多玩家數'
+        },
+        noLimit: {
+            en: 'No limit',
+            es: 'Sin límite',
+            ro: 'Fără limită',
+            'pt-BR': 'Sem limite',
+            da: 'Ingen grænse',
+            'zh-CN': '无限制',
+            'zh-TW': '無限制'
+        },
+        aggressiveWarning: {
+            en: 'This schedule is frequent and has no conditions set. The task will run even if the server is full.',
+            es: 'Este horario es frecuente y no tiene condiciones. La tarea se ejecutará incluso si el servidor está lleno.',
+            ro: 'Acest program este frecvent și nu are condiții setate. Sarcina va rula chiar dacă serverul este plin.',
+            'pt-BR': 'Este agendamento é frequente e não possui condições. A tarefa será executada mesmo se o servidor estiver cheio.',
+            da: 'Denne tidsplan er hyppig og har ingen betingelser. Opgaven vil køre selv om serveren er fuld.',
+            'zh-CN': '此计划频率较高且未设置条件。即使服务器满员，任务也会运行。',
+            'zh-TW': '此排程頻率較高且未設定條件。即使伺服器滿員，工作也會執行。'
         }
     },
     buttons: {
@@ -165,6 +359,24 @@ export const lang = {
             da: 'Opret opgave',
             'zh-CN': '创建任务',
             'zh-TW': '建立工作'
+        },
+        save: {
+            en: 'Save Changes',
+            es: 'Guardar Cambios',
+            ro: 'Salvați Modificările',
+            'pt-BR': 'Salvar Alterações',
+            da: 'Gem ændringer',
+            'zh-CN': '保存更改',
+            'zh-TW': '儲存變更'
+        },
+        cancel: {
+            en: 'Cancel',
+            es: 'Cancelar',
+            ro: 'Anulați',
+            'pt-BR': 'Cancelar',
+            da: 'Annuller',
+            'zh-CN': '取消',
+            'zh-TW': '取消'
         },
         delete: {
             en: 'Delete',
@@ -185,15 +397,6 @@ export const lang = {
             da: 'Planlagte opgaver',
             'zh-CN': '计划任务',
             'zh-TW': '排程工作'
-        },
-        active: {
-            en: 'Active',
-            es: 'Activo',
-            ro: 'Activ',
-            'pt-BR': 'Ativo',
-            da: 'Aktiv',
-            'zh-CN': '活跃',
-            'zh-TW': '活躍'
         },
         action: {
             en: 'Action',
@@ -221,6 +424,89 @@ export const lang = {
             da: 'Næste kørsel',
             'zh-CN': '下次运行',
             'zh-TW': '下次執行'
+        },
+        lastRun: {
+            en: 'Last run',
+            es: 'Última ejecución',
+            ro: 'Ultima execuție',
+            'pt-BR': 'Última execução',
+            da: 'Sidste kørsel',
+            'zh-CN': '上次运行',
+            'zh-TW': '上次執行'
+        },
+        failed: {
+            en: 'Failed',
+            es: 'Fallido',
+            ro: 'Eșuat',
+            'pt-BR': 'Falhou',
+            da: 'Fejlede',
+            'zh-CN': '失败',
+            'zh-TW': '失敗'
+        }
+    },
+    history: {
+        emptyTitle: {
+            en: 'No Execution History',
+            es: 'Sin Historial de Ejecución',
+            ro: 'Niciun Istoric de Execuție',
+            'pt-BR': 'Sem Histórico de Execução',
+            da: 'Ingen udførelseshistorik',
+            'zh-CN': '没有执行历史',
+            'zh-TW': '沒有執行歷史'
+        },
+        emptyDescription: {
+            en: 'Task execution history will appear here once tasks start running.',
+            es: 'El historial de ejecución de tareas aparecerá aquí una vez que las tareas comiencen a ejecutarse.',
+            ro: 'Istoricul de execuție al sarcinilor va apărea aici odată ce sarcinile încep să ruleze.',
+            'pt-BR': 'O histórico de execução de tarefas aparecerá aqui assim que as tarefas começarem a ser executadas.',
+            da: 'Opgaveudførelseshistorikken vises her, når opgaverne begynder at køre.',
+            'zh-CN': '任务开始运行后，执行历史将显示在此处。',
+            'zh-TW': '工作開始執行後，執行歷史將顯示在此處。'
+        },
+        entries: {
+            en: 'entries',
+            es: 'entradas',
+            ro: 'înregistrări',
+            'pt-BR': 'entradas',
+            da: 'poster',
+            'zh-CN': '条记录',
+            'zh-TW': '筆記錄'
+        },
+        clear: {
+            en: 'Clear History',
+            es: 'Borrar Historial',
+            ro: 'Ștergeți Istoricul',
+            'pt-BR': 'Limpar Histórico',
+            da: 'Ryd historik',
+            'zh-CN': '清除历史',
+            'zh-TW': '清除歷史'
+        },
+        clearTitle: {
+            en: 'Clear History',
+            es: 'Borrar Historial',
+            ro: 'Ștergeți Istoricul',
+            'pt-BR': 'Limpar Histórico',
+            da: 'Ryd historik',
+            'zh-CN': '清除历史',
+            'zh-TW': '清除歷史'
+        },
+        clearMessage: {
+            en: 'Are you sure you want to clear all execution history for this server?',
+            es: '¿Estás seguro de que quieres borrar todo el historial de ejecución de este servidor?',
+            ro: 'Sigur doriți să ștergeți tot istoricul de execuție pentru acest server?',
+            'pt-BR': 'Tem certeza de que deseja limpar todo o histórico de execução deste servidor?',
+            da: 'Er du sikker på, at du vil rydde al udførelseshistorik for denne server?',
+            'zh-CN': '您确定要清除此服务器的所有执行历史吗？',
+            'zh-TW': '您確定要清除此伺服器的所有執行歷史嗎？'
+        },
+        clearConfirm: {
+            en: 'Clear All',
+            es: 'Borrar Todo',
+            ro: 'Ștergeți Tot',
+            'pt-BR': 'Limpar Tudo',
+            da: 'Ryd alt',
+            'zh-CN': '全部清除',
+            'zh-TW': '全部清除'
         }
     },
     messages: {

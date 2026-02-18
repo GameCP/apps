@@ -15,6 +15,7 @@
 #                          - all-tenants: All tenant databases
 #                          - appstore: Publish to app store only
 #                          - all: All tenants + app store
+#   --bump <patch|minor|major>  Bump version before deploying
 #   --dry-run              Show what would happen without doing it
 #   --yes                  Skip confirmation prompts
 #   --help                 Show this help message
@@ -36,7 +37,9 @@ ENV_PROFILE="local"
 TARGET="local"
 DRY_RUN=false
 SKIP_CONFIRM=false
+BUMP_VERSION=""
 EXTENSION_NAME=""
+FORCE_FLAG=""
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -55,6 +58,14 @@ while [[ $# -gt 0 ]]; do
             ;;
         --yes|-y)
             SKIP_CONFIRM=true
+            shift
+            ;;
+        --bump)
+            BUMP_VERSION="$2"
+            shift 2
+            ;;
+        --force|-f)
+            FORCE_FLAG="--force"
             shift
             ;;
         --help|-h)
@@ -122,6 +133,19 @@ if [ "$DRY_RUN" = true ]; then
     echo -e "   Mode: ${YELLOW}DRY RUN${NC}"
 fi
 echo ""
+
+# Bump version if requested
+if [ -n "$BUMP_VERSION" ]; then
+    echo -e "${BLUE}📈 Bumping version ($BUMP_VERSION)...${NC}"
+    if [ "$DRY_RUN" = true ]; then
+        echo "   [DRY RUN] Would run: npm run version:$BUMP_VERSION"
+    else
+        (cd "$EXTENSION_DIR" && npm run version:$BUMP_VERSION)
+        # Re-read version after bump
+        VERSION=$(node -e "console.log(require('$EXTENSION_DIR/gamecp.json').version)")
+        echo -e "   New version: ${GREEN}v$VERSION${NC}"
+    fi
+fi
 
 # Build extension
 echo -e "${BLUE}🔨 Building extension...${NC}"
@@ -284,7 +308,7 @@ publish_to_appstore() {
     echo -e "${BLUE}📤 Publishing to App Store...${NC}"
     
     cd "$EXTENSION_DIR"
-    GAMECP_API_KEY="$GAMECP_PUBLISHER_KEY" GAMECP_APPSTORE_URL="$APPSTORE_API_URL" node "$SCRIPT_DIR/publish.js"
+    GAMECP_API_KEY="$GAMECP_PUBLISHER_KEY" GAMECP_APPSTORE_URL="$APPSTORE_API_URL" node "$SCRIPT_DIR/publish.js" $FORCE_FLAG
 }
 
 # Execute based on target

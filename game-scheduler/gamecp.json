@@ -1,13 +1,13 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "game-scheduler",
-  "version": "1.2.17",
+  "version": "1.3.0",
   "name": "Scheduler",
-  "description": "Schedule automated server starts, stops, and restarts",
+  "description": "Schedule automated server operations — restarts, commands, server actions, and more",
   "author": "GameCP Team",
   "ui_bundle": "dist/index.js",
   "handlers_bundle": "dist/handlers.js",
-  "integrity": "sha384-3rNex1hMxbH4NEz0DPiyIMRLP32+a0Z8NLBkjL21dm/rkXqRAe9GgoQlKJaFx8+8",
+  "integrity": "sha384-R6O5o2WjBpk4uIhJzQprY7ZHUWF9j7E8pjQK6Vy+xNoEcQ1rY2s993AgoNQNMqdA",
   "ui_injection": [
     {
       "method": "MOUNT",
@@ -38,10 +38,35 @@
         "description": "Create a new scheduled task"
       },
       {
+        "method": "PUT",
+        "path": "/tasks/:id",
+        "handler_export": "updateTask",
+        "timeout_ms": 3000,
+        "description": "Update a scheduled task"
+      },
+      {
+        "method": "PATCH",
+        "path": "/tasks/:id",
+        "handler_export": "toggleTask",
+        "description": "Toggle a task's enabled state"
+      },
+      {
         "method": "DELETE",
         "path": "/tasks/:id",
         "handler_export": "deleteTask",
         "description": "Delete a scheduled task"
+      },
+      {
+        "method": "GET",
+        "path": "/logs",
+        "handler_export": "getLogs",
+        "description": "Get execution logs for a server"
+      },
+      {
+        "method": "DELETE",
+        "path": "/logs",
+        "handler_export": "clearLogs",
+        "description": "Clear execution logs for a server"
       }
     ],
     "event_listeners": [
@@ -88,7 +113,8 @@
       "cron",
       "restart",
       "wipe",
-      "tasks"
+      "tasks",
+      "server-actions"
     ],
     "screenshots": [
       "assets/screenshots/1.png"
