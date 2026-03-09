@@ -16,20 +16,19 @@ export function DatabaseNavItem({ activeSection, scrollToSection }: DatabaseNavI
         <button
             type="button"
             onClick={() => scrollToSection('database-provisioning')}
-            className={`w-full flex items-start p-3 text-left rounded-lg transition-colors ${isActive
-                ? 'bg-primary text-primary-foreground border border-primary shadow-sm'
-                : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground'
+            className={`w-full flex items-start p-3 text-left rounded-lg border transition-colors ${isActive
+                ? 'bg-primary/10 text-primary border-primary/30 shadow-sm'
+                : 'border-transparent text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground active:bg-muted'
                 }`}
         >
             <RiDatabase2Line
-                className={`w-5 h-5 mt-0.5 mr-3 flex-shrink-0 ${isActive ? 'text-primary-foreground' : 'text-primary'
-                    }`}
+                className={`w-5 h-5 mt-0.5 mr-3 flex-shrink-0 text-primary`}
             />
             <div className="min-w-0 flex-1">
                 <div className="text-sm font-medium truncate">
                     {t(lang.nav.provisioningTitle)}
                 </div>
-                <div className="text-xs mt-1 line-clamp-2">
+                <div className="text-xs mt-1 line-clamp-2 opacity-80">
                     {t(lang.nav.provisioningDescription)}
                 </div>
             </div>

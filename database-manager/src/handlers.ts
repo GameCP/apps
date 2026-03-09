@@ -33,7 +33,9 @@ function buildConnectionString(
         case 'postgresql':
             return `postgresql://${username}:${password}@${host}:${port}/${database}`;
         case 'redis':
-            return `redis://:${password}@${host}:${port}`;
+            return username
+                ? `redis://${username}:${password}@${host}:${port}`
+                : `redis://:${password}@${host}:${port}`;
         case 'mongodb':
             return `mongodb://${username}:${password}@${host}:${port}/${database}`;
         default:
@@ -51,14 +53,32 @@ export async function getDatabases(ctx: ExtensionContext): Promise<ApiResponse> 
 
     const databases = await ctx.db.collection('databases').find({ serverId }).toArray();
     
-    // Strip passwords from response - never expose hashed passwords
-    const sanitizedDatabases = databases.map((db: any) => ({
-        ...db,
-        password: '********', // Never show password, even hashed
-        connectionString: '', // Can't build connection string without password
-    }));
+    // Decrypt passwords so users can view them in the UI
+    const decryptedDatabases = await Promise.all(
+        databases.map(async (db: any) => {
+            let decryptedPassword = '';
+            try {
+                decryptedPassword = db.password ? await ctx.crypto.decrypt(db.password) : '';
+            } catch (err: any) {
+                ctx.logger.warn('Failed to decrypt database password', { dbId: db._id, error: err.message });
+            }
+
+            return {
+                ...db,
+                password: decryptedPassword,
+                connectionString: buildConnectionString(
+                    db.type,
+                    db.host,
+                    db.port,
+                    db.name,
+                    db.username,
+                    decryptedPassword
+                ),
+            };
+        })
+    );
     
-    return { status: 200, body: { databases: sanitizedDatabases } };
+    return { status: 200, body: { databases: decryptedDatabases } };
 }
 
 // Create a new database

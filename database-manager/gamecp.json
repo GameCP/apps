@@ -1,7 +1,7 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "database-manager",
-  "version": "1.2.32",
+  "version": "1.2.33",
   "name": "Database Manager",
   "description": "Provision and manage databases for your game servers. Supports MySQL, PostgreSQL, Redis, and more.",
   "author": "GameCP Team",
@@ -31,7 +31,8 @@
       "target": "games.edit.form",
       "component": "GameDatabaseSettings",
       "position": "end",
-      "order": 50
+      "order": 50,
+      "sectionId": "database-provisioning"
     },
     {
       "method": "MOUNT",
@@ -160,5 +161,5 @@
       "ioredis"
     ]
   },
-  "integrity": "sha384-AVeq/4V3jfIH+UaIS1xr4toXN6xl1BdGCgmUosTyeop5ti3ejVC8GehBclDoBU1L"
+  "integrity": "sha384-ag5hXHG6sosc73jEfafZb8lSfRQ2rXLxwWtHZwSlNfyDzUamotFSFRpWH9u08BBX"
 }
