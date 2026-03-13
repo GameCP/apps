@@ -23,6 +23,7 @@ export function DatabaseSourcesNav({ user, closeSidebar }: DatabaseSourcesNavPro
             href={href}
             icon={RiDatabase2Line}
             className="h-8"
+            title=""
         >
             {t(lang.admin.title)}
         </SidebarNavItem>

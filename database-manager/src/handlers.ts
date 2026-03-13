@@ -43,6 +43,70 @@ function buildConnectionString(
     }
 }
 
+// Game database config resolved from server's game reference
+interface GameDatabaseConfig {
+    enabled: boolean;
+    allowUserManagement: boolean;
+    allowedSourceIds: string[] | null; // null = all sources allowed
+}
+
+// Helper to get the full database config from a server's game config
+async function getGameDatabaseConfig(ctx: ExtensionContext, serverId: string): Promise<GameDatabaseConfig> {
+    try {
+        ctx.logger.info('getGameDatabaseConfig: Fetching game server', { serverId });
+        const serverRes = await ctx.api.get(`/api/game-servers/${serverId}`);
+        
+        ctx.logger.info('getGameDatabaseConfig: Raw API response keys', { 
+            keys: serverRes ? Object.keys(serverRes) : 'null',
+            hasData: !!serverRes?.data,
+            hasGameServer: !!serverRes?.gameServer,
+            hasDataGameServer: !!serverRes?.data?.gameServer,
+        });
+
+        // ctx.api.get returns { data: ... } - unwrap it
+        const responseData = serverRes?.data || serverRes;
+        const gameServer = responseData?.gameServer;
+        
+        ctx.logger.info('getGameDatabaseConfig: GameServer lookup', {
+            hasGameServer: !!gameServer,
+            hasGameRef: !!gameServer?.gameRef,
+            gameRefType: typeof gameServer?.gameRef,
+        });
+
+        const gameRef = gameServer?.gameRef;
+        if (!gameRef) {
+            ctx.logger.warn('getGameDatabaseConfig: No gameRef found', { serverId });
+            return { enabled: false, allowUserManagement: false, allowedSourceIds: null };
+        }
+
+        ctx.logger.info('getGameDatabaseConfig: GameRef extensionData', {
+            hasExtensionData: !!gameRef.extensionData,
+            extensionDataKeys: gameRef.extensionData ? Object.keys(gameRef.extensionData) : [],
+            dbManagerConfig: gameRef.extensionData?.['database-manager'],
+        });
+
+        const dbConfig = gameRef.extensionData?.['database-manager'];
+        if (!dbConfig?.enabled) {
+            ctx.logger.info('getGameDatabaseConfig: DB not enabled for game', { serverId, dbConfig });
+            return { enabled: false, allowUserManagement: false, allowedSourceIds: [] };
+        }
+
+        const allowedSources: string[] = dbConfig.allowedSources || [];
+        const result = {
+            enabled: true,
+            // Default to true for backwards compatibility
+            allowUserManagement: dbConfig.allowUserManagement !== false,
+            allowedSourceIds: allowedSources.length > 0 ? allowedSources : null,
+        };
+        
+        ctx.logger.info('getGameDatabaseConfig: Resolved config', result);
+        return result;
+    } catch (err: any) {
+        ctx.logger.error('getGameDatabaseConfig: Failed', { serverId, error: err.message, stack: err.stack });
+        return { enabled: false, allowUserManagement: false, allowedSourceIds: null };
+    }
+}
+
 // Get all databases for a server
 export async function getDatabases(ctx: ExtensionContext): Promise<ApiResponse> {
     const { serverId } = ctx.request.query;
@@ -89,12 +153,29 @@ export async function createDatabase(ctx: ExtensionContext): Promise<ApiResponse
         return { status: 400, body: { error: 'Server ID required' } };
     }
 
+    // Resolve game config for non-admins
+    const isAdmin = ctx.user?.role === 'admin';
+    const gameDbConfig = !isAdmin ? await getGameDatabaseConfig(ctx, serverId) : null;
+    const allowedSourceIds = gameDbConfig?.allowedSourceIds ?? null;
+
+    // Check if users are allowed to create databases
+    if (!isAdmin && gameDbConfig && !gameDbConfig.allowUserManagement) {
+        return { status: 403, body: { error: 'Database management is restricted to administrators for this game' } };
+    }
+
     // If sourceId not provided, auto-select based on type
     let selectedSourceId = sourceId;
     if (!selectedSourceId) {
         const dbType = type || 'mysql';
+        const query: any = { type: dbType, enabled: true };
+
+        // Filter by allowed sources if restricted
+        if (allowedSourceIds) {
+            query._id = { $in: allowedSourceIds };
+        }
+
         const sources = await ctx.db.collection('database_sources')
-            .find({ type: dbType, enabled: true })
+            .find(query)
             .toArray() as DatabaseSource[];
         
         if (sources.length === 0) {
@@ -111,6 +192,11 @@ export async function createDatabase(ctx: ExtensionContext): Promise<ApiResponse
 
     if (!source || !source.enabled) {
         return { status: 404, body: { error: 'Database source not found or disabled' } };
+    }
+
+    // Enforce allowed sources for non-admins
+    if (allowedSourceIds && !allowedSourceIds.includes(source._id)) {
+        return { status: 403, body: { error: 'This database source is not allowed for this game' } };
     }
 
     // Generate database name and credentials
@@ -219,6 +305,15 @@ export async function deleteDatabase(ctx: ExtensionContext): Promise<ApiResponse
 
     if (!database) {
         return { status: 404, body: { error: 'Database not found' } };
+    }
+
+    // Check if users are allowed to delete databases
+    const isAdmin = ctx.user?.role === 'admin';
+    if (!isAdmin) {
+        const gameDbConfig = await getGameDatabaseConfig(ctx, database.serverId);
+        if (!gameDbConfig.allowUserManagement) {
+            return { status: 403, body: { error: 'Database management is restricted to administrators for this game' } };
+        }
     }
 
     // Get the source to drop the database
@@ -337,22 +432,79 @@ export async function unsuspendServerDatabases(ctx: ExtensionContext): Promise<A
 }
 
 
-// Get all database sources (admin only)
+// Get database sources
+// Admins: full details (minus passwords) for all sources
+// Users: limited fields for enabled sources, filtered by the game's allowedSources config
 export async function getSources(ctx: ExtensionContext): Promise<ApiResponse> {
-    // Admin check
-    if (!ctx.user || ctx.user.role !== 'admin') {
-        return { status: 403, body: { error: 'Admin access required' } };
+    if (!ctx.user) {
+        return { status: 401, body: { error: 'Authentication required' } };
     }
-    
-    const sources = await ctx.db.collection('database_sources').find({}).toArray();
-    
-    // Remove passwords entirely from response - never send them to the client
-    const sanitizedSources = sources.map((source: any) => {
-        const { adminPassword, ...rest } = source;
-        return rest;
-    });
 
-    return { status: 200, body: { sources: sanitizedSources } };
+    if (ctx.user.role === 'admin') {
+        const sources = await ctx.db.collection('database_sources').find({}).toArray();
+        
+        // Remove passwords entirely from response - never send them to the client
+        const sanitizedSources = sources.map((source: any) => {
+            const { adminPassword, ...rest } = source;
+            return rest;
+        });
+
+        return { status: 200, body: { sources: sanitizedSources } };
+    }
+
+    // Non-admins: require serverId to resolve game-level source restrictions
+    const { serverId } = ctx.request.query;
+    ctx.logger.info('getSources: Non-admin request', { serverId, userRole: ctx.user.role, queryKeys: Object.keys(ctx.request.query) });
+    
+    if (!serverId) {
+        ctx.logger.warn('getSources: Missing serverId in query');
+        return { status: 400, body: { error: 'Server ID required', sources: [] } };
+    }
+
+    // Resolve full game config (sources + permissions)
+    const gameDbConfig = await getGameDatabaseConfig(ctx, serverId);
+    const { allowedSourceIds } = gameDbConfig;
+
+    ctx.logger.info('getSources: Game config resolved', { gameDbConfig, allowedSourceIds });
+
+    // Build query: always enabled, optionally filtered by allowed IDs
+    const query: any = { enabled: true };
+    if (allowedSourceIds) {
+        // Empty array means DB is disabled for this game
+        if (allowedSourceIds.length === 0) {
+            ctx.logger.info('getSources: Empty allowedSourceIds, returning no sources');
+            return { status: 200, body: { sources: [], permissions: { canCreate: false, canDelete: false } } };
+        }
+        query._id = { $in: allowedSourceIds };
+    }
+
+    ctx.logger.info('getSources: Querying database_sources', { query });
+    const sources = await ctx.db.collection('database_sources')
+        .find(query)
+        .toArray();
+
+    ctx.logger.info('getSources: Found sources', { count: sources.length, sourceIds: sources.map((s: any) => s._id) });
+
+    const limitedSources = sources.map((source: any) => ({
+        _id: source._id,
+        name: source.name,
+        type: source.type,
+        enabled: source.enabled,
+        adminerUrl: source.adminerUrl || '',
+    }));
+
+    const response = {
+        status: 200,
+        body: {
+            sources: limitedSources,
+            permissions: {
+                canCreate: gameDbConfig.allowUserManagement,
+                canDelete: gameDbConfig.allowUserManagement,
+            },
+        },
+    };
+    ctx.logger.info('getSources: Returning response', { sourceCount: limitedSources.length, permissions: response.body.permissions });
+    return response;
 }
 
 // Create a database source (admin only)

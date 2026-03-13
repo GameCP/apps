@@ -154,6 +154,13 @@ export function GameDatabaseSettings({ gameId, extensionData, onChange }: GameDa
                     />
 
                     <Switch
+                        checked={config.allowUserManagement !== false}
+                        onChange={(checked) => handleChange('allowUserManagement', checked)}
+                        label={t(lang.provisioning.allowUserManagement)}
+                        description={t(lang.provisioning.allowUserManagementDesc)}
+                    />
+
+                    <Switch
                         checked={config.autoCreate || false}
                         onChange={(checked) => handleChange('autoCreate', checked)}
                         label={t(lang.provisioning.autoCreate)}

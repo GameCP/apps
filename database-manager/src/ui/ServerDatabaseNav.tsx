@@ -14,18 +14,12 @@ export function ServerDatabaseNav({ serverId }: ServerDatabaseNavProps) {
     const { api, t } = useGameCP();
 
     // Use SWR to fetch visibility data
+    // Only check game extensionData - no need to verify sources exist here.
+    // The DatabaseTab page handles "no sources" with an appropriate empty state.
     const { data: visibilityData } = useSWR<{ visible: boolean }>(
         `/api/x/database-manager/nav-visibility?serverId=${serverId}`,
         async () => {
             try {
-                // Check if there are any enabled sources
-                const sourcesRes = await api.get('/api/x/database-manager/sources');
-                const sources = sourcesRes.sources?.filter((s: any) => s.enabled) || [];
-
-                if (sources.length === 0) {
-                    return { visible: false };
-                }
-
                 // Fetch server to get game config
                 const serverRes = await api.get(`/api/game-servers/${serverId}`);
                 const gameRef = serverRes.gameServer?.gameRef;
@@ -52,6 +46,7 @@ export function ServerDatabaseNav({ serverId }: ServerDatabaseNavProps) {
         <SidebarNavItem
             href={`/game-servers/${serverId}/extensions/database-manager`}
             icon={RiDatabase2Line}
+            title=""
         >
             {t(lang.page.title)}
         </SidebarNavItem>
