@@ -132,7 +132,7 @@ export default function ServerManager() {
                     className="btn btn-primary"
                 >
                     <HiOutlinePlus className="w-4 h-4" />
-                    Add Server
+                    Deploy
                 </button>
             </div>
 

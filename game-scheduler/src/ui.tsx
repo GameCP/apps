@@ -56,7 +56,7 @@ export function ScheduleIcon({ serverId }: { serverId: string }) {
         <SidebarNavItem
             href={href}
             icon={RiCalendarEventLine}
-            title={t(lang.page.title)}
+            title=""
         >
             {t(lang.nav.title)}
         </SidebarNavItem>

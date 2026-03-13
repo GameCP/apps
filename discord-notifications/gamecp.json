@@ -1,13 +1,13 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "discord-notifications",
-  "version": "1.4.4",
+  "version": "2.0.0",
   "name": "Discord Notifications",
-  "description": "Send game server alerts, crash notifications, and status updates to Discord channels via webhooks",
+  "description": "Send game server alerts, crash notifications, player activity, and status updates to Discord channels via webhooks with customizable templates",
   "author": "GameCP Team",
   "ui_bundle": "dist/index.js",
   "handlers_bundle": "dist/handlers.js",
-  "integrity": "sha384-DKfjb/wIei700FLNh5KAqGORmujlqlIeHOrXZVZEo4xv2NH5/DA1/m1ZANZ2IEGY",
+  "integrity": "sha384-placeholder",
   "ui_injection": [
     {
       "method": "MOUNT",
@@ -20,44 +20,61 @@
       "target": "server.page.extensions",
       "component": "SettingsPage",
       "route_path": "/game-servers/:id/extensions/discord"
+    },
+    {
+      "method": "HANDLER",
+      "target": "settings.page",
+      "component": "DiscordAdminPage",
+      "route_path": "/extensions/discord-notifications"
     }
   ],
-  "config": {
-    "webhookUrl": {
-      "type": "text",
-      "label": "Discord Webhook URL",
-      "description": "Enter your Discord webhook URL to receive notifications",
-      "placeholder": "https://discord.com/api/webhooks/...",
-      "required": true
-    }
-  },
   "internal_logic": {
     "api_routes": [
       {
-        "method": "POST",
-        "path": "/webhooks",
-        "handler_export": "saveWebhook",
-        "timeout_ms": 3000,
-        "description": "Save Discord webhook URL"
+        "method": "GET",
+        "path": "/config",
+        "handler_export": "getConfig",
+        "description": "Get admin global configuration"
+      },
+      {
+        "method": "PUT",
+        "path": "/config",
+        "handler_export": "saveConfig",
+        "timeout_ms": 5000,
+        "description": "Save admin global configuration"
       },
       {
         "method": "GET",
         "path": "/webhooks",
         "handler_export": "getWebhooks",
-        "description": "Get configured webhooks"
+        "description": "Get server webhooks"
+      },
+      {
+        "method": "POST",
+        "path": "/webhooks",
+        "handler_export": "saveWebhook",
+        "timeout_ms": 3000,
+        "description": "Add or update a server webhook"
+      },
+      {
+        "method": "DELETE",
+        "path": "/webhooks",
+        "handler_export": "deleteWebhook",
+        "description": "Remove a server webhook"
+      },
+      {
+        "method": "PUT",
+        "path": "/overrides",
+        "handler_export": "saveOverrides",
+        "timeout_ms": 3000,
+        "description": "Save per-server event template overrides"
       },
       {
         "method": "POST",
         "path": "/test",
         "handler_export": "testWebhook",
         "timeout_ms": 10000,
-        "description": "Send test message to Discord"
-      },
-      {
-        "method": "DELETE",
-        "path": "/webhooks",
-        "handler_export": "deleteWebhook",
-        "description": "Remove a Discord webhook"
+        "description": "Send test message to a Discord webhook"
       }
     ],
     "event_listeners": [
@@ -78,11 +95,37 @@
         "handler_export": "handleStop",
         "async": true,
         "description": "Notify when server stops"
+      },
+      {
+        "event": "server.player.join",
+        "handler_export": "handlePlayerJoin",
+        "async": true,
+        "description": "Notify when a player joins"
+      },
+      {
+        "event": "server.player.leave",
+        "handler_export": "handlePlayerLeave",
+        "async": true,
+        "description": "Notify when a player leaves"
+      },
+      {
+        "event": "server.lifecycle.created",
+        "handler_export": "handleServerCreated",
+        "async": true,
+        "description": "Notify when a server is created"
+      },
+      {
+        "event": "server.lifecycle.deleted",
+        "handler_export": "handleServerDeleted",
+        "async": true,
+        "description": "Notify when a server is deleted"
       }
     ]
   },
   "sandbox_config": {
     "db_collections": [
+      "config",
+      "server_configs",
       "webhooks",
       "logs"
     ],
@@ -107,7 +150,8 @@
       "webhooks",
       "notifications",
       "alerts",
-      "monitoring"
+      "monitoring",
+      "players"
     ],
     "screenshots": [
       "assets/screenshots/settings-page.png",

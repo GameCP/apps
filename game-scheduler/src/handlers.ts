@@ -445,11 +445,11 @@ export const processScheduledTasks: TypedEventHandler<'cron.tick'> = async (even
     ctx.logger.error(`Error executing task ${taskIdentifier}:`, error.message);
 
     // Check if the error is because the game server doesn't exist
-    const isServerNotFound = error.message?.includes('Game server not found') ||
+    const isServerNotFound = error.message?.includes('Server not found') ||
                              error.message?.includes('not found');
 
     if (isServerNotFound) {
-      ctx.logger.warn(`Game server ${task.serverId} not found. Cleaning up task ${taskIdentifier}...`);
+      ctx.logger.warn(`Server ${task.serverId} not found. Cleaning up task ${taskIdentifier}...`);
       await ctx.db.collection('schedules').deleteOne({ _id: task._id });
 
       await ctx.db.collection('task_logs').insertOne({
@@ -458,7 +458,7 @@ export const processScheduledTasks: TypedEventHandler<'cron.tick'> = async (even
         taskName: taskIdentifier,
         action: task.action,
         status: 'failed',
-        error: 'Game server not found - task deleted',
+        error: 'Server not found - task deleted',
         duration_ms: duration,
         executed_at: new Date(),
       } as TaskLog);

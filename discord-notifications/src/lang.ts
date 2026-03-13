@@ -237,26 +237,4 @@ export const lang = {
       'zh-TW': '您確定要移除此 Discord Webhook 嗎？您將停止在此頻道接收通知。',
     },
   },
-
-  // Info Box
-  info: {
-    title: {
-      en: 'About Discord Webhooks',
-      es: 'Acerca de los Webhooks de Discord',
-      ro: 'Despre Webhook-urile Discord',
-      'pt-BR': 'Sobre Webhooks do Discord',
-      da: 'Om Discord-webhooks',
-      'zh-CN': '关于 Discord Webhook',
-      'zh-TW': '關於 Discord Webhook',
-    },
-    description: {
-      en: 'Webhook URLs are unique to each Discord channel. You can create them in your Discord server settings under Integrations > Webhooks. Once configured, events like server start, stop, and crashes will be sent directly to your channel.',
-      es: 'Las URLs de webhook son únicas para cada canal de Discord. Puedes crearlas en la configuración de tu servidor de Discord en Integraciones > Webhooks. Una vez configuradas, eventos como inicio, detención y fallos del servidor se enviarán directamente a tu canal.',
-      ro: 'URL-urile webhook sunt unice pentru fiecare canal Discord. Le puteți crea în setările serverului Discord la Integrări > Webhooks. Odată configurate, evenimente precum pornirea, oprirea și blocările serverului vor fi trimise direct pe canal.',
-      'pt-BR': 'As URLs de webhook são exclusivas para cada canal do Discord. Você pode criá-las nas configurações do seu servidor Discord em Integrações > Webhooks. Uma vez configurados, eventos como início, parada e falhas do servidor serão enviados diretamente para o seu canal.',
-      da: 'Webhook-URL\'er er unikke for hver Discord-kanal. Du kan oprette dem i dine Discord-serverindstillinger under Integrationer > Webhooks. Når de er konfigureret, vil hændelser som serverstart, -stop og -nedbrud blive sendt direkte til din kanal.',
-      'zh-CN': 'Webhook URL 对每个 Discord 频道都是唯一的。您可以在 Discord 服务器设置的"集成 > Webhook"中创建它们。配置完成后，服务器启动、停止和崩溃等事件将直接发送到您的频道。',
-      'zh-TW': 'Webhook URL 對每個 Discord 頻道都是唯一的。您可以在 Discord 伺服器設定的「整合 > Webhook」中建立它們。設定完成後，伺服器啟動、停止和當機等事件將直接傳送到您的頻道。',
-    },
-  },
 };
