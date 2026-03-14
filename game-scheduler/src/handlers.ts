@@ -10,7 +10,7 @@ interface ScheduledTask {
   _id?: string;
   serverId: string;
   name: string;
-  action: 'start' | 'stop' | 'restart' | 'command' | 'execute_action';
+  action: 'start' | 'stop' | 'restart' | 'command' | 'execute_action' | 'backup';
   schedule: string;
   config?: {
     command?: string;
@@ -113,7 +113,7 @@ export const createTask: ApiRouteHandler = async (ctx) => {
   }
 
   // Validate action type
-  const validActions = ['start', 'stop', 'restart', 'command', 'execute_action'];
+  const validActions = ['start', 'stop', 'restart', 'command', 'execute_action', 'backup'];
   if (!validActions.includes(action)) {
     return {
       status: 400,
@@ -404,6 +404,9 @@ export const processScheduledTasks: TypedEventHandler<'cron.tick'> = async (even
       case 'execute_action':
         await executeServerAction(task, ctx);
         break;
+      case 'backup':
+        await executeBackup(task, ctx);
+        break;
 
       default:
         ctx.logger.error(`Unknown action type: ${task.action}`);
@@ -607,7 +610,14 @@ async function executeServerAction(task: ScheduledTask, ctx: ExtensionContext): 
   ctx.logger.info(`Server action ${actionId} completed successfully`);
 }
 
-
+async function executeBackup(task: ScheduledTask, ctx: ExtensionContext): Promise<void> {
+  ctx.logger.info(`Creating backup for server ${task.serverId}...`);
+  if (ctx.instance?.backup) {
+    await ctx.instance.backup();
+  } else {
+    throw new Error('Instance backup method not available');
+  }
+}
 
 /**
  * Clean up scheduled tasks when a game server is deleted

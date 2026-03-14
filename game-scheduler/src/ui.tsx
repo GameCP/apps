@@ -6,6 +6,7 @@ import {
     RiRestartLine,
     RiTerminalLine,
     RiFlashlightLine,
+    RiArchiveLine,
     RiDeleteBinLine,
     RiCheckLine,
     RiCloseLine,
@@ -261,6 +262,7 @@ const ACTION_ICONS: Record<string, any> = {
     restart: RiRestartLine,
     command: RiTerminalLine,
     execute_action: RiFlashlightLine,
+    backup: RiArchiveLine,
 
 };
 
@@ -270,6 +272,7 @@ const ACTION_COLORS: Record<string, string> = {
     restart: 'amber',
     command: 'info',
     execute_action: 'purple',
+    backup: 'info',
 
 };
 
@@ -534,6 +537,7 @@ function TaskForm({
                             { value: 'restart', label: t(lang.form.actionRestart) },
                             { value: 'command', label: t(lang.form.actionCommand) },
                             { value: 'execute_action', label: t(lang.form.actionExecuteAction) },
+                            { value: 'backup', label: t(lang.form.actionBackup) },
 
                         ]}
                         required
@@ -585,9 +589,10 @@ function TaskForm({
 
                 {/* ── Pre-Warning (Progressive Disclosure) ── */}
                 <div className="border border-border rounded-lg overflow-hidden bg-background">
-                    <button
-                        type="button"
-                        className="w-full flex items-center justify-between p-4 hover:bg-muted/30 transition-colors"
+                    <div
+                        role="button"
+                        tabIndex={0}
+                        className="w-full flex items-center justify-between p-4 hover:bg-muted/30 transition-colors cursor-pointer"
                         onClick={() => setPreWarningEnabled(!preWarningEnabled)}
                     >
                         <div className="flex items-center gap-3">
@@ -607,7 +612,7 @@ function TaskForm({
                             onChange={setPreWarningEnabled}
                             size="sm"
                         />
-                    </button>
+                    </div>
 
                     {preWarningEnabled && (
                         <div className="p-4 pt-0 border-t border-border bg-background">
@@ -634,9 +639,10 @@ function TaskForm({
 
                 {/* ── Conditions (Progressive Disclosure) ── */}
                 <div className="border border-border rounded-lg overflow-hidden bg-background">
-                    <button
-                        type="button"
-                        className="w-full flex items-center justify-between p-4 hover:bg-muted/30 transition-colors"
+                    <div
+                        role="button"
+                        tabIndex={0}
+                        className="w-full flex items-center justify-between p-4 hover:bg-muted/30 transition-colors cursor-pointer"
                         onClick={() => setConditionsEnabled(!conditionsEnabled)}
                     >
                         <div className="flex items-center gap-3">
@@ -656,7 +662,7 @@ function TaskForm({
                             onChange={setConditionsEnabled}
                             size="sm"
                         />
-                    </button>
+                    </div>
 
                     {conditionsEnabled && (
                         <div className="p-4 pt-0 border-t border-border bg-background">

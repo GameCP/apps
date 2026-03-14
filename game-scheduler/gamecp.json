@@ -1,13 +1,13 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "game-scheduler",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "name": "Scheduler",
-  "description": "Schedule automated server operations — restarts, commands, server actions, and more",
+  "description": "Schedule automated server operations — restarts, backups, commands, server actions, and more",
   "author": "GameCP Team",
   "ui_bundle": "dist/index.js",
   "handlers_bundle": "dist/handlers.js",
-  "integrity": "sha384-yAIoP+UorABr6OIaL9aBtFnyUMj36HjaMBp/++wUJdU2lJnlrEwxP48T+Eb4Vmp0",
+  "integrity": "sha384-KZceABZUxNxXdvouBnSS6pG4/+YocjfdwKDNLWie6GpaqGWyNfV39eCWzEU45Gky",
   "ui_injection": [
     {
       "method": "MOUNT",
@@ -92,7 +92,8 @@
     "permissions": [
       "server.power.manage",
       "server.console.write",
-      "server.files.write"
+      "server.files.write",
+      "server.backup.create"
     ],
     "resource_limits": {
       "memory_mb": 128,
@@ -113,6 +114,7 @@
       "cron",
       "restart",
       "wipe",
+      "backup",
       "tasks",
       "server-actions"
     ],

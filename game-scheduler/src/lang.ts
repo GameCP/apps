@@ -186,6 +186,15 @@ export const lang = {
             'zh-CN': '执行服务器操作',
             'zh-TW': '執行伺服器操作'
         },
+        actionBackup: {
+            en: 'Create Backup',
+            es: 'Crear Copia de Seguridad',
+            ro: 'Creați Backup',
+            'pt-BR': 'Criar Backup',
+            da: 'Opret sikkerhedskopi',
+            'zh-CN': '创建备份',
+            'zh-TW': '建立備份'
+        },
 
         command: {
             en: 'Command',
