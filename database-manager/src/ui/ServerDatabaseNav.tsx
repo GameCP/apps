@@ -48,7 +48,7 @@ export function ServerDatabaseNav({ serverId }: ServerDatabaseNavProps) {
             icon={RiDatabase2Line}
             title=""
         >
-            {t(lang.page.title)}
+            {t(lang.nav.title)}
         </SidebarNavItem>
     );
 }

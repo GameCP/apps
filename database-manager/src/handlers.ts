@@ -1,4 +1,4 @@
-import type { ExtensionContext, ApiResponse, MySQLConfig, PostgreSQLConfig } from '@gamecp/types';
+import type { ExtensionContext, ApiResponse, MySQLConfig, PostgreSQLConfig, TypedEventHandler } from '@gamecp/types';
 import type { Database, DatabaseSource, CreateDatabaseRequest, DatabaseType } from './types';
 
 // Helper to generate random password
@@ -48,6 +48,7 @@ interface GameDatabaseConfig {
     enabled: boolean;
     allowUserManagement: boolean;
     allowedSourceIds: string[] | null; // null = all sources allowed
+    maxDatabasesPerServer: number; // 0 = unlimited
 }
 
 // Helper to get the full database config from a server's game config
@@ -76,7 +77,7 @@ async function getGameDatabaseConfig(ctx: ExtensionContext, serverId: string): P
         const gameRef = gameServer?.gameRef;
         if (!gameRef) {
             ctx.logger.warn('getGameDatabaseConfig: No gameRef found', { serverId });
-            return { enabled: false, allowUserManagement: false, allowedSourceIds: null };
+            return { enabled: false, allowUserManagement: false, allowedSourceIds: null, maxDatabasesPerServer: 0 };
         }
 
         ctx.logger.info('getGameDatabaseConfig: GameRef extensionData', {
@@ -88,7 +89,7 @@ async function getGameDatabaseConfig(ctx: ExtensionContext, serverId: string): P
         const dbConfig = gameRef.extensionData?.['database-manager'];
         if (!dbConfig?.enabled) {
             ctx.logger.info('getGameDatabaseConfig: DB not enabled for game', { serverId, dbConfig });
-            return { enabled: false, allowUserManagement: false, allowedSourceIds: [] };
+            return { enabled: false, allowUserManagement: false, allowedSourceIds: [], maxDatabasesPerServer: 0 };
         }
 
         const allowedSources: string[] = dbConfig.allowedSources || [];
@@ -97,13 +98,14 @@ async function getGameDatabaseConfig(ctx: ExtensionContext, serverId: string): P
             // Default to true for backwards compatibility
             allowUserManagement: dbConfig.allowUserManagement !== false,
             allowedSourceIds: allowedSources.length > 0 ? allowedSources : null,
+            maxDatabasesPerServer: parseInt(dbConfig.maxDatabasesPerServer) || 0,
         };
         
         ctx.logger.info('getGameDatabaseConfig: Resolved config', result);
         return result;
     } catch (err: any) {
         ctx.logger.error('getGameDatabaseConfig: Failed', { serverId, error: err.message, stack: err.stack });
-        return { enabled: false, allowUserManagement: false, allowedSourceIds: null };
+        return { enabled: false, allowUserManagement: false, allowedSourceIds: null, maxDatabasesPerServer: 0 };
     }
 }
 
@@ -161,6 +163,15 @@ export async function createDatabase(ctx: ExtensionContext): Promise<ApiResponse
     // Check if users are allowed to create databases
     if (!isAdmin && gameDbConfig && !gameDbConfig.allowUserManagement) {
         return { status: 403, body: { error: 'Database management is restricted to administrators for this game' } };
+    }
+
+    // Enforce max databases per server limit
+    const maxDatabases = gameDbConfig?.maxDatabasesPerServer || 0;
+    if (maxDatabases > 0) {
+        const currentCount = await ctx.db.collection('databases').countDocuments({ serverId });
+        if (currentCount >= maxDatabases) {
+            return { status: 403, body: { error: `Database limit reached. Maximum ${maxDatabases} database(s) allowed per server.` } };
+        }
     }
 
     // If sourceId not provided, auto-select based on type
@@ -501,6 +512,7 @@ export async function getSources(ctx: ExtensionContext): Promise<ApiResponse> {
                 canCreate: gameDbConfig.allowUserManagement,
                 canDelete: gameDbConfig.allowUserManagement,
             },
+            maxDatabasesPerServer: gameDbConfig.maxDatabasesPerServer,
         },
     };
     ctx.logger.info('getSources: Returning response', { sourceCount: limitedSources.length, permissions: response.body.permissions });
@@ -746,3 +758,117 @@ export async function testDatabaseConnection(ctx: ExtensionContext): Promise<Api
         };
     }
 }
+
+// Rotate password for a provisioned database
+export async function rotatePassword(ctx: ExtensionContext): Promise<ApiResponse> {
+    const { id } = ctx.request.params;
+
+    if (!id) {
+        return { status: 400, body: { error: 'Database ID required' } };
+    }
+
+    const database = await ctx.db.collection('databases').findOne({ _id: id }) as Database | null;
+
+    if (!database) {
+        return { status: 404, body: { error: 'Database not found' } };
+    }
+
+    // Get the source to update credentials on the actual server
+    const source = await ctx.db.collection('database_sources').findOne({ _id: database.sourceId }) as DatabaseSource | null;
+
+    if (!source) {
+        return { status: 404, body: { error: 'Database source not found' } };
+    }
+
+    const newPassword = generatePassword();
+    const adminPassword = source.adminPassword ? await ctx.crypto.decrypt(source.adminPassword) : '';
+
+    try {
+        if (source.type === 'mysql' && ctx.mysql) {
+            const config: MySQLConfig = {
+                host: source.host,
+                port: source.port,
+                user: source.adminUsername,
+                password: adminPassword,
+            };
+            await ctx.mysql.query(config, `ALTER USER '${database.username}'@'%' IDENTIFIED BY '${newPassword}'`);
+            await ctx.mysql.query(config, 'FLUSH PRIVILEGES');
+        } else if (source.type === 'postgresql' && ctx.pg) {
+            const config: PostgreSQLConfig = {
+                host: source.host,
+                port: source.port,
+                user: source.adminUsername,
+                password: adminPassword,
+                database: 'postgres',
+            };
+            await ctx.pg.query(config, `ALTER ROLE "${database.username}" WITH PASSWORD '${newPassword}'`);
+        } else if (source.type === 'redis' && ctx.redis) {
+            // Redis ACL SET for password rotation
+            await ctx.redis.command(
+                { host: source.host, port: source.port, password: adminPassword },
+                `ACL SETUSER ${database.username} >${newPassword}`
+            );
+        } else {
+            return { status: 400, body: { error: `Password rotation not supported for ${source.type}` } };
+        }
+    } catch (err: any) {
+        ctx.logger.error('Failed to rotate password on database server', { error: err.message });
+        return { status: 500, body: { error: `Failed to rotate password: ${err.message}` } };
+    }
+
+    // Encrypt and store the new password
+    const encryptedPassword = await ctx.crypto.encrypt(newPassword);
+    await ctx.db.collection('databases').updateOne(
+        { _id: id },
+        { $set: { password: encryptedPassword } }
+    );
+
+    ctx.logger.info('Database password rotated', { id, type: source.type });
+
+    return {
+        status: 200,
+        body: { message: 'Password rotated successfully' },
+    };
+}
+
+// Clean up all databases when a server is deleted
+export const onServerDeleted: TypedEventHandler<'server.lifecycle.deleted'> = async (event, payload, ctx) => {
+    const { serverId, serverName } = payload;
+    ctx.logger.info(`Server ${serverName} (${serverId}) deleted. Cleaning up databases...`);
+
+    try {
+        const databases = await ctx.db.collection('databases').find({ serverId }).toArray() as Database[];
+
+        if (databases.length === 0) {
+            ctx.logger.info(`No databases to clean up for server ${serverName}`);
+            return;
+        }
+
+        for (const database of databases) {
+            const source = await ctx.db.collection('database_sources').findOne({ _id: database.sourceId }) as DatabaseSource | null;
+
+            if (source) {
+                try {
+                    const adminPassword = source.adminPassword ? await ctx.crypto.decrypt(source.adminPassword) : '';
+
+                    if (source.type === 'mysql' && ctx.mysql) {
+                        const config: MySQLConfig = { host: source.host, port: source.port, user: source.adminUsername, password: adminPassword };
+                        await ctx.mysql.query(config, `DROP DATABASE IF EXISTS \`${database.name}\``);
+                        await ctx.mysql.query(config, `DROP USER IF EXISTS '${database.username}'@'%'`);
+                    } else if (source.type === 'postgresql' && ctx.pg) {
+                        const config: PostgreSQLConfig = { host: source.host, port: source.port, user: source.adminUsername, password: adminPassword, database: 'postgres' };
+                        await ctx.pg.query(config, `DROP DATABASE IF EXISTS "${database.name}"`);
+                        await ctx.pg.query(config, `DROP USER IF EXISTS "${database.username}"`);
+                    }
+                } catch (err: any) {
+                    ctx.logger.warn(`Failed to drop database ${database.name} from server`, { error: err.message });
+                }
+            }
+        }
+
+        const result = await ctx.db.collection('databases').deleteMany({ serverId });
+        ctx.logger.info(`Deleted ${result.deletedCount} database(s) for server ${serverName}`);
+    } catch (error: any) {
+        ctx.logger.error(`Error cleaning up databases for deleted server ${serverName}:`, error.message);
+    }
+};

@@ -1,7 +1,7 @@
 {
   "$schema": "../../packages/build/gamecp-manifest.schema.json",
   "extension_id": "database-manager",
-  "version": "1.2.37",
+  "version": "1.2.48",
   "name": "Database Manager",
   "description": "Provision and manage databases for your game servers. Supports MySQL, PostgreSQL, Redis, and more.",
   "author": "GameCP Team",
@@ -67,6 +67,14 @@
     "license": "MIT"
   },
   "internal_logic": {
+    "event_listeners": [
+      {
+        "event": "server.lifecycle.deleted",
+        "handler_export": "onServerDeleted",
+        "async": true,
+        "description": "Clean up databases when a game server is deleted"
+      }
+    ],
     "api_routes": [
       {
         "path": "/databases",
@@ -95,6 +103,13 @@
         "handler": "testDatabaseConnection",
         "handler_export": "testDatabaseConnection",
         "description": "Test connection to a provisioned database"
+      },
+      {
+        "path": "/databases/:id/rotate-password",
+        "method": "POST",
+        "handler": "rotatePassword",
+        "handler_export": "rotatePassword",
+        "description": "Rotate the password for a provisioned database"
       },
       {
         "path": "/sources",

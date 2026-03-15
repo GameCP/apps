@@ -122,6 +122,15 @@ export const lang = {
             da: 'Kopier forbindelsesstreng',
             'zh-CN': '复制连接字符串',
             'zh-TW': '複製連線字串'
+        },
+        rotatePassword: {
+            en: 'Rotate Password',
+            es: 'Rotar contraseña',
+            ro: 'Rotește parola',
+            'pt-BR': 'Rotacionar senha',
+            da: 'Roter adgangskode',
+            'zh-CN': '轮换密码',
+            'zh-TW': '輪換密碼'
         }
     },
     messages: {
@@ -151,6 +160,24 @@ export const lang = {
             da: 'Forbindelsesstreng kopieret til udklipsholder',
             'zh-CN': '连接字符串已复制到剪贴板',
             'zh-TW': '連線字串已複製到剪貼簿'
+        },
+        passwordRotated: {
+            en: 'Password rotated successfully',
+            es: 'Contraseña rotada exitosamente',
+            ro: 'Parola a fost rotită cu succes',
+            'pt-BR': 'Senha rotacionada com sucesso',
+            da: 'Adgangskode roteret med succes',
+            'zh-CN': '密码轮换成功',
+            'zh-TW': '密碼輪換成功'
+        },
+        rotateError: {
+            en: 'Failed to rotate password',
+            es: 'Error al rotar la contraseña',
+            ro: 'Eroare la rotirea parolei',
+            'pt-BR': 'Falha ao rotacionar senha',
+            da: 'Kunne ikke rotere adgangskode',
+            'zh-CN': '密码轮换失败',
+            'zh-TW': '密碼輪換失敗'
         },
         createError: {
             en: 'Failed to create database',
@@ -234,6 +261,24 @@ export const lang = {
             da: 'Er du sikker på, at du vil slette denne database? Denne handling kan ikke fortrydes.',
             'zh-CN': '您确定要删除此数据库吗？此操作无法撤消。',
             'zh-TW': '您確定要刪除此資料庫嗎？此操作無法復原。'
+        },
+        rotateTitle: {
+            en: 'Rotate Password',
+            es: 'Rotar contraseña',
+            ro: 'Rotește parola',
+            'pt-BR': 'Rotacionar senha',
+            da: 'Roter adgangskode',
+            'zh-CN': '轮换密码',
+            'zh-TW': '輪換密碼'
+        },
+        rotateMessage: {
+            en: 'Are you sure you want to rotate this password? The current password will be replaced and any services using it will need to be updated.',
+            es: 'The current password will be replaced and any services using it will need to be updated.',
+            ro: 'Sigur doriți să rotiți această parolă? Parola curentă va fi înlocuită și orice serviciu care o folosește va trebui actualizat.',
+            'pt-BR': 'Tem certeza de que deseja rotacionar esta senha? A senha atual será substituída e qualquer serviço que a utilize precisará ser atualizado.',
+            da: 'Er du sikker på, at du vil rotere denne adgangskode? Den nuværende adgangskode vil blive erstattet.',
+            'zh-CN': '您确定要轮换此密码吗？当前密码将被替换，使用它的任何服务都需要更新。',
+            'zh-TW': '您確定要輪換此密碼嗎？目前的密碼將被替換，使用它的任何服務都需要更新。'
         }
     },
     info: {

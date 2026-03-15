@@ -3,7 +3,7 @@ import { useGameCP } from '@gamecp/types/client';
 import { Card, Button, FormInput, useConfirmDialog, Container, EmptyState, Typography, SkeletonItem, PageHeader } from '@gamecp/ui';
 import { lang } from '../lang';
 import type { Database, DatabaseSource } from '../types';
-import { HiDatabase, HiPlus, HiTrash, HiExternalLink, HiClipboardCopy, HiRefresh, HiCheckCircle, HiXCircle } from 'react-icons/hi';
+import { HiDatabase, HiPlus, HiTrash, HiExternalLink, HiClipboardCopy, HiRefresh, HiCheckCircle, HiXCircle, HiKey } from 'react-icons/hi';
 import useSWR, { mutate } from 'swr';
 
 interface DatabaseTabProps {
@@ -18,6 +18,7 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
     const [selectedSource, setSelectedSource] = useState('');
     const [testingDb, setTestingDb] = useState<string | null>(null);
     const [testResults, setTestResults] = useState<Record<string, { success: boolean; message: string; latencyMs: number }>>({});
+    const [rotatingPasswordId, setRotatingPasswordId] = useState<string | null>(null);
 
     // SWR for data fetching
     const databasesKey = `/api/x/database-manager/databases?serverId=${serverId}`;
@@ -98,6 +99,28 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
             setTestResults(prev => ({ ...prev, [dbId]: { success: false, message: error.error || t(lang.messages.testError), latencyMs: 0 } }));
         } finally {
             setTestingDb(null);
+        }
+    };
+
+    const rotatePassword = async (dbId: string) => {
+        const confirmed = await confirm({
+            title: t(lang.confirm.rotateTitle),
+            message: t(lang.confirm.rotateMessage),
+            confirmText: t(lang.buttons.rotatePassword),
+            confirmButtonColor: 'danger',
+        });
+
+        if (!confirmed) return;
+
+        setRotatingPasswordId(dbId);
+        try {
+            await api.post(`/api/x/database-manager/databases/${dbId}/rotate-password`, {});
+            mutate(databasesKey);
+            toast.success(t(lang.messages.passwordRotated));
+        } catch (error: any) {
+            toast.error(error.error || t(lang.messages.rotateError));
+        } finally {
+            setRotatingPasswordId(null);
         }
     };
 
@@ -236,7 +259,7 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
                                 </Button>
                             ) : undefined
                         }
-                        contentClassName="space-y-4"
+                        contentClassName="space-y-4 pt-2"
                     >
                         {/* Connection Details */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -321,6 +344,15 @@ export function DatabaseTab({ serverId }: DatabaseTabProps) {
                             >
                                 <HiClipboardCopy className="w-4 h-4 mr-2" />
                                 {t(lang.buttons.copyConnection)}
+                            </Button>
+                            <Button
+                                onClick={() => rotatePassword(db._id)}
+                                disabled={rotatingPasswordId === db._id}
+                                variant="secondary"
+                                size="sm"
+                            >
+                                <HiKey className={`w-4 h-4 mr-2 ${rotatingPasswordId === db._id ? 'animate-spin' : ''}`} />
+                                {t(lang.buttons.rotatePassword)}
                             </Button>
                             {(db.type === 'mysql' || db.type === 'postgresql') && getAdminerUrl(db) && (
                                 <a
